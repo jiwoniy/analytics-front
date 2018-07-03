@@ -24,6 +24,7 @@ export default {
 <style lang="scss" scoped>
 .div--Right__page {
   width: 250px;
+  margin-left: 250px;
   height: 100%;
   display: block;
   position: fixed;

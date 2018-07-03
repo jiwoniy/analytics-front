@@ -1,7 +1,11 @@
 <template>
   <transition>
     <div class="div--Working__page">
-      <button>Reset</button>
+      <div class="div--Button">
+        <span @click="resetted"> reset </span>
+        <span @click="openLeftPanel"> left </span>
+        <span @click="openRightPanel"> right </span>
+      </div>
       <svg>
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -22,6 +26,8 @@
 </template>
 
 <script>
+import { eventsBus, events } from '@/events'
+
 import * as d3 from 'd3-selection'
 import { zoom as d3zoom, zoomIdentity } from 'd3-zoom'
 import { scaleLinear } from 'd3-scale'
@@ -46,6 +52,16 @@ export default {
     }
   },
   methods: {
+    openLeftPanel () {
+      eventsBus.$emit(events.LEFT_PANEL, {
+        open: true
+      })
+    },
+    openRightPanel () {
+      eventsBus.$emit(events.RIGHT_PANEL, {
+        open: true
+      })
+    },
     zoomed () {
       this.view.attr('transform', d3.event.transform)
       this.gX.call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
@@ -112,8 +128,8 @@ export default {
       .attr('class', 'axis axis--y')
       .call(this.yAxis)
 
-    d3.select('button')
-      .on('click', this.resetted)
+    // d3.select('button')
+    //   .on('click', this.resetted)
 
     this.svgContainer.call(this.zoom)
   }
@@ -122,6 +138,18 @@ export default {
 
 <style lang="scss" scoped>
 .div--Working__page {
+  display: block;
+}
+
+.div--Working__page .div--Button {
+  display: flex;
+  flex-direction: row;
+  width: 200px;
+  height: 30px;
+
+  span {
+    width: 50px;
+  }
 }
 
 .view {
