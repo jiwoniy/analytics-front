@@ -1,7 +1,6 @@
 <template>
   <transition name="fade">
     <div class="div--Left__page">
-      Left panel
       <button @click="closeLeftPanel"> x</button>
     </div>
   </transition>

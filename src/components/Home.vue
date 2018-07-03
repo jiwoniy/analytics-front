@@ -19,7 +19,6 @@ export default {
 
 <style lang="scss" scoped>
 .div--Home__page {
-  width: 100px;
   height: 100%;
 }
 </style>

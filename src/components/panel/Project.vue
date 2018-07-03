@@ -1,9 +1,9 @@
 <template>
   <transition>
     <div class="div--Project__page">
-      <left-side v-show="isLeftPanelShow"></left-side>
+      <!-- <left-side v-show="isLeftPanelShow"></left-side> -->
       <work></work>
-      <right-side v-show="isRightPanelShow"></right-side>
+      <!-- <right-side v-show="isRightPanelShow"></right-side> -->
     </div>
   </transition>
 </template>
