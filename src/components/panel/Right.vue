@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
-    <div class="div--Right__page">
+    <section class="right-panel__page">
       <button @click="closeRightPanel"> x </button>
-    </div>
+    </section>
   </transition>
 </template>
 
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.div--Right__page {
+.right-panel__page {
   width: 250px;
   margin-left: 250px;
   height: 100%;

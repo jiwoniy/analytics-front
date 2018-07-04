@@ -22,6 +22,9 @@
 import { eventsBus, events } from '@/events'
 
 import * as d3Selection from 'd3-selection'
+// import * as d3Zoom from 'd3-zoom'
+import * as d3Drag from 'd3-drag'
+// import * as d3Array from 'd3-array'
 
 // https://bl.ocks.org/mbostock/1557377
 export default {
@@ -57,6 +60,23 @@ export default {
     this.svgContainer = d3Selection.select('#svg_map')
       .attr('width', this.width)
       .attr('height', this.height)
+
+    this.svgContainer.append('use')
+      .attr('href', '#pointer')
+      .attr('x', 50)
+      .attr('y', 50)
+      .attr('fill', '#039BE5')
+      .attr('stroke', '#039BE5')
+      .attr('stroke-width', '1px')
+
+    const dragHandler = d3Drag.drag()
+      .on('drag', function () {
+        d3Selection.select(this)
+          .attr('x', d3Selection.event.x)
+          .attr('y', d3Selection.event.y)
+      })
+
+    dragHandler(this.svgContainer.selectAll('use'))
   }
 }
 </script>
