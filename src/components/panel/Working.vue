@@ -2,24 +2,11 @@
   <transition>
     <div class="div--Working__page">
       <div class="div--Button">
-        <span @click="resetted"> reset </span>
+        <!-- <span @click="resetted"> reset </span> -->
         <span @click="openLeftPanel"> left </span>
         <span @click="openRightPanel"> right </span>
       </div>
-      <svg>
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop  offset="0.0%" stop-color="#2c7bb6"></stop>
-            <stop  offset="12.5%" stop-color="#00a6ca"></stop>
-            <stop  offset="25.0%" stop-color="#00ccbc"></stop>
-            <stop  offset="37.5%" stop-color="#90eb9d"></stop>
-            <stop  offset="50.0%" stop-color="#ffff8c"></stop>
-            <stop  offset="62.5%" stop-color="#f9d057"></stop>
-            <stop  offset="75.0%" stop-color="#f29e2e"></stop>
-            <stop  offset="87.5%" stop-color="#e76818"></stop>
-            <stop offset="100.0%" stop-color="#d7191c"></stop>
-          </linearGradient>
-        </defs>
+      <svg id="svg_map">
       </svg>
     </div>
   </transition>
@@ -28,27 +15,36 @@
 <script>
 import { eventsBus, events } from '@/events'
 
-import * as d3 from 'd3-selection'
-import { zoom as d3zoom, zoomIdentity } from 'd3-zoom'
-import { scaleLinear } from 'd3-scale'
-import { axisBottom, axisRight } from 'd3-axis'
-// import { transform as d3Transform } from 'd3-transform'
+import * as d3Selection from 'd3-selection'
+// import * as d3Zoom from 'd3-zoom'
+import * as d3Drag from 'd3-drag'
+import * as d3Array from 'd3-array'
 
+// https://bl.ocks.org/mbostock/1557377
 export default {
   name: 'Working',
   data () {
     return {
       svgContainer: null,
+      mapContainer: null,
       zoom: null,
       width: 600,
       height: 600,
+      radius: 20,
+      innerWidth: 240,
+      innerHeight: 125,
       x: null,
       y: null,
       xAxis: null,
       yAxis: null,
       view: null,
       gX: null,
-      gY: null
+      gY: null,
+      maxZoomIn: 2.0,
+      maxZoomOut: 0.2,
+      zoomStep: 0.2,
+      actualZoomLevel: 1.0,
+      moveStep: 100
     }
   },
   methods: {
@@ -62,15 +58,29 @@ export default {
         open: true
       })
     },
-    zoomed () {
-      this.view.attr('transform', d3.event.transform)
-      this.gX.call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
-      this.gY.call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
+    roundFloat (value) {
+      return value.toFixed(2)
     },
-    resetted () {
-      this.svgContainer.transition()
-        .duration(750)
-        .call(this.zoom.transform, zoomIdentity)
+    // Called when drag event starts. It stop the propagation of the click event
+    dragstarted (d) {
+      d3Selection.event.sourceEvent.stopPropagation()
+    },
+    // drag (node, test) {
+    //   console.log('---drag')
+    //   d3Drag.drag()
+    //     .on('start', this.dragstarted)
+    //     .on('drag', this.dragged)
+    // },
+    // Called when the drag event occurs (object should be moved)
+    // dragmove (d) {
+    //   console.log('------dragemove--')
+    //   console.log(d)
+    //   d3Selection.select(d)
+    //     .attr('cx', d.x = Math.max(this.radius, Math.min(this.innerWidth - this.radius, d3Selection.event.x)))
+    //     .attr('cy', d.y = Math.max(this.radius, Math.min(this.innerHeight - this.radius, d3Selection.event.y)))
+    // },
+    subject (d) {
+      return d == null ? {x: d3Selection.event.x, y: d3Selection.event.y} : d
     }
   },
   mounted () {
@@ -81,57 +91,35 @@ export default {
     this.width = windowWidth - margin.left - margin.right
     this.height = windowHeight - margin.top - margin.bottom
 
-    this.svgContainer = d3.select('svg')
+    this.svgContainer = d3Selection.select('#svg_map')
       .attr('width', this.width)
       .attr('height', this.height)
-      .append('g')
 
-    // this.svgContainer.attr('width', this.width).attr('height', this.height)
+    this.mapContainer = this.svgContainer.append('g')
 
-    this.zoom = d3zoom()
-      .scaleExtent([1, 40])
-      .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
-      .on('zoom', this.zoomed)
+    const radius = this.radius
+    const width = this.innerWidth
+    const height = this.innerHeight
+    function dragmove (d) {
+      d3Selection.select(this)
+        .attr('cx', d.x = Math.max(radius, Math.min(width - radius, d3Selection.event.x)))
+        .attr('cy', d.y = Math.max(radius, Math.min(height - radius, d3Selection.event.y)))
+    }
 
-    this.x = scaleLinear()
-      .domain([-1, this.width + 1])
-      .range([-1, this.width + 1])
+    var drag = d3Drag.drag()
+      .subject(this.subject)
+      .on('drag', dragmove)
 
-    this.y = scaleLinear()
-      .domain([-1, this.height + 1])
-      .range([-1, this.height + 1])
+    this.testContainer = this.mapContainer.data(d3Array.range(16).map(() => { return {x: this.innerWidth / 2, y: this.innerHeight / 2} }))
+      .enter().append('svg')
+      .attr('width', this.innerWidth)
+      .attr('height', this.innerHeight)
 
-    this.xAxis = axisBottom(this.x)
-      .ticks((this.width + 2) / (this.height + 2) * 10)
-      .tickSize(this.height)
-      .tickPadding(8 - this.height)
-
-    this.yAxis = axisRight(this.y)
-      .ticks(10)
-      .tickSize(this.width)
-      .tickPadding(8 - this.width)
-
-    this.view = this.svgContainer.append('rect')
-      // .attr('class', 'view')
-      .attr('x', 0.5)
-      .attr('y', 0.5)
-      .attr('fill', 'url(#gradient)')
-      // fill="url(#grad1)"
-      .attr('width', this.width - 1)
-      .attr('height', this.height - 1)
-
-    this.gX = this.svgContainer.append('g')
-      .attr('class', 'axis axis--x')
-      .call(this.xAxis)
-
-    this.gY = this.svgContainer.append('g')
-      .attr('class', 'axis axis--y')
-      .call(this.yAxis)
-
-    // d3.select('button')
-    //   .on('click', this.resetted)
-
-    this.svgContainer.call(this.zoom)
+    this.testContainer.append('circle')
+      .attr('r', this.radius)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .call(drag)
   }
 }
 </script>
@@ -150,25 +138,5 @@ export default {
   span {
     width: 50px;
   }
-}
-
-.view {
-  fill: url(#gradient);
-  stroke: #000;
-}
-
-.axis path {
-  display: none;
-}
-
-.axis line {
-  stroke-opacity: 0.3;
-  shape-rendering: crispEdges;
-}
-
-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
 }
 </style>
