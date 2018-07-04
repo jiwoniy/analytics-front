@@ -9,7 +9,7 @@
             <h2>{{ block.title }}</h2>
           </span>
           <!-- <div class="drag-options"></div> -->
-          <ul class="drag-inner-list" ref="dragableList" :data-status="block">
+          <ul class="drag-inner-list" :data-status="block">
             <li class="drag-item" v-for="item in block"
               :key="item.id"
               :data-block-id="item.id"
