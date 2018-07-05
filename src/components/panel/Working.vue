@@ -38,9 +38,6 @@ export default {
         open: true
       })
     }
-  },
-  mounted () {
-    console.log('working palete')
   }
 }
 </script>

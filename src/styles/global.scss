@@ -1,0 +1,14 @@
+#app {
+  font-family: 'Roboto', sans-serif !important;
+  --app-left_panel-width: 250px;
+  --widget-header-color: #ff5a60;
+  --widget-header-height: 52px;
+  --widget-input-height: 89px;
+  --widget-icon-toggle: #FE5C63;
+  --widget-height: 100vh;
+  --widget-menu-subHeader-height: 44px;
+  // mobile safari doesn't work vh
+  content: 'viewport-units-buggyfill; --widget-height: 100vh';
+  // overflow-y: hidden;
+  // overflow-x: hidden;
+}

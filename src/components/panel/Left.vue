@@ -44,7 +44,7 @@ export default {
 
 <style lang="scss" scoped>
 .left-panel__page {
-  width: 250px;
+  width: var(--app-left_panel-width);
   height: 100%;
   display: block;
   position: fixed;
