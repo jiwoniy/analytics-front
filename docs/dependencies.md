@@ -13,7 +13,7 @@ Project dependencies
 > Vue Router is the official router for Vue.js. It deeply integrates with Vue.js core to make building Single Page Applications with Vue.js a breeze. Features include:
 
 
-[Axios](https://github.com/axios/axios)
+[axios](https://github.com/axios/axios)
 -------------
 
 > Promise based HTTP client for the browser and node.js
@@ -32,3 +32,8 @@ Project dependencies
 -------------
 
 > Parse, validate, manipulate, and display dates and times in JavaScript.
+
+[dragula](https://github.com/bevacqua/dragula)
+-------------
+
+> Drag and drop so simple it hurts https://bevacqua.github.io/dragula/

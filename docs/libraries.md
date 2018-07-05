@@ -24,7 +24,4 @@ Libraries
 [Interactive & Dynamic Force-Directed Graphs with D3](https://medium.com/ninjaconcept/interactive-dynamic-force-directed-graphs-with-d3-da720c6d7811)
 [understanding zoom behavior bindings](http://bl.ocks.org/cpdean/7a71e687dd5a80f6fd57)
 
-## Drag and drop
-[dragula](https://github.com/bevacqua/dragula)
-
 
