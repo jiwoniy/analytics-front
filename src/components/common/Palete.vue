@@ -1,8 +1,8 @@
 <template>
   <transition>
-    <div class="palete">
-      <svg id="svg_map" slot="svg-container">
-      </svg>
+    <div id="svgContainer" class="palete">
+      <!-- <svg id="svg_map" slot="svg-container">
+      </svg> -->
     </div>
   </transition>
 </template>
@@ -18,11 +18,17 @@ export default {
   data () {
     return {
       svgContainer: null,
-      // svgContentsGroup: null,
-      nodesType: []
+      svgGraph: null
     }
   },
   methods: {
+    setGraph () {
+      const nodes = []
+      const edges = []
+      this.svgGraph = new GraphCreator(this.svgContainer, nodes, edges)
+      this.svgGraph.setIdCt(2)
+      this.svgGraph.updateGraph()
+    },
     setSvgContainer () {
       const windowWidth = window.innerWidth
       const windowHeight = window.innerHeight
@@ -35,48 +41,36 @@ export default {
       this.width = windowWidth - leftPanelWidth - margin.left - margin.right
       this.height = windowHeight - topPanelHeight - margin.top - margin.bottom
 
-      this.svgContainer = d3Selection.select('#svg_map')
+      this.svgContainer = d3Selection.select('#svgContainer').append('svg')
         .attr('width', this.width)
         .attr('height', this.height)
-
-      const nodes = []
-      const edges = []
-
-      const graph = new GraphCreator(this.svgContainer, nodes, edges)
-      graph.setIdCt(2)
+      this.setGraph(this.svgContainer)
     },
     init () {
       this.setSvgContainer()
     }
-    // updateNodes () {
-    //   console.log('--updateNodes--')
-    //   console.log(this.nodesType)
-    // }
   },
   mounted () {
     eventsBus.$on(events.SEND_DATA_TRANSFER, (payload) => {
       const { data } = payload
-      this.nodesType = Object.assign([], [ ...this.nodesType, data ])
+      this.svgGraph.addNode(data)
+      // this.nodes = Object.assign([], [ ...this.nodes, data ])
     })
 
     this.init()
   }
-  // updated () {
-  //   console.log('--updated')
-  // },
-  // watch: {
-  //   nodesType (newValue, old) {
-  //     this.updateNodes()
-  //     // console.log('--nodesType value')
-  //   }
-  // }
 }
 </script>
+
+<style lang="scss">
+@import '../../styles/graph-creator.scss';
+</style>
 
 <style lang="scss" scoped>
 .palete {
   width: 100%;
   height: 100%;
   display: block;
+  background-color: rgb(248, 248, 248)
 }
 </style>

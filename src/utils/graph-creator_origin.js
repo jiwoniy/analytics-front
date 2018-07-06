@@ -585,8 +585,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     return "Make sure to save your graph locally before leaving :-)";
   };
 
-  console.log('--start--')
-
   var docEl = document.documentElement,
       bodyEl = document.getElementsByTagName('body')[0];
 
