@@ -53,6 +53,10 @@ g.selected:hover circle {
   fill: rgb(250, 232, 255);
 }
 
+g.selected circle .selected{
+  fill: red;
+}
+
 path.link {
   fill: none;
   stroke: #333;

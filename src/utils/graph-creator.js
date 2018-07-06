@@ -60,17 +60,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, nodes, edges) {
     .style('marker-end', 'url(#mark-end-arrow)')
 
   // svg nodes and edges
-  thisGraph.paths = svgG.append('g').selectAll('g')
-  thisGraph.circles = svgG.append('g').selectAll('g')
+  thisGraph.paths = svgG.append('g').classed('path-group', true).selectAll('g')
+  thisGraph.circles = svgG.append('g').classed('circle-group', true).selectAll('g')
 
   thisGraph.drag = d3Drag.drag()
     .subject(function (d) {
-      // return { x: d.x, y: d.y }
-      return d == null ? {x: d3Selection.event.x, y: d3Selection.event.y} : d
+      return { x: d.x, y: d.y }
+      // return d == null ? {x: d3Selection.event.x, y: d3Selection.event.y} : d
     })
     .on('drag', function (args) {
-      thisGraph.state.justDragged = true
-      thisGraph.dragmove(thisGraph, args)
+      // thisGraph.state.justDragged = true
+      // thisGraph.dragmove(args)
     })
     .on('end', function () {
       // todo check if edge-mode is selected
@@ -84,29 +84,23 @@ const GraphCreator = function GraphCreatorConstructor (svg, nodes, edges) {
     // thisGraph.svgKeyUp(thisGraph)
     thisGraph.svgKeyUp()
   })
+  // .on('mouseup', function () {
+  //   console.log('--mouseup--')
+  //   // thisGraph.svgKeyDown()
+  // }).on('mousedown', function () {
+  //   console.log('--mousedown--')
+  //   // thisGraph.svgKeyDown()
+  // })
 
-  svg.on('mousedown', function (d) {
+  thisGraph.svg.on('mousedown', function (d) {
     thisGraph.svgMouseDown(d)
-    thisGraph.svgMouseUp(d)
-    // thisGraph.svgMouseDown(thisGraph, d)
-    // thisGraph.svgMouseUp(thisGraph, d)
   })
 
-  // TODO check....why...??
-  svg.on('mouseup', function (d) {
+  thisGraph.svg.on('mouseup', function (d) {
     thisGraph.svgMouseUp(d)
-    // thisGraph.svgMouseUp(thisGraph, d)
   })
 
-  // custom
-  // svg.on('addnode', function () {
-  //   thisGraph.drawNodeGraph()
-  // })
-
-  // svg.on('mouseover', function () {
-  // })
-
-  // svg.on('mouseout', function () {
+  // thisGraph.svg.on('click', function (d) {
   // })
 
   // listen for dragging
@@ -213,17 +207,24 @@ GraphCreator.prototype.constants = {
 }
 
 /* PROTOTYPE FUNCTIONS */
+// GraphCreator.prototype.dragmove = function dragmove (d) {
+//   var thisGraph = this
+//   if (thisGraph.state.shiftNodeDrag) {
+//     thisGraph.dragLine.attr('d',
+//       `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},${d3Selection.mouse(this.svgG.node())[1]}`)
+//   } else {
+//     d.x += d3Selection.event.dx
+//     d.y += d3Selection.event.dy
+//     thisGraph.updateGraph()
+//   }
+// }
 
-GraphCreator.prototype.dragmove = function dragmove (d) {
+GraphCreator.prototype.dragLink = function dragLink (d) {
+  console.log('--dragline--')
+  console.log(d)
   var thisGraph = this
-  if (thisGraph.state.shiftNodeDrag) {
-    thisGraph.dragLine.attr('d',
-      `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},${d3Selection.mouse(this.svgG.node())[1]}`)
-  } else {
-    d.x += d3Selection.event.dx
-    d.y += d3Selection.event.dy
-    thisGraph.updateGraph()
-  }
+  thisGraph.dragLine.attr('d',
+    `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},${d3Selection.mouse(this.svgG.node())[1]}`)
 }
 
 GraphCreator.prototype.deleteGraph = function deleteGraph (skipPrompt) {
@@ -384,6 +385,7 @@ GraphCreator.prototype.changeTextOfNode = function (d3node, d) {
 
 // mouseup on nodes
 GraphCreator.prototype.circleMouseUp = function (d3node, d) {
+  console.log('--circle mousup')
   const thisGraph = this
   const state = thisGraph.state
   const constants = thisGraph.constants
@@ -484,44 +486,78 @@ GraphCreator.prototype.svgMouseUp = function svgMouseUp () {
   state.graphMouseDown = false
 }
 
-// .on("mouseleave",function(){
-//   d3.select(this)
-//     .attr("fill", "red")
-//     .transition().duration(1000)
-//     .attr("fill", "blue");
-// });
-
-// GraphCreator.prototype.drawNodeGraph = function drawNodeGraph () {
+// GraphCreator.prototype.svgClicked = function svgClicked () {
 // }
 
 // make our logic
 GraphCreator.prototype.addNode = function addNode (node) {
-  // this.svg.dispatch('addnode')
   const thisGraph = this
-  const constants = thisGraph.constants
+  const consts = thisGraph.constants
+  const state = thisGraph.state
+  // const constants = thisGraph.constants
 
   // what is "idct"
-
   // const xycoords = d3Selection.mouse(thisGraph.svgG.node())
   const newNode = {
     id: thisGraph.idct++,
-    title: node.title || constants.defaultTitle,
+    title: node.title || consts.defaultTitle,
     x: 300,
     y: 300
     // x: xycoords[0],
     // y: xycoords[1]
   }
-  // console.log(newNode)
   thisGraph.nodes.push(newNode)
-  thisGraph.updateGraph()
+  const exists = d3Selection.select('.circle-group').selectAll('g').data(thisGraph.nodes)
 
-  // // make title of text immediently editable
-  // const d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function (dval) {
-  //   return dval.id === d.id
-  // }), d)
-  // const txtNode = d3txt.node()
-  // thisGraph.selectElementContents(txtNode)
-  // txtNode.focus()
+  const newGs = exists
+    .enter()
+    .append('g')
+
+  const circleDrag = d3Drag.drag()
+    .subject(function (d) {
+      return { x: d.x, y: d.y }
+    })
+    .on('drag', function (d) {
+      thisGraph.state.justDragged = true
+      if (thisGraph.state.shiftNodeDrag) {
+        thisGraph.dragLink(d)
+      } else {
+        d3Selection.select(this).attr('transform', `translate(${d3Selection.event.x}, ${d3Selection.event.y})`)
+      }
+    })
+
+  newGs.classed(consts.circleGClass, true)
+    .attr('transform', function (d) {
+      return `translate(${d.x},${d.y})`
+    })
+    .on('mouseover', function (d) {
+      if (state.shiftNodeDrag) { // check
+        d3Selection.select(this).classed(consts.connectClass, true)
+      }
+    })
+    .on('mouseout', function (d) {
+      d3Selection.select(this).classed(consts.connectClass, false)
+    })
+    .on('mousedown', function (d) {
+      thisGraph.circleMouseDown(d3Selection.select(this), d)
+    })
+    .on('mouseup', function (d) {
+      thisGraph.circleMouseUp(d3Selection.select(this), d)
+    })
+    .on('dblclick', function (d) {
+      d.selected = true
+      d3Selection.select(this).classed(thisGraph.constants.selectedClass, true)
+    })
+    .call(circleDrag)
+
+  newGs.append('circle')
+    .attr('r', String(consts.nodeRadius))
+
+  newGs.each(function (d) {
+    thisGraph.insertTitleLinebreaks(d3Selection.select(this), d.title)
+  })
+  exists.exit().remove()
+  thisGraph.updateGraph()
 }
 
 // keydown on main svg
@@ -596,50 +632,14 @@ GraphCreator.prototype.updateGraph = function updateGraph () {
       state.mouseDownLink = null
     })
 
-  // remove old links
+  // // remove old links
   paths.exit().remove()
-
   // update existing nodes
-  thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function (d) {
-    return d.id
-  })
+  // thisGraph.circles = thisGraph.circles.data(thisGraph.nodes, function (d) {
+  //   return d.id
+  // })
 
-  thisGraph.circles.attr('transform', function (d) {
-    return `translate(${d.x},${d.y})`
-  })
   // add new nodes
-  const newGs = thisGraph.circles.enter()
-    .append('g')
-
-  newGs.classed(consts.circleGClass, true)
-    .attr('transform', function (d) {
-      return `translate(${d.x},${d.y})`
-    })
-    .on('mouseover', function (d) {
-      if (state.shiftNodeDrag) {
-        d3Selection.select(this).classed(consts.connectClass, true)
-      }
-    })
-    .on('mouseout', function (d) {
-      d3Selection.select(this).classed(consts.connectClass, false)
-    })
-    .on('mousedown', function (d) {
-      thisGraph.circleMouseDown(d3Selection.select(this), d)
-    })
-    .on('mouseup', function (d) {
-      thisGraph.circleMouseUp(d3Selection.select(this), d)
-    })
-    .call(thisGraph.drag)
-
-  newGs.append('circle')
-    .attr('r', String(consts.nodeRadius))
-
-  newGs.each(function (d) {
-    thisGraph.insertTitleLinebreaks(d3Selection.select(this), d.title)
-  })
-
-  // remove old nodes
-  thisGraph.circles.exit().remove()
 }
 
 GraphCreator.prototype.zoomed = function zoomed () {
