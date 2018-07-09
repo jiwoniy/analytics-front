@@ -23,9 +23,8 @@ export default {
   },
   methods: {
     setGraph (svgContainer) {
-      const nodes = []
       const edges = []
-      this.svgGraph = new GraphCreator(svgContainer, nodes, edges)
+      this.svgGraph = new GraphCreator(svgContainer, edges)
       this.svgGraph.setIdCt(2)
       this.svgGraph.updateGraph()
     },

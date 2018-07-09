@@ -21,9 +21,12 @@ export default {
     },
     drop (event) {
       const data = event.dataTransfer.getData('data')
-      eventsBus.$emit(events.SEND_DATA_TRANSFER, {
-        data: JSON.parse(data)
-      })
+      // TODO check json data
+      if (data) {
+        eventsBus.$emit(events.SEND_DATA_TRANSFER, {
+          data: JSON.parse(data)
+        })
+      }
       event.preventDefault()
     }
   }
