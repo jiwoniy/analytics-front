@@ -91,18 +91,15 @@ path.link.selected  {
 
 // data-node selected
 .data-node.selected rect {
-  // stroke: red;
   fill: #676a6c;
+  opacity: 0.3;
   stroke-width: 2;
 }
 
 // data-node node-hover
 .data-node.data-node-hover rect {
   cursor: pointer;
-  opacity: 0.5;
-  // fill: #676a6c;
-  stroke-width: 2;
-  stroke: red;
+  fill: #ADD8E6;
 }
 
 // data-node node-hover & connect-node

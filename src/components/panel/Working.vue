@@ -7,8 +7,9 @@
         <span @click="openRightPanel"> right </span>
       </div>
       <drop-comp>
-        <svg-palete slot="svg-container">
-
+        <svg-palete slot="svg-container"
+          :open-right-panel="openRightPanel"
+        >
         </svg-palete>
       </drop-comp>
     </section>
@@ -28,15 +29,13 @@ export default {
     SvgPalete
   },
   methods: {
-    openLeftPanel () {
+    openLeftPanel (status = true) {
       eventsBus.$emit(events.LEFT_PANEL, {
-        open: true
+        open: status
       })
     },
-    openRightPanel () {
-      eventsBus.$emit(events.RIGHT_PANEL, {
-        open: true
-      })
+    openRightPanel (payload) {
+      eventsBus.$emit(events.RIGHT_PANEL, payload)
     }
   }
 }

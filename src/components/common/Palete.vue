@@ -1,8 +1,6 @@
 <template>
   <transition>
     <div id="svgContainer" class="palete">
-      <!-- <svg id="svg_map" slot="svg-container">
-      </svg> -->
     </div>
   </transition>
 </template>
@@ -21,10 +19,18 @@ export default {
       svgGraph: null
     }
   },
+  props: {
+    openRightPanel: {
+      type: Function,
+      default: () => {}
+    }
+  },
   methods: {
     setGraph (svgContainer) {
-      const edges = []
-      this.svgGraph = new GraphCreator(svgContainer, edges)
+      const options = {
+        nodeSelectCallback: this.nodeSelect
+      }
+      this.svgGraph = new GraphCreator(svgContainer, options)
       this.svgGraph.setIdCt(2)
       this.svgGraph.updateGraph()
     },
@@ -44,6 +50,18 @@ export default {
         .attr('width', this.width)
         .attr('height', this.height)
       this.setGraph(this.svgContainer)
+    },
+    nodeSelect (nodeItem) {
+      if (nodeItem.status.selected) {
+        this.openRightPanel({
+          open: true,
+          item: nodeItem
+        })
+      } else {
+        this.openRightPanel({
+          open: false
+        })
+      }
     },
     init () {
       this.setSvgContainer()

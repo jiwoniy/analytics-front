@@ -2,6 +2,9 @@
   <transition name="fade">
     <section class="right-panel__page">
       <button @click="closeRightPanel"> x </button>
+      <div>
+        {{ currentItem && currentItem.title }}
+      </div>
     </section>
   </transition>
 </template>
@@ -11,6 +14,12 @@ import { eventsBus, events } from '@/events'
 
 export default {
   name: 'Right-Panel',
+  props: {
+    currentItem: {
+      type: Object,
+      default: () => {}
+    }
+  },
   methods: {
     closeRightPanel () {
       eventsBus.$emit(events.RIGHT_PANEL, {
@@ -31,7 +40,7 @@ export default {
   z-index: 1;
   top: 0;
   right: 0;
-  background-color: #111;
+  background-color: #ffffff;
 }
 
 .fade-enter-active {

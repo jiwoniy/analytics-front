@@ -16,7 +16,11 @@
         </work-panel>
       </div>
 
-      <right-panel v-show="isRightPanelShow"></right-panel>
+      <right-panel
+        v-show="isRightPanelShow"
+        :current-item="currentNodeItem"
+      >
+      </right-panel>
     </section>
   </transition>
 </template>
@@ -41,7 +45,8 @@ export default {
     return {
       blocks: [],
       isLeftPanelShow: true,
-      isRightPanelShow: false
+      isRightPanelShow: false,
+      currentNodeItem: null
     }
   },
   created () {
@@ -59,7 +64,13 @@ export default {
     })
 
     eventsBus.$on(events.RIGHT_PANEL, (payload) => {
-      const { open } = payload
+      const { open, item } = payload
+      if (open) {
+        this.currentNodeItem = item
+      } else {
+        this.currentNodeItem = null
+      }
+
       this.isRightPanelShow = open
     })
   }

@@ -20,11 +20,18 @@ export default {
       event.preventDefault()
     },
     drop (event) {
+      const position = {
+        x: event.x || 100,
+        y: event.y || 100
+      }
       const data = event.dataTransfer.getData('data')
       // TODO check json data
       if (data) {
         eventsBus.$emit(events.SEND_DATA_TRANSFER, {
-          data: JSON.parse(data)
+          data: {
+            ...JSON.parse(data),
+            position
+          }
         })
       }
       event.preventDefault()
