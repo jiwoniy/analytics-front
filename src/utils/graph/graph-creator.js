@@ -4,8 +4,8 @@ import * as d3Zoom from 'd3-zoom'
 // import * as d3Force from 'd3-force'
 import * as d3Shape from 'd3-shape'
 
-import GraphNodes from '@/utils/graph-nodes'
-import GraphEddes from '@/utils/graph-edges'
+import GraphNodes from './graph-nodes'
+import GraphEddes from './graph-edges'
 
 // This source from https://github.com/cjrd/directed-graph-creator
 

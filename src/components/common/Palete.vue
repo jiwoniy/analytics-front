@@ -9,7 +9,7 @@
 import * as d3Selection from 'd3-selection'
 
 import { eventsBus, events } from '@/events'
-import GraphCreator from '@/utils/graph-creator'
+import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
   name: 'Svg-palete',

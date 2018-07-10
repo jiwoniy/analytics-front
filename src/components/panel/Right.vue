@@ -33,12 +33,13 @@ export default {
 <style lang="scss" scoped>
 .right-panel__page {
   width: 250px;
-  margin-left: 250px;
+  // margin-left: 250px;
   height: 100%;
   display: block;
   position: fixed;
   z-index: 1;
-  top: 0;
+  // top: 0;
+  top: var(--app-top_panel-height);
   right: 0;
   background-color: #ffffff;
 }

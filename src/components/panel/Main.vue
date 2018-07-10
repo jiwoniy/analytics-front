@@ -1,7 +1,9 @@
 <template>
   <transition>
     <section class="main-panel__page">
-      <div ref="dragable">
+      <top-panel id="topPanel" class="top">
+      </top-panel>
+      <div class="work" ref="dragable">
         <left-panel
           id="leftPanel"
           v-show="isLeftPanelShow"
@@ -14,13 +16,12 @@
           :class="{ 'isLeftActive': isLeftPanelShow }"
         >
         </work-panel>
+        <right-panel
+          v-show="isRightPanelShow"
+          :current-item="currentNodeItem"
+        >
+        </right-panel>
       </div>
-
-      <right-panel
-        v-show="isRightPanelShow"
-        :current-item="currentNodeItem"
-      >
-      </right-panel>
     </section>
   </transition>
 </template>
@@ -30,6 +31,7 @@ import faker from 'faker'
 
 import { eventsBus, events } from '@/events'
 
+import TopPanel from '@/components/panel/Top'
 import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
@@ -37,6 +39,7 @@ import WorkPanel from '@/components/panel/Working'
 export default {
   name: 'Work-Panel',
   components: {
+    TopPanel,
     LeftPanel,
     RightPanel,
     WorkPanel
@@ -80,8 +83,22 @@ export default {
 <style lang="scss" scoped>
 .main-panel__page {
   display: flex;
+  flex-direction: column;
 }
+
+.main-panel__page .top {
+  width: 100%;
+  height: 58px;
+}
+
+.main-panel__page .work {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: calc(100% - 58px);
+}
+
 .main-panel__page .Working__page.isLeftActive {
-  margin-left: 250px;
+  // margin-left: 250px;
 }
 </style>

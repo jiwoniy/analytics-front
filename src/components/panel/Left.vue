@@ -45,12 +45,12 @@ export default {
 <style lang="scss" scoped>
 .left-panel__page {
   width: var(--app-left_panel-width);
-  height: 100%;
+  // height: 100%;
   display: block;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
+  // position: fixed;
+  // z-index: 1;
+  // top: 0;
+  // left: 0;
 
   .drag-item-list {
     display: flex;
