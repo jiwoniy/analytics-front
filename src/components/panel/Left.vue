@@ -1,9 +1,10 @@
 <template>
-  <transition name="fade">
-    <section id="leftPanel" class="left-panel__page">
-      <button @click="closeLeftPanel"> x </button>
-
-      <div class="drag-item-list">
+  <section
+    id="leftPanel"
+    class="left-panel__page"
+  >
+    <transition name="fade">
+      <div class="drag-item-list" v-show="isShow">
         <drag-comp
           v-for="block in blocks"
           :key="block.id"
@@ -11,9 +12,9 @@
         >
         </drag-comp>
       </div>
-
-    </section>
-  </transition>
+    </transition>
+    <button class="folder__button" @click="closeLeftPanel"> x </button>
+  </section>
 </template>
 
 <script>
@@ -30,12 +31,16 @@ export default {
     blocks: {
       type: Array,
       default: () => []
+    },
+    isShow: {
+      type: Boolean,
+      default: () => true
     }
   },
   methods: {
     closeLeftPanel () {
       eventsBus.$emit(events.LEFT_PANEL, {
-        open: false
+        open: !this.isShow
       })
     }
   }
@@ -44,19 +49,23 @@ export default {
 
 <style lang="scss" scoped>
 .left-panel__page {
-  width: var(--app-left_panel-width);
-  // height: 100%;
+  position: relative;
   display: block;
-  // position: fixed;
-  // z-index: 1;
-  // top: 0;
-  // left: 0;
 
   .drag-item-list {
+    width: var(--app-left_panel-width);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+.left-panel__page .folder__button {
+  position: absolute;
+  top: 0px;
+  right: calc(0px - var(--left-panel-folder-button));
+  width: var(--left-panel-folder-button);
+  height: var(--left-panel-folder-button);
 }
 
 .fade-enter-active {

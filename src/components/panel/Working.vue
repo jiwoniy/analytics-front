@@ -2,13 +2,14 @@
   <transition>
     <section class="div--Working__page">
       <div class="div--Button">
-        <span @click="openLeftPanel"> left </span>
-        <span @click="openRightPanel"> right </span>
+        <!-- <span @click="openLeftPanel"> left </span>
+        <span @click="openRightPanel"> right </span> -->
       </div>
       <drop-comp>
         <svg-palete
           slot="svg-container"
           :open-right-panel="openRightPanel"
+          :is-open-left-panel="isLeftPanelShow"
         >
         </svg-palete>
       </drop-comp>
@@ -28,10 +29,16 @@ export default {
     DropComp,
     SvgPalete
   },
+  props: {
+    isLeftPanelShow: {
+      type: Boolean,
+      default: () => true
+    }
+  },
   methods: {
     openLeftPanel (status = true) {
       eventsBus.$emit(events.LEFT_PANEL, {
-        open: status
+        open: true
       })
     },
     openRightPanel (payload) {
@@ -44,6 +51,7 @@ export default {
 <style lang="scss" scoped>
 .div--Working__page {
   display: block;
+  width: 100%;
 }
 
 .div--Working__page .div--Button {

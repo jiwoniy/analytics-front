@@ -16,16 +16,26 @@ export default {
   data () {
     return {
       svgContainer: null,
-      svgGraph: null
+      svgGraph: null,
+      leftPanelWidth: null
     }
   },
   props: {
     openRightPanel: {
       type: Function,
       default: () => {}
+    },
+    isOpenLeftPanel: {
+      type: Boolean,
+      default: () => true
     }
   },
   methods: {
+    svgContainerResize () {
+      d3Selection.select('#svgContainer').select('svg')
+        .attr('width', this.isOpenLeftPanel ? this.width : this.width + this.leftPanelWidth)
+        .attr('height', this.height)
+    },
     setGraph (svgContainer, options) {
       this.svgGraph = new GraphCreator(svgContainer, {
         ...options,
@@ -49,6 +59,7 @@ export default {
       this.svgContainer = d3Selection.select('#svgContainer').append('svg')
         .attr('width', this.width)
         .attr('height', this.height)
+
       this.setGraph(this.svgContainer, {
         width: this.width,
         height: this.height
@@ -74,10 +85,18 @@ export default {
     eventsBus.$on(events.SEND_DATA_TRANSFER, (payload) => {
       const { data } = payload
       this.svgGraph.addNode(data)
-      // this.nodes = Object.assign([], [ ...this.nodes, data ])
     })
 
     this.init()
+
+    this.$nextTick(() => {
+      this.leftPanelWidth = document.getElementById('leftPanel').offsetWidth
+    })
+  },
+  watch: {
+    isOpenLeftPanel (newVal) {
+      this.svgContainerResize()
+    }
   }
 }
 </script>

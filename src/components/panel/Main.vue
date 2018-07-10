@@ -6,14 +6,13 @@
       <div class="work" ref="dragable">
         <left-panel
           id="leftPanel"
-          v-show="isLeftPanelShow"
+          :is-show="isLeftPanelShow"
           :blocks="blocks"
         >
         </left-panel>
+
         <work-panel
-          id="rightPanel"
-          class="Working__page"
-          :class="{ 'isLeftActive': isLeftPanelShow }"
+          :is-left-panel-show="isLeftPanelShow"
         >
         </work-panel>
         <right-panel
@@ -88,17 +87,18 @@ export default {
 
 .main-panel__page .top {
   width: 100%;
-  height: 58px;
+  height: var(--app-top_panel-height);
 }
 
 .main-panel__page .work {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100% - 58px);
+  height: calc(100% - var(--app-top_panel-height));
 }
 
-.main-panel__page .Working__page.isLeftActive {
+// .main-panel__page .Working__page {
+  // width: 100%;
   // margin-left: 250px;
-}
+// }
 </style>
