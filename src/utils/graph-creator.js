@@ -3,6 +3,7 @@ import * as d3Drag from 'd3-drag'
 import * as d3Zoom from 'd3-zoom'
 
 import GraphNodes from '@/utils/graph-nodes'
+import GraphEddes from '@/utils/graph-edges'
 
 // This source from https://github.com/cjrd/directed-graph-creator
 
@@ -12,7 +13,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   thisGraph.idct = 0
 
   thisGraph.nodes = new GraphNodes()
-  thisGraph.edges = []
+  thisGraph.edges = new GraphEddes()
 
   thisGraph.state = {
     selectedNode: null,
@@ -20,6 +21,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     mouseDownNode: null,
     mouseDownLink: null,
     justDragged: false,
+    captured: null,
     justScaleTransGraph: false,
     lastKeyDown: -1,
     shiftNodeDrag: false,
@@ -187,8 +189,8 @@ GraphCreator.prototype.deleteGraph = function deleteGraph (skipPrompt) {
     doDelete = window.confirm('Press OK to delete this graph')
   }
   if (doDelete) {
-    thisGraph.nodes = []
-    thisGraph.edges = []
+    // thisGraph.nodes = []
+    // thisGraph.edges = []
     thisGraph.updateGraph()
   }
 }
@@ -228,7 +230,7 @@ GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
     return (l.source === node || l.target === node)
   })
   toSplice.map(function (l) {
-    thisGraph.edges.splice(thisGraph.edges.indexOf(l), 1)
+    // thisGraph.edges.splice(thisGraph.edges.indexOf(l), 1)
   })
 }
 
@@ -361,12 +363,12 @@ GraphCreator.prototype.rectMouseUp = function (d3node, d) {
     const newEdge = {source: mouseDownNode, target: d}
     const filtRes = thisGraph.paths.filter(function (d) {
       if (d.source === newEdge.target && d.target === newEdge.source) {
-        thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1)
+        // thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1)
       }
       return d.source === newEdge.source && d.target === newEdge.target
     })
     if (!filtRes[0].length) {
-      thisGraph.edges.push(newEdge)
+      // thisGraph.edges.push(newEdge)
       thisGraph.updateGraph()
     }
   } else {
@@ -444,10 +446,6 @@ GraphCreator.prototype.rectMouseUp = function (d3node, d) {
 // GraphCreator.prototype.svgClicked = function svgClicked () {
 // }
 
-// Important
-// define node status
-// 1. moving, clicked
-
 function rectDraghandler (context) {
   return d3Drag.drag()
     .subject(function (d) {
@@ -473,6 +471,14 @@ function rectDraghandler (context) {
       if (context.state.justDragged) {
         context.state.justDragged = false
         context.dragLine.classed('hidden', true)
+        if (context.state.captured) {
+          const newEdge = {
+            source: d,
+            target: context.state.captured
+          }
+          context.edges.add(newEdge)
+          context.state.captured = null
+        }
       }
     })
 }
@@ -515,13 +521,14 @@ GraphCreator.prototype.addNode = function addNode (node) {
       d3Selection.select(this).classed(consts.nodeHoverClass, true)
       if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNode() !== d.id)) {
         d3Selection.select(this).classed(consts.connectClass, true)
-        // TODO add edges
+        thisGraph.state.captured = d
       }
     })
     .on('mouseout', function (d) {
       // console.log('--mouseout--')
       d3Selection.select(this).classed(consts.nodeHoverClass, false)
       d3Selection.select(this).classed(consts.connectClass, false)
+      thisGraph.state.captured = null
     })
     // .on('mousedown', function (d) {
     // thisGraph.circleMouseDown(d3Selection.select(this), d)

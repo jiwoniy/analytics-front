@@ -2,8 +2,6 @@
 document.onload = (function(d3, saveAs, Blob, undefined){
   "use strict";
 
-  console.log('------dom start-----')
-
   // TODO add user settings
   var consts = {
     defaultTitle: "random variable"
@@ -13,7 +11,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   };
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges){
-    console.log('--GraphCreator init--')
     var thisGraph = this;
         thisGraph.idct = 0;
 

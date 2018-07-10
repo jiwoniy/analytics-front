@@ -2,12 +2,12 @@
   <transition>
     <section class="div--Working__page">
       <div class="div--Button">
-        <!-- <span @click="resetted"> reset </span> -->
         <span @click="openLeftPanel"> left </span>
         <span @click="openRightPanel"> right </span>
       </div>
       <drop-comp>
-        <svg-palete slot="svg-container"
+        <svg-palete
+          slot="svg-container"
           :open-right-panel="openRightPanel"
         >
         </svg-palete>

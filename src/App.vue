@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-    <!-- <div id="widgetContainer"></div> -->
+    <!-- <div id="tf-widget-container"></div> -->
     <router-view/>
   </div>
 </template>
 
 <script>
-// import ChatWidget from '@/utils/widget'
-
 export default {
   name: 'App'
   // mounted () {
-  // console.log(window.ChatWidget)
-  /* eslint-disable no-new */
-  // new ChatWidget(document.getElementById('widgetContainer'))
-  // new ChatWidget(document.getElementById('widgetContainer'), {})
+  //   /* eslint-disable no-new */
+  //   /* eslint-disable no-undef */
+  //   new ChatWidget(document.getElementById('tf-widget-container'), {
+  //     provider_id: 10
+  //   })
   // }
 }
 </script>
