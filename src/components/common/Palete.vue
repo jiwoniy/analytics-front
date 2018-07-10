@@ -26,11 +26,11 @@ export default {
     }
   },
   methods: {
-    setGraph (svgContainer) {
-      const options = {
+    setGraph (svgContainer, options) {
+      this.svgGraph = new GraphCreator(svgContainer, {
+        ...options,
         nodeSelectCallback: this.nodeSelect
-      }
-      this.svgGraph = new GraphCreator(svgContainer, options)
+      })
       this.svgGraph.setIdCt(2)
       this.svgGraph.updateGraph()
     },
@@ -49,7 +49,10 @@ export default {
       this.svgContainer = d3Selection.select('#svgContainer').append('svg')
         .attr('width', this.width)
         .attr('height', this.height)
-      this.setGraph(this.svgContainer)
+      this.setGraph(this.svgContainer, {
+        width: this.width,
+        height: this.height
+      })
     },
     nodeSelect (nodeItem) {
       if (nodeItem.status.selected) {
