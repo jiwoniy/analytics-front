@@ -477,6 +477,7 @@ function rectDraghandler (context) {
             target: context.state.captured
           }
           context.edges.add(newEdge)
+          context.updateLinksGraph()
           context.state.captured = null
         }
       }
@@ -487,11 +488,7 @@ function rectDraghandler (context) {
 GraphCreator.prototype.addNode = function addNode (node) {
   const thisGraph = this
   const consts = thisGraph.constants
-  // const state = thisGraph.state
-  // const constants = thisGraph.constants
 
-  // what is "idct"
-  // const xycoords = d3Selection.mouse(thisGraph.svgG.node())
   const newNode = {
     id: thisGraph.idct++,
     title: node.title || consts.defaultTitle,
@@ -501,13 +498,28 @@ GraphCreator.prototype.addNode = function addNode (node) {
       moving: false,
       selected: false
     }
-    // x: xycoords[0],
-    // y: xycoords[1]
   }
-  thisGraph.nodes.add(newNode)
-  const exists = d3Selection.select('.rect-group').selectAll('g').data(thisGraph.nodes.getNodes())
 
-  const newGs = exists
+  // thisGraph.paths = thisGraph.paths.data(thisGraph.edges.getEdges(), function (d) {
+  //   return `${String(d.source.id)}+${String(d.target.id)}`
+  // })
+  // const exists = thisGraph.paths.data(thisGraph.edges.getEdges())
+
+  thisGraph.nodes.add(newNode)
+
+  // TODO 나중에 그리는 부분 따로 분리
+  // console.log(thisGraph.rects)
+  // const exists = thisGraph.rects.data(thisGraph.nodes.getNodes(), function (d) {
+  //   return d.id
+  // })
+  const datas = thisGraph.nodes.getNodes()
+  const exits = d3Selection.select('.rect-group').selectAll('g').data(datas)
+  // console.log(exists)
+  // console.log(thisGraph.rects)
+  // console.log(thisGraph.rects.selectAll('g'))
+  // const exists = thisGraph.rects.data(datas)
+  // console.log(exists)
+  const newGs = exits
     .enter()
     .append('g')
 
@@ -525,7 +537,6 @@ GraphCreator.prototype.addNode = function addNode (node) {
       }
     })
     .on('mouseout', function (d) {
-      // console.log('--mouseout--')
       d3Selection.select(this).classed(consts.nodeHoverClass, false)
       d3Selection.select(this).classed(consts.connectClass, false)
       thisGraph.state.captured = null
@@ -555,7 +566,7 @@ GraphCreator.prototype.addNode = function addNode (node) {
     thisGraph.insertTitleLinebreaks(d3Selection.select(this), d.title)
   })
 
-  exists.exit().remove()
+  exits.exit().remove()
   thisGraph.updateGraph()
 }
 
@@ -610,39 +621,40 @@ GraphCreator.prototype.updateNodesGraph = function updateNodesGraph () {
 
 GraphCreator.prototype.updateLinksGraph = function updateLinksGraph () {
   const thisGraph = this
-  const consts = thisGraph.constants
-  const state = thisGraph.state
+  // const consts = thisGraph.constants
+  // const state = thisGraph.state
 
-  thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function (d) {
-    return `${String(d.source.id)}+${String(d.target.id)}`
+  // const paths = thisGraph.paths
+  const exits = d3Selection.select('.path-group').selectAll('path').data(thisGraph.edges.getEdges(), function (d) {
+    return `${String(d.source.id)}-${String(d.target.id)}`
   })
-  const paths = thisGraph.paths
 
-  // update existing paths
-  paths.style('marker-end', 'url(#end-arrow)')
-    .classed(consts.selectedClass, function (d) {
-      return d === state.selectedEdge
-    })
+  // update
+  exits.style('marker-end', 'url(#end-arrow)')
+    // .classed(consts.selectedClass, function (d) {
+    //   return d === state.selectedEdge
+    // })
     .attr('d', function (d) {
       return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
     })
 
-  // add new paths
-  paths.enter()
+  // enter
+  exits.enter()
     .append('path')
     .style('marker-end', 'url(#end-arrow)')
     .classed('link', true)
     .attr('d', function (d) {
       return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
     })
-    .on('mousedown', function (d) {
-      thisGraph.pathMouseDown(thisGraph, d3Selection.select(this), d)
-    })
-    .on('mouseup', function (d) {
-      state.mouseDownLink = null
-    })
+    // .on('mousedown', function (d) {
+    //   thisGraph.pathMouseDown(thisGraph, d3Selection.select(this), d)
+    // })
+    // .on('mouseup', function (d) {
+    //   state.mouseDownLink = null
+    // })
 
-  paths.exit().remove()
+  // remove
+  exits.exit().remove()
 }
 
 GraphCreator.prototype.zoomed = function zoomed () {
