@@ -2,6 +2,9 @@
   <transition>
     <div class="top-panel__page">
       <button @click="save"> save </button>
+      <button @click="edit"> edit </button>
+      <button @click="refresh"> refresh </button>
+      <button @click="load"> load </button>
     </div>
   </transition>
 </template>
@@ -14,6 +17,15 @@ export default {
   methods: {
     save () {
       eventController.SAVE({})
+    },
+    edit () {
+      eventController.EDIT({})
+    },
+    refresh () {
+      eventController.REFRESH({})
+    },
+    load () {
+      eventController.LOAD({})
     }
   }
 }

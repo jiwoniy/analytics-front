@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
 import eventController from '@/utils/EventController'
@@ -29,7 +30,15 @@ export default {
       default: () => true
     }
   },
+  computed: {
+    ...mapGetters({
+      currentWorkflow: 'workflow/getCurrentWorkflow'
+    })
+  },
   methods: {
+    ...mapActions({
+      setCurrentWorkflow: 'workflow/setCurrentWorkflow'
+    }),
     svgContainerResize () {
       d3Selection.select('#svgContainer').select('svg')
         .attr('width', this.isOpenLeftPanel ? this.width : this.width + this.leftPanelWidth)
@@ -38,10 +47,15 @@ export default {
     setGraph (svgContainer, options) {
       this.svgGraph = new GraphCreator(svgContainer, {
         ...options,
-        nodeSelectCallback: this.nodeSelect
+        nodeSelectCallback: this.nodeSelect,
+        saveFile: this.currentWorkflow
       })
       this.svgGraph.setIdCt(2)
-      this.svgGraph.updateGraph()
+    },
+    removeSvgGraph () {
+      if (this.svgGraph) {
+        this.svgContainer.remove()
+      }
     },
     setSvgContainer () {
       const windowWidth = window.innerWidth
@@ -86,7 +100,23 @@ export default {
       this.svgGraph.addNode(data)
     })
 
-    eventController.addListner('SAVE', (payload) => {})
+    eventController.addListner('SAVE', () => {
+      const saveFile = this.svgGraph.save()
+      this.setCurrentWorkflow(saveFile)
+    })
+
+    eventController.addListner('EDIT', () => {
+      this.svgGraph.setEditable(true)
+    })
+
+    eventController.addListner('REFRESH', () => {
+      this.removeSvgGraph()
+    })
+
+    eventController.addListner('LOAD', () => {
+      this.removeSvgGraph()
+      this.setSvgContainer()
+    })
 
     this.init()
 
