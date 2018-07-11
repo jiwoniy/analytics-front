@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import { eventsBus, events } from '@/events'
-
+import eventController from '@/utils/EventController'
 import DragComp from '@/components/common/Drag'
 
 export default {
@@ -39,9 +38,7 @@ export default {
   },
   methods: {
     closeLeftPanel () {
-      eventsBus.$emit(events.LEFT_PANEL, {
-        open: !this.isShow
-      })
+      eventController.LEFT_PANEL({ open: !this.isShow })
     }
   }
 }

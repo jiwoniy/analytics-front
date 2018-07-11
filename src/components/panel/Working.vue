@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import { eventsBus, events } from '@/events'
-
+import eventController from '@/utils/EventController'
 import DropComp from '@/components/common/Drop'
 import SvgPalete from '@/components/common/Palete'
 
@@ -37,12 +36,10 @@ export default {
   },
   methods: {
     openLeftPanel (status = true) {
-      eventsBus.$emit(events.LEFT_PANEL, {
-        open: true
-      })
+      eventController.LEFT_PANEL({ open: true })
     },
     openRightPanel (payload) {
-      eventsBus.$emit(events.RIGHT_PANEL, payload)
+      eventController.RIGHT_PANEL(payload)
     }
   }
 }

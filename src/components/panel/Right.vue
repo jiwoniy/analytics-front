@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { eventsBus, events } from '@/events'
+import eventController from '@/utils/EventController'
 
 export default {
   name: 'Right-Panel',
@@ -22,9 +22,7 @@ export default {
   },
   methods: {
     closeRightPanel () {
-      eventsBus.$emit(events.RIGHT_PANEL, {
-        open: false
-      })
+      eventController.LEFT_PANEL({ open: false })
     }
   }
 }

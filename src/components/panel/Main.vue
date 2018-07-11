@@ -28,8 +28,7 @@
 <script>
 import faker from 'faker'
 
-import { eventsBus, events } from '@/events'
-
+import eventController from '@/utils/EventController'
 import TopPanel from '@/components/panel/Top'
 import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
@@ -60,12 +59,12 @@ export default {
     }
   },
   mounted () {
-    eventsBus.$on(events.LEFT_PANEL, (payload) => {
+    eventController.addListner('LEFT_PANEL', (payload) => {
       const { open } = payload
       this.isLeftPanelShow = open
     })
 
-    eventsBus.$on(events.RIGHT_PANEL, (payload) => {
+    eventController.addListner('RIGHT_PANEL', (payload) => {
       const { open, item } = payload
       if (open) {
         this.currentNodeItem = item

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { eventsBus, events } from '@/events'
+import eventController from '@/utils/EventController'
 
 export default {
   name: 'Drop-Component',
@@ -27,7 +27,7 @@ export default {
       const data = event.dataTransfer.getData('data')
       // TODO check json data
       if (data) {
-        eventsBus.$emit(events.SEND_DATA_TRANSFER, {
+        eventController.SEND_DATA_TRANSFER({
           data: {
             ...JSON.parse(data),
             position

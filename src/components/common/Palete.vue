@@ -1,14 +1,13 @@
 <template>
   <transition>
-    <div id="svgContainer" class="palete">
-    </div>
+    <div id="svgContainer" class="palete"></div>
   </transition>
 </template>
 
 <script>
 import * as d3Selection from 'd3-selection'
 
-import { eventsBus, events } from '@/events'
+import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
@@ -82,10 +81,12 @@ export default {
     }
   },
   mounted () {
-    eventsBus.$on(events.SEND_DATA_TRANSFER, (payload) => {
+    eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
       const { data } = payload
       this.svgGraph.addNode(data)
     })
+
+    eventController.addListner('SAVE', (payload) => {})
 
     this.init()
 

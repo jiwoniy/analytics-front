@@ -9,3 +9,36 @@
     <div id="app"></div>
   </body>
 </html>
+<!-- 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title> your web </title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="tf-widget-container"></div>
+  </body>
+</html>
+
+<script>
+  function async(u, c) {
+  var d = document, t = 'script',
+  o = d.createElement(t),
+  s = d.getElementsByTagName(t)[0];
+  o.src = '//' + u;
+  
+  if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+  s.parentNode.insertBefore(o, s);
+  }
+
+  function widget () {
+    new ChatWidget(document.getElementById("tf-widget-container"), {
+      provider_id: 10
+    })
+  }
+   
+  async('cdn.travelflan.com/js/test/widget-loader-v1.js', widget)
+</script> -->
