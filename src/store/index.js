@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import createLogger from 'vuex/dist/logger'
 
 import common from './common'
-import workflow from './workflow'
+import pipeline from './pipeline'
 
 import configureMediator from '@/helper/mediator'
 
@@ -14,7 +14,7 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
   modules: {
     common,
-    workflow
+    pipeline
     // auth
   },
 

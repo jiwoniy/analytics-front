@@ -4,22 +4,30 @@ import * as d3Zoom from 'd3-zoom'
 // import * as d3Force from 'd3-force'
 import * as d3Shape from 'd3-shape'
 
+// import onChange from '@/helper/onChange'
+
+import {
+  saveNodeTransformNode,
+  nodesTransformForSave,
+  edgesTransformForSave,
+  saveNodesTransformToNodes,
+  saveEdgesTransformToEdges
+} from './helper'
 import GraphNodes from './graph-nodes'
 import GraphEddes from './graph-edges'
 
 // This source from https://github.com/cjrd/directed-graph-creator
 const GraphCreator = function GraphCreatorConstructor (svg, options) {
   const thisGraph = this
-  thisGraph.idct = 0
 
-  thisGraph.options = options || {}
-  thisGraph.width = options.width
-  thisGraph.hegith = options.hegith
+  this.options = options || {}
+  this.width = options.width
+  this.hegith = options.hegith
 
-  thisGraph.nodes = new GraphNodes()
-  thisGraph.edges = new GraphEddes()
+  this.nodes = new GraphNodes()
+  this.edges = new GraphEddes()
 
-  thisGraph.state = {
+  this.state = {
     editable: false,
     selectedNode: null,
     selectedEdge: null,
@@ -32,6 +40,19 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     shiftNodeDrag: false,
     selectedText: null
   }
+
+  const stateProxyHandler = {
+    set (target, key, value) {
+      target[key] = value
+      if (key === 'selectedNode') {
+        if (thisGraph.options && thisGraph.options.nodeSelectCallback) {
+          thisGraph.options.nodeSelectCallback(value)
+        }
+      }
+      return true
+    }
+  }
+  this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
   // define arrow markers for graph links
   const defs = svg.append('svg:defs')
@@ -56,26 +77,27 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
 
-  thisGraph.svg = svg
-  thisGraph.svgG = svg.append('g')
+  this.svg = svg
+  this.svgG = svg.append('g')
     .classed(thisGraph.constants.graphClass, true)
-  const svgG = thisGraph.svgG
+  const svgG = this.svgG
 
   // displayed when dragging between nodes
-  thisGraph.dragLine = svgG.append('svg:path')
+  this.dragLine = svgG.append('svg:path')
     .attr('class', 'link dragline hidden')
     .attr('d', 'M0,0L0,0')
     .style('marker-end', 'url(#mark-end-arrow)')
 
-  thisGraph.paths = svgG.append('g').classed('path-group', true).selectAll('g')
-  thisGraph.rects = svgG.append('g').classed('rect-group', true).selectAll('g')
+  this.paths = svgG.append('g').classed('path-group', true).selectAll('g')
+  this.rects = svgG.append('g').classed('rect-group', true).selectAll('g')
+
   if (options.saveFile) {
     const file = JSON.parse(options.saveFile)
-    thisGraph.nodes = new GraphNodes(thisGraph.transfromInitNodes(file.nodes))
-    thisGraph.edges = new GraphEddes(file.edges)
+    this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
+    this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
 
-    thisGraph.updateNodesGraph()
-    thisGraph.updateLinksGraph(true)
+    this.drawNodes()
+    this.drawLinks()
     // thisGraph.nodes.getNodes().forEach(node => thisGraph.addNode(node))
     // const nodes = thisGraph.transfromInitNodes(thisGraph.nodes.getNodes())
     // thisGraph.addNodes(nodes)
@@ -112,9 +134,14 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   //   // thisGraph.svgKeyDown()
   // })
 
-  // thisGraph.svg.on('mousedown', function (d) {
-  // thisGraph.svgMouseDown(d)
-  // })
+  this.svg.on('mousedown', function (d) {
+    thisGraph.stateProxy.selectedNode = null
+    // console.log(thisGraph.nodes.selectNodeId)
+    // if (thisGraph.state.selectedNode) {
+    //   thisGraph.state.selectedNode = null
+    // }
+    // console.log(thisGraph.state.selectedNode)
+  })
 
   // thisGraph.svg.on('mouseup', function (d) {
   // thisGraph.svgMouseUp(d)
@@ -156,13 +183,13 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   // }
 }
 
-GraphCreator.prototype.setIdCt = function setIdCt (idct) {
-  this.idct = idct
-}
+// GraphCreator.prototype.setIdCt = function setIdCt (idct) {
+//   this.idct = idct
+// }
 
 GraphCreator.prototype.constants = {
   graphClass: 'graph',
-  defaultTitle: 'random variable',
+  // defaultTitle: 'random variable',
   selectedClass: 'selected',
   // circleGClass: 'conceptG',
   // rectGClass: 'conceptG',
@@ -191,6 +218,7 @@ GraphCreator.prototype.constants = {
 
 GraphCreator.prototype.dragLink = function dragLink (d) {
   const thisGraph = this
+  // TODO
   thisGraph.dragLine.attr('d',
     `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},
     ${d3Selection.mouse(this.svgG.node())[1]}`)
@@ -461,6 +489,7 @@ GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
 // GraphCreator.prototype.svgClicked = function svgClicked () {
 // }
 
+// Important Node drag handler
 function rectDraghandler (context) {
   return d3Drag.drag()
     .subject(function (d) {
@@ -478,7 +507,9 @@ function rectDraghandler (context) {
             .attr('transform', `translate(${d3Selection.event.x}, ${d3Selection.event.y})`)
           d.x = d3Selection.event.x
           d.y = d3Selection.event.y
-          context.updateLinksGraph()
+
+          // when node draging edges also shoud be updated by new position
+          context.drawLinks(d)
         } else {
           context.state.justDragged = true
           context.dragLine.classed('hidden', false)
@@ -498,7 +529,7 @@ function rectDraghandler (context) {
               target: context.state.capturedTarget
             }
             context.edges.add(newEdge)
-            context.updateLinksGraph()
+            context.drawLinks()
             context.state.capturedTarget = null
           }
         }
@@ -506,38 +537,19 @@ function rectDraghandler (context) {
     })
 }
 
-GraphCreator.prototype.transfromNodeInit = function transfromNodeInit (node) {
-  const thisGraph = this
-  const consts = thisGraph.constants
-  const newNode = {
-    id: node.id,
-    title: node.title || consts.defaultTitle,
-    position: {
-      x: node.position.x * 0.3, // just by expericene
-      y: node.position.y
-    },
-    status: {
-      moving: false,
-      selected: false
-    },
-    x: node.position.x * 0.3,
-    y: node.position.y
-  }
-  return newNode
-}
-
-GraphCreator.prototype.transfromInitNodes = function transfromInitNodes (nodes) {
-  const thisGraph = this
-  return nodes.map(node => thisGraph.transfromNodeInit(node))
-}
-
-GraphCreator.prototype.addNode = function addNode (node) {
-  const thisGraph = this
-  if (thisGraph.state.editable) {
-    thisGraph.nodes.add(thisGraph.transfromNodeInit(node))
-    thisGraph.updateNodesGraph()
-  }
-}
+// let data
+// if (dragingNode.id === d.source.id) {
+//   data = {
+//     source: [d3Selection.event.x, d3Selection.event.y],
+//     target: [d.target.x, d.target.y]
+//   }
+//   // edges를 업데이트 해줘야 한다.
+// } else {
+//   data = {
+//     source: [d.source.x, d.source.y],
+//     target: [d3Selection.event.x, d3Selection.event.y]
+//   }
+// }
 
 // keydown on main svg
 // GraphCreator.prototype.svgKeyDown = function svgKeyDown () {
@@ -576,14 +588,21 @@ GraphCreator.prototype.addNode = function addNode (node) {
 //   this.state.lastKeyDown = -1
 // }
 
+GraphCreator.prototype.addNode = function addNode (node) {
+  if (this.state.editable) {
+    this.nodes.add(saveNodeTransformNode(node))
+    this.drawNodes()
+  }
+}
+
 // call to propagate changes to graph
 GraphCreator.prototype.updateGraph = function updateGraph () {
   const thisGraph = this
-  thisGraph.updateLinksGraph()
-  thisGraph.updateNodesGraph()
+  thisGraph.drawLinks()
+  thisGraph.drawNodes()
 }
 
-GraphCreator.prototype.updateNodesGraph = function updateNodesGraph () {
+GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
 
@@ -603,7 +622,7 @@ GraphCreator.prototype.updateNodesGraph = function updateNodesGraph () {
     })
     .on('mouseover', function (d) {
       d3Selection.select(this).classed(consts.nodeHoverClass, true)
-      if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNode() !== d.id)) {
+      if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNodeId() !== d.type)) {
         d3Selection.select(this).classed(consts.connectClass, true)
         thisGraph.state.capturedTarget = d
       }
@@ -621,10 +640,7 @@ GraphCreator.prototype.updateNodesGraph = function updateNodesGraph () {
     // })
     .on('click', function (d) {
       thisGraph.nodes.setSelectedNode(d)
-      thisGraph.updateNodesGraph()
-      if (thisGraph.options && thisGraph.options.nodeSelectCallback) {
-        thisGraph.options.nodeSelectCallback(d)
-      }
+      thisGraph.stateProxy.selectedNode = thisGraph.nodes.getSelectNode()
     })
     .call(rectDrag)
     // .on('dblclick', function (d) {
@@ -641,10 +657,11 @@ GraphCreator.prototype.updateNodesGraph = function updateNodesGraph () {
   exits.exit().remove()
 }
 
-GraphCreator.prototype.updateLinksGraph = function updateLinksGraph (isLoad = false) {
+GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const thisGraph = this
-  const state = thisGraph.state
-  const consts = thisGraph.constants
+  // const state = thisGraph.state
+  // const consts = thisGraph.constants
+
   function draw () {
     const lineGenerator = d3Shape.linkHorizontal()
 
@@ -654,18 +671,25 @@ GraphCreator.prototype.updateLinksGraph = function updateLinksGraph (isLoad = fa
 
     // update
     exists
-      .classed(consts.selectedClass, function (d) {
-        return d === state.selectedEdge
-      })
+      // .classed(consts.selectedClass, function (d) {
+      //   return d === state.selectedEdge
+      // })
       .attr('d', function (d) {
-        // rect 200 width, 50 height
-        console.log('----------------exist---')
-        console.log(`isLoad: ${isLoad}`)
-        console.log(d)
-        const data = {
-          source: [d.source.x + 100, d.source.y + 50],
-          target: [d.target.x + 100, d.target.y]
+        if (dragingNode) { // draging node
+          if (dragingNode.id === d.source.id) {
+            d.source.x = dragingNode.x
+            d.source.y = dragingNode.y
+          } else if (dragingNode.id === d.target.id) {
+            d.target.x = dragingNode.x
+            d.target.y = dragingNode.y
+          }
         }
+
+        const data = {
+          source: [d.source.x, d.source.y],
+          target: [d.target.x, d.target.y]
+        }
+
         return lineGenerator(data)
         // return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
       })
@@ -676,8 +700,8 @@ GraphCreator.prototype.updateLinksGraph = function updateLinksGraph (isLoad = fa
       .classed('link', true)
       .attr('d', function (d) {
         const data = {
-          source: [d.source.x + 100, d.source.y + 50],
-          target: [d.target.x + 100, d.target.y]
+          source: [d.source.x, d.source.y],
+          target: [d.target.x, d.target.y]
         }
         return lineGenerator(data)
         // return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
@@ -709,25 +733,14 @@ GraphCreator.prototype.setEditable = function setEditable (status) {
 }
 
 GraphCreator.prototype.save = function save () {
-  console.log('GraphCreator save action')
   const saveFile = {
     edges: [],
     nodes: []
   }
+
   if (this.edges.getEdges().length && this.nodes.getNodes()) {
-    this.edges.getEdges().forEach(edge => {
-      saveFile.edges.push(edge)
-    })
-    this.nodes.getNodes().forEach(node => {
-      saveFile.nodes.push({
-        id: node.id,
-        title: node.title,
-        position: {
-          x: node.x,
-          y: node.y
-        }
-      })
-    })
+    saveFile.edges = edgesTransformForSave(this.edges.getEdges())
+    saveFile.nodes = nodesTransformForSave(this.nodes.getNodes())
 
     return JSON.stringify(saveFile)
   }

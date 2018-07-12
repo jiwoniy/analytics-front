@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
@@ -32,12 +33,12 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentWorkflow: 'workflow/getCurrentWorkflow'
+      pipeline: 'pipeline/getPipeline'
     })
   },
   methods: {
     ...mapActions({
-      setCurrentWorkflow: 'workflow/setCurrentWorkflow'
+      setPipeline: 'pipeline/setPipeline'
     }),
     svgContainerResize () {
       d3Selection.select('#svgContainer').select('svg')
@@ -48,9 +49,8 @@ export default {
       this.svgGraph = new GraphCreator(svgContainer, {
         ...options,
         nodeSelectCallback: this.nodeSelect,
-        saveFile: this.currentWorkflow
+        saveFile: this.pipeline
       })
-      this.svgGraph.setIdCt(2)
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -79,7 +79,7 @@ export default {
       })
     },
     nodeSelect (nodeItem) {
-      if (nodeItem.status.selected) {
+      if (nodeItem && nodeItem.status.selected) {
         this.openRightPanel({
           open: true,
           item: nodeItem
@@ -97,12 +97,20 @@ export default {
   mounted () {
     eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
       const { data } = payload
-      this.svgGraph.addNode(data)
+      this.svgGraph.addNode({
+        ...data,
+        id: uuidv4(),
+        type: data.id,
+        position: {
+          x: data.position.x * 0.3,
+          y: data.position.y * 0.7
+        }
+      })
     })
 
     eventController.addListner('SAVE', () => {
       const saveFile = this.svgGraph.save()
-      this.setCurrentWorkflow(saveFile)
+      this.setPipeline(saveFile)
     })
 
     eventController.addListner('EDIT', () => {

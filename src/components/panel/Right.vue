@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     closeRightPanel () {
-      eventController.LEFT_PANEL({ open: false })
+      eventController.RIGHT_PANEL({ open: false })
     }
   }
 }

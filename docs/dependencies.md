@@ -21,12 +21,17 @@ Project dependencies
 [vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
 -------------
 
-> native websocket implementation for Vuejs 2 and Vuex
+> Native websocket implementation for Vuejs 2 and Vuex
 
 [vue-i18n](http://kazupon.github.io/vue-i18n/introduction.html)
 -------------
 
 > VueI18n is internationalization plugin of Vue.js. It easily integrates some localization features to your Vue.js Application. Features includes:
+
+[vueSnotify](https://artemsky.github.io/vue-snotify/documentation/installation.html)
+-------------
+
+> Notifications
 
 [Moment](https://momentjs.com/)
 -------------
