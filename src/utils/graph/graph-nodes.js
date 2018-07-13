@@ -1,10 +1,12 @@
+import { getId } from '@/utils/normalize'
+
 function GraphNodes (nodes) {
-  this.nodes = nodes || []
+  this.nodes = nodes || {}
   this.selectNodeId = null
 }
 
 GraphNodes.prototype.getNodes = function getNodes () {
-  return this.nodes
+  return Object.keys(this.nodes).map(key => this.nodes[key])
 }
 
 GraphNodes.prototype.getSelectNodeId = function getSelectNodeId () {
@@ -12,33 +14,28 @@ GraphNodes.prototype.getSelectNodeId = function getSelectNodeId () {
 }
 
 GraphNodes.prototype.getSelectNode = function getSelectNode () {
-  console.log(this.nodes)
-  console.log(this.selectNodeId)
-  return this.nodes.find(node => node.id === this.selectNodeId)
+  return this.nodes[this.selectNodeId]
 }
 
 GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
   if (selectNode) {
-    this.nodes.forEach(node => {
-      if (selectNode.id === node.id && node.status.selected) {
-        node.status.selected = false
-        this.selectNodeId = null
-      } else if (selectNode.id === node.id && !node.status.selected) {
-        node.status.selected = true
-        this.selectNodeId = selectNode.id
-      } else {
-        node.status.selected = false
-        this.selectNodeId = null
-      }
-    })
+    if (selectNode.status.selected) {
+      this.nodes[selectNode.id].status.selected = false
+      this.selectNodeId = null
+    } else if (!selectNode.status.selected) {
+      this.nodes[selectNode.id].status.selected = true
+      this.selectNodeId = selectNode.id
+    }
   } else {
-    this.selectNodeId = null
+    if (this.selectNodeId) {
+      this.nodes[this.selectNodeId].status.selected = false
+      this.selectNodeId = null
+    }
   }
 }
 
 GraphNodes.prototype.add = function add (node) {
-  const thisGraphNodes = this
-  thisGraphNodes.nodes.push(node)
+  this.nodes[getId(node)] = node
 }
 
 export default GraphNodes

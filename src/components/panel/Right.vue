@@ -1,12 +1,15 @@
 <template>
-  <transition name="fade">
-    <section class="right-panel__page">
-      <button @click="closeRightPanel"> x </button>
+  <section
+    class="right-panel__page"
+    :class="{ active: isShow }"
+  >
+      <!-- <button @click="closeRightPanel"> x </button> -->
+    <transition name="fade">
       <div>
         {{ currentItem && currentItem.title }}
       </div>
-    </section>
-  </transition>
+    </transition>
+  </section>
 </template>
 
 <script>
@@ -18,6 +21,10 @@ export default {
     currentItem: {
       type: Object,
       default: () => {}
+    },
+    isShow: {
+      type: Boolean,
+      default: () => false
     }
   },
   methods: {
@@ -30,16 +37,18 @@ export default {
 
 <style lang="scss" scoped>
 .right-panel__page {
-  width: 250px;
-  // margin-left: 250px;
+  width: 0px;
   height: 100%;
   display: block;
   position: fixed;
   z-index: 1;
-  // top: 0;
   top: var(--app-top_panel-height);
   right: 0;
   background-color: #ffffff;
+}
+
+.right-panel__page.active {
+  width: 250px;
 }
 
 .fade-enter-active {

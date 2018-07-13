@@ -16,7 +16,7 @@
         >
         </work-panel>
         <right-panel
-          v-show="isRightPanelShow"
+          :isShow="isRightPanelShow"
           :current-item="currentNodeItem"
         >
         </right-panel>
@@ -66,12 +66,12 @@ export default {
 
     eventController.addListner('RIGHT_PANEL', (payload) => {
       const { open, item } = payload
-      if (open) {
+      // console.log(payload)
+      if (open && item) {
         this.currentNodeItem = item
       } else {
         this.currentNodeItem = null
       }
-
       this.isRightPanelShow = open
     })
   }

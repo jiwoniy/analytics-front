@@ -1,6 +1,9 @@
 <template>
   <transition>
-    <div id="svgContainer" class="palete"></div>
+    <div id="svgContainer" class="palete">
+      <svg>
+      </svg>
+    </div>
   </transition>
 </template>
 
@@ -17,6 +20,7 @@ export default {
   data () {
     return {
       svgContainer: null,
+      svgContainerG: null,
       svgGraph: null,
       leftPanelWidth: null
     }
@@ -54,7 +58,7 @@ export default {
     },
     removeSvgGraph () {
       if (this.svgGraph) {
-        this.svgContainer.remove()
+        this.svgContainerG.remove()
       }
     },
     setSvgContainer () {
@@ -69,9 +73,11 @@ export default {
       this.width = windowWidth - leftPanelWidth - margin.left - margin.right
       this.height = windowHeight - topPanelHeight - margin.top - margin.bottom
 
-      this.svgContainer = d3Selection.select('#svgContainer').append('svg')
+      this.svgContainer = d3Selection.select('#svgContainer').select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
+      this.svgContainerG = this.svgContainer.append('g')
+        .classed('graph', true)
 
       this.setGraph(this.svgContainer, {
         width: this.width,
@@ -83,6 +89,10 @@ export default {
         this.openRightPanel({
           open: true,
           item: nodeItem
+        })
+      } else if (nodeItem && !nodeItem.status.selected) {
+        this.openRightPanel({
+          open: false
         })
       } else {
         this.openRightPanel({
@@ -119,12 +129,13 @@ export default {
 
     eventController.addListner('REFRESH', () => {
       this.removeSvgGraph()
-    })
-
-    eventController.addListner('LOAD', () => {
-      this.removeSvgGraph()
       this.setSvgContainer()
     })
+
+    // eventController.addListner('LOAD', () => {
+    //   this.removeSvgGraph()
+    //   this.setSvgContainer()
+    // })
 
     this.init()
 

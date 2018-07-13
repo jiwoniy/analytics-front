@@ -41,11 +41,13 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     selectedText: null
   }
 
+  // watch state
   const stateProxyHandler = {
     set (target, key, value) {
       target[key] = value
       if (key === 'selectedNode') {
         if (thisGraph.options && thisGraph.options.nodeSelectCallback) {
+          thisGraph.nodes.setSelectedNode(value)
           thisGraph.options.nodeSelectCallback(value)
         }
       }
@@ -55,41 +57,56 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
   // define arrow markers for graph links
-  const defs = svg.append('svg:defs')
-  defs.append('svg:marker')
-    .attr('id', 'end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', '32')
-    .attr('markerWidth', 3.5)
-    .attr('markerHeight', 3.5)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5')
+  // const defs = svg.append('svg:defs')
+  // defs.append('svg:marker')
+  //   .attr('id', 'end-arrow')
+  //   .attr('viewBox', '0 -5 10 10')
+  //   .attr('refX', '32')
+  //   .attr('markerWidth', 3.5)
+  //   .attr('markerHeight', 3.5)
+  //   .attr('orient', 'auto')
+  //   .append('svg:path')
+  //   .attr('d', 'M0,-5L10,0L0,5')
 
-  // define arrow markers for leading arrow
-  defs.append('svg:marker')
-    .attr('id', 'mark-end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 7)
-    .attr('markerWidth', 3.5)
-    .attr('markerHeight', 3.5)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5')
+  // // define arrow markers for leading arrow
+  // defs.append('svg:marker')
+  //   .attr('id', 'mark-end-arrow')
+  //   .attr('viewBox', '0 -5 10 10')
+  //   .attr('refX', 7)
+  //   .attr('markerWidth', 3.5)
+  //   .attr('markerHeight', 3.5)
+  //   .attr('orient', 'auto')
+  //   .append('svg:path')
+  //   .attr('d', 'M0,-5L10,0L0,5')
+
+  // defs.append('svg:g')
+  //   .attr('id', 'nodenode')
+  //   .append('rect')
+  //   .attr('width', 200)
+  //   .attr('height', 50)
+  //   .classed('data-node', true)
+  // <defs>
+  //     <g>
+  //         <rect x="100" y="100" width="100" height="100" />
+  //         <circle cx="100" cy="100" r="100" />
+  //     </g>
+  // </defs>
 
   this.svg = svg
-  this.svgG = svg.append('g')
-    .classed(thisGraph.constants.graphClass, true)
-  const svgG = this.svgG
+  this.svgG = svg.select('g')
+
+  // console.log(this.svgG)
+  // .classed(thisGraph.constants.graphClass, true)
+  // svgG  const svgG = this.
 
   // displayed when dragging between nodes
-  this.dragLine = svgG.append('svg:path')
+  this.dragLine = this.svgG.append('svg:path')
     .attr('class', 'link dragline hidden')
     .attr('d', 'M0,0L0,0')
     .style('marker-end', 'url(#mark-end-arrow)')
 
-  this.paths = svgG.append('g').classed('path-group', true).selectAll('g')
-  this.rects = svgG.append('g').classed('rect-group', true).selectAll('g')
+  this.paths = this.svgG.append('g').classed('path-group', true).selectAll('g')
+  this.rects = this.svgG.append('g').classed('rect-group', true).selectAll('g')
 
   if (options.saveFile) {
     const file = JSON.parse(options.saveFile)
@@ -136,11 +153,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
 
   this.svg.on('mousedown', function (d) {
     thisGraph.stateProxy.selectedNode = null
-    // console.log(thisGraph.nodes.selectNodeId)
-    // if (thisGraph.state.selectedNode) {
-    //   thisGraph.state.selectedNode = null
-    // }
-    // console.log(thisGraph.state.selectedNode)
   })
 
   // thisGraph.svg.on('mouseup', function (d) {
@@ -175,7 +187,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
       d3Selection.select('#svgContainer').style('cursor', 'auto')
     })
 
-  svg.call(dragSvg).on('dblclick.zoom', null)
+  this.svg.call(dragSvg).on('dblclick.zoom', null)
 
   // listen for resize
   // window.onresize = function windowResize () {
@@ -596,7 +608,7 @@ GraphCreator.prototype.addNode = function addNode (node) {
 }
 
 // call to propagate changes to graph
-GraphCreator.prototype.updateGraph = function updateGraph () {
+GraphCreator.prototype.drawGraph = function drawGraph () {
   const thisGraph = this
   thisGraph.drawLinks()
   thisGraph.drawNodes()
@@ -639,8 +651,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     //   thisGraph.circleMouseUp(d3Selection.select(this), d)
     // })
     .on('click', function (d) {
-      thisGraph.nodes.setSelectedNode(d)
-      thisGraph.stateProxy.selectedNode = thisGraph.nodes.getSelectNode()
+      thisGraph.stateProxy.selectedNode = d
     })
     .call(rectDrag)
     // .on('dblclick', function (d) {
@@ -649,7 +660,25 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     // })
     // 2px solid #62b77a
 
-  newGs.append('rect')
+    // this.dragLine = svgG.append('svg:path')
+    // .attr('class', 'link dragline hidden')
+    // .attr('d', 'M0,0L0,0')
+    // .style('marker-end', 'url(#mark-end-arrow)')
+
+  // newGs.append('rect')
+
+  newGs.append('use')
+    .attr('xlink:href', '#nodenode')
+    .attr('x', '100')
+    .attr('y', '100')
+
+    // x="100" y="100" xlink:href="#bird"
+    // .append('g')
+    // .append('rect')
+    // .style(', 'url(#node)')
+
+  // <use xlink:href="#node" x="50" y="50" />
+
   newGs.each(function (d) {
     thisGraph.insertTitleLinebreaks(d3Selection.select(this), d.title)
   })
@@ -706,6 +735,10 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         return lineGenerator(data)
         // return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
       })
+      .on('click', function (d) {
+        console.log('--link click--')
+        console.log(d)
+      })
       // .on('mousedown', function (d) {
       //   thisGraph.pathMouseDown(thisGraph, d3Selection.select(this), d)
       // })
@@ -725,7 +758,6 @@ GraphCreator.prototype.zoomed = function zoomed () {
 
   d3Selection.select(`.${this.constants.graphClass}`)
     .attr('transform', d3Selection.event.transform)
-    // .attr('transform', `translate(${d3Selection.event.translate}) scale(${d3Selection.event.scale})`)
 }
 
 GraphCreator.prototype.setEditable = function setEditable (status) {
