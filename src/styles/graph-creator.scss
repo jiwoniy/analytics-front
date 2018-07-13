@@ -80,34 +80,52 @@ path.link.selected  {
   stroke: rgb(229, 172, 247);
 }
 
-// data-node basic
-.data-node rect {
-  width: 200px;
-  height: 50px;
+// node css
+
+.node-wrap use {
   fill: #ffffff;
   stroke: #676a6c;
   stroke-width: 1.5;
 }
 
-// data-node selected
-.data-node.selected rect {
-  fill: #676a6c;
-  opacity: 0.3;
-  stroke-width: 2;
+.node-wrap {
+  text {
+    text-anchor: middle;
+    // alignment-baseline: central;
+  }
 }
 
+// .node-hover {
+//   rect {
+//     fill: red;
+//     opacity: 0.3;
+//     stroke-width: 2;
+//   }
+// }
+
+// data-node selected
+// .data-node.selected rect {
+//   fill: #676a6c;
+//   opacity: 0.3;
+//   stroke-width: 2;
+// }
+
 // data-node node-hover
-.data-node.data-node-hover rect {
-  cursor: pointer;
-  fill: #ADD8E6;
+.node-wrap use.node-hover  {
+  stroke: red;
+  stroke-width: 3;
+}
+
+.node-wrap use.node-selected  {
+  fill: blue;
 }
 
 // data-node node-hover & connect-node
-.data-node.data-node-hover.connect-node rect {
-  stroke-width: 10;
-}
+// .data-node.hover.connect-node rect {
+//   stroke-width: 10;
+// }
 
-.data-node text {
-  font-family: sans-serif;
-  font-size: 12px;
-}
+// .data-node text {
+//   font-family: sans-serif;
+//   font-size: 12px;
+// }

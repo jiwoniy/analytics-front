@@ -3,6 +3,8 @@ function transformNode (node) {
     id: node.id,
     type: node.id,
     title: node.title,
+    input: node.input,
+    output: node.output,
     position: {
       x: node.x,
       y: node.y
@@ -14,6 +16,8 @@ function saveNodeTransformNode (node) {
   return {
     id: node.id,
     type: node.type,
+    input: node.input,
+    output: node.output,
     title: node.title,
     status: {
       moving: false,

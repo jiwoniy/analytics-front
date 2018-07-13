@@ -27,6 +27,7 @@
 
 <script>
 import faker from 'faker'
+import * as d3Random from 'd3-random'
 
 import eventController from '@/utils/EventController'
 import TopPanel from '@/components/panel/Top'
@@ -54,7 +55,9 @@ export default {
     for (let i = 0; i <= 10; i += 1) {
       this.blocks.push({
         id: i,
-        title: faker.company.bs()
+        title: faker.company.bs(),
+        input: Math.floor(d3Random.randomUniform(0, 3)()),
+        output: Math.floor(d3Random.randomUniform(0, 3)())
       })
     }
   },

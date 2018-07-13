@@ -2,6 +2,7 @@
   <transition>
     <div id="svgContainer" class="palete">
       <svg>
+        <def-node-shape></def-node-shape>
       </svg>
     </div>
   </transition>
@@ -12,11 +13,15 @@ import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
+import DefNodeShape from '@/components/common/DefNodeShape'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
   name: 'Svg-palete',
+  components: {
+    DefNodeShape
+  },
   data () {
     return {
       svgContainer: null,
@@ -76,7 +81,9 @@ export default {
       this.svgContainer = d3Selection.select('#svgContainer').select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
-      this.svgContainerG = this.svgContainer.append('g')
+      this.svgContainerG = this.svgContainer
+        .append('g')
+        .attr('id', 'graphG')
         .classed('graph', true)
 
       this.setGraph(this.svgContainer, {

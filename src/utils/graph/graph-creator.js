@@ -30,6 +30,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   this.state = {
     editable: false,
     selectedNode: null,
+    contextNode: null,
     selectedEdge: null,
     mouseDownNode: null,
     mouseDownLink: null,
@@ -47,6 +48,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
       target[key] = value
       if (key === 'selectedNode') {
         if (thisGraph.options && thisGraph.options.nodeSelectCallback) {
+          // node 중에 선택된 값이 무엇인지 확인하고..
+          // 오른창을 닫기 위해 클릭...
           thisGraph.nodes.setSelectedNode(value)
           thisGraph.options.nodeSelectCallback(value)
         }
@@ -56,57 +59,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   }
   this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
-  // define arrow markers for graph links
-  // const defs = svg.append('svg:defs')
-  // defs.append('svg:marker')
-  //   .attr('id', 'end-arrow')
-  //   .attr('viewBox', '0 -5 10 10')
-  //   .attr('refX', '32')
-  //   .attr('markerWidth', 3.5)
-  //   .attr('markerHeight', 3.5)
-  //   .attr('orient', 'auto')
-  //   .append('svg:path')
-  //   .attr('d', 'M0,-5L10,0L0,5')
-
-  // // define arrow markers for leading arrow
-  // defs.append('svg:marker')
-  //   .attr('id', 'mark-end-arrow')
-  //   .attr('viewBox', '0 -5 10 10')
-  //   .attr('refX', 7)
-  //   .attr('markerWidth', 3.5)
-  //   .attr('markerHeight', 3.5)
-  //   .attr('orient', 'auto')
-  //   .append('svg:path')
-  //   .attr('d', 'M0,-5L10,0L0,5')
-
-  // defs.append('svg:g')
-  //   .attr('id', 'nodenode')
-  //   .append('rect')
-  //   .attr('width', 200)
-  //   .attr('height', 50)
-  //   .classed('data-node', true)
-  // <defs>
-  //     <g>
-  //         <rect x="100" y="100" width="100" height="100" />
-  //         <circle cx="100" cy="100" r="100" />
-  //     </g>
-  // </defs>
-
   this.svg = svg
-  this.svgG = svg.select('g')
-
-  // console.log(this.svgG)
-  // .classed(thisGraph.constants.graphClass, true)
-  // svgG  const svgG = this.
+  this.svgG = svg.select('#graphG')
 
   // displayed when dragging between nodes
-  this.dragLine = this.svgG.append('svg:path')
+  this.dragLine = this.svg.append('svg:path')
     .attr('class', 'link dragline hidden')
     .attr('d', 'M0,0L0,0')
     .style('marker-end', 'url(#mark-end-arrow)')
 
-  this.paths = this.svgG.append('g').classed('path-group', true).selectAll('g')
-  this.rects = this.svgG.append('g').classed('rect-group', true).selectAll('g')
+  this.pathsGroup = this.svgG.append('g').classed('path-group', true)
+  this.rectsGroup = this.svgG.append('g').classed('rect-group', true)
 
   if (options.saveFile) {
     const file = JSON.parse(options.saveFile)
@@ -152,7 +115,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
   // })
 
   this.svg.on('mousedown', function (d) {
-    thisGraph.stateProxy.selectedNode = null
+    thisGraph.setSelectNode(this, null)
   })
 
   // thisGraph.svg.on('mouseup', function (d) {
@@ -200,13 +163,14 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
 // }
 
 GraphCreator.prototype.constants = {
-  graphClass: 'graph',
+  // graphClass: 'graph',
   // defaultTitle: 'random variable',
   selectedClass: 'selected',
   // circleGClass: 'conceptG',
   // rectGClass: 'conceptG',
-  nodeGClass: 'data-node',
-  nodeHoverClass: 'data-node-hover',
+  nodeGClass: 'node-wrap',
+  nodeHoverClass: 'node-hover',
+  nodeSelectedClass: 'node-selected',
   connectClass: 'connect-node',
   activeEditId: 'active-editing',
   BACKSPACE_KEY: 8,
@@ -259,23 +223,86 @@ GraphCreator.prototype.dragLink = function dragLink (d) {
 //   sel.addRange(range)
 // }
 
-// /* insert svg line breaks: taken from http://stackoverflow.com/questions/13241475/how-do-i-include-newlines-in-labels-in-d3-charts */
-GraphCreator.prototype.insertTitleLinebreaks = function (gEl, title) {
-  const words = title.split(/\s+/g)
-  // const nwords = words.length
-  const el = gEl.append('text')
-    .attr('x', '50px')
-    .attr('dy', '25px')
-    // .attr('dy', `-${(nwords - 1) * 7.5}`)
+GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
+  function dotme (selectText) {
+    const words = insertText.split(/\s+/)
+    const insertedText = selectText.append('tspan').text(insertText)
+    const ellipsis = selectText.append('tspan').attr('class', 'elip').text('...')
 
-  for (let i = 0; i < words.length; i++) {
-    const tspan = el.append('tspan').text(words[i])
-    if (i > 0) {
-      // tspan.attr('x', 0).attr('dy', '15')
-      tspan.attr('x', '50px')
-        .attr('dy', '15')
+    const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
+    const numWords = words.length
+
+    console.log(`width: ${width}`)
+    console.log(`numWords: ${numWords}`)
+
+    while (insertedText.node().getComputedTextLength() > width && words.length) {
+      words.pop()
+      insertedText.text(words.join(' '))
     }
   }
+
+  nodeElement.append('text')
+    .attr('transform', 'translate(100, 25)')
+    .classed('dotme', true)
+    .call(dotme)
+
+  //   function wrap(text) {
+  //     text.each(function() {
+  //         var text = d3.select(this);
+  //         var words = text.text().split(/\s+/).reverse();
+  //         var lineHeight = 20;
+  //         var width = parseFloat(text.attr('width'));
+  //         var y = parseFloat(text.attr('y'));
+  //         var x = text.attr('x');
+  //         var anchor = text.attr('text-anchor');
+
+  //         var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('text-anchor', anchor);
+  //         var lineNumber = 0;
+  //         var line = [];
+  //         var word = words.pop();
+
+  //         while (word) {
+  //             line.push(word);
+  //             tspan.text(line.join(' '));
+  //             if (tspan.node().getComputedTextLength() > width) {
+  //                 lineNumber += 1;
+  //                 line.pop();
+  //                 tspan.text(line.join(' '));
+  //                 line = [word];
+  //                 tspan = text.append('tspan').attr('x', x).attr('y', y + lineNumber * lineHeight).attr('anchor', anchor).text(word);
+  //             }
+  //             word = words.pop();
+  //         }
+  //     });
+  // }
+
+  // function dotme(text) {
+  //     text.each(function() {
+  //         var text = d3.select(this);
+  //         var words = text.text().split(/\s+/);
+
+  //         var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
+  //         var width = parseFloat(text.attr('width')) - ellipsis.node().getComputedTextLength();
+  //         var numWords = words.length;
+
+  //         var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
+
+  //         // Try the whole line
+  //         // While it's too long, and we have words left, keep removing words
+
+  //         while (tspan.node().getComputedTextLength() > width && words.length) {
+  //             words.pop();
+  //             tspan.text(words.join(' '));
+  //         }
+
+  //         if (words.length === numWords) {
+  //             ellipsis.remove();
+  //         }
+  //     });
+  // }
+
+  // d3.selectAll('.wrapme').call(wrap);
+  // d3.selectAll('.dotme').call(dotme);
 }
 
 // // remove edges associated with a node
@@ -628,19 +655,23 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .append('g')
 
   const rectDrag = rectDraghandler(thisGraph)
+
   newGs.classed(consts.nodeGClass, true)
     .attr('transform', function (d) {
       return `translate(${d.x},${d.y})`
     })
     .on('mouseover', function (d) {
-      d3Selection.select(this).classed(consts.nodeHoverClass, true)
+      d3Selection.select(this).select('use')
+        .classed(consts.nodeHoverClass, true)
       if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNodeId() !== d.type)) {
         d3Selection.select(this).classed(consts.connectClass, true)
         thisGraph.state.capturedTarget = d
       }
     })
     .on('mouseout', function (d) {
-      d3Selection.select(this).classed(consts.nodeHoverClass, false)
+      // d3Selection.select(this).classed(consts.nodeHoverClass, false)
+      d3Selection.select(this).select('use')
+        .classed(consts.nodeHoverClass, false)
       d3Selection.select(this).classed(consts.connectClass, false)
       thisGraph.state.capturedTarget = null
     })
@@ -651,7 +682,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     //   thisGraph.circleMouseUp(d3Selection.select(this), d)
     // })
     .on('click', function (d) {
-      thisGraph.stateProxy.selectedNode = d
+      thisGraph.setSelectNode(this, d)
     })
     .call(rectDrag)
     // .on('dblclick', function (d) {
@@ -665,25 +696,29 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     // .attr('d', 'M0,0L0,0')
     // .style('marker-end', 'url(#mark-end-arrow)')
 
-  // newGs.append('rect')
-
   newGs.append('use')
-    .attr('xlink:href', '#nodenode')
-    .attr('x', '100')
-    .attr('y', '100')
-
-    // x="100" y="100" xlink:href="#bird"
-    // .append('g')
-    // .append('rect')
-    // .style(', 'url(#node)')
-
-  // <use xlink:href="#node" x="50" y="50" />
+    .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
 
   newGs.each(function (d) {
-    thisGraph.insertTitleLinebreaks(d3Selection.select(this), d.title)
+    thisGraph.appendText(d3Selection.select(this), d.title)
   })
 
   exits.exit().remove()
+}
+
+// node를 선택한 다음 벌어지는 동작
+GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
+  const consts = this.constants
+
+  if (data) {
+    this.stateProxy.selectedNode = data
+    d3Selection.select(context)
+      .select('use').classed(consts.nodeSelectedClass, true)
+  } else {
+    this.rectsGroup.selectAll('g.node-wrap').selectAll('use.node-selected')
+      .classed(consts.nodeSelectedClass, false)
+    this.stateProxy.selectedNode = null
+  }
 }
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
