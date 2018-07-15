@@ -194,10 +194,11 @@ GraphCreator.prototype.constants = {
 
 GraphCreator.prototype.dragLink = function dragLink (d) {
   const thisGraph = this
+  const x = d3Selection.mouse(thisGraph.svgG.node())[0]
+  const y = d3Selection.mouse(this.svgG.node())[1]
   // TODO
   thisGraph.dragLine.attr('d',
-    `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},
-    ${d3Selection.mouse(this.svgG.node())[1]}`)
+    `M${d.x},${d.y}L${x},${y}`)
 }
 
 // EDITABLE
@@ -230,10 +231,7 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
     const ellipsis = selectText.append('tspan').attr('class', 'elip').text('...')
 
     const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-    const numWords = words.length
-
-    console.log(`width: ${width}`)
-    console.log(`numWords: ${numWords}`)
+    // const numWords = words.length
 
     while (insertedText.node().getComputedTextLength() > width && words.length) {
       words.pop()
@@ -245,64 +243,6 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
     .attr('transform', 'translate(100, 25)')
     .classed('dotme', true)
     .call(dotme)
-
-  //   function wrap(text) {
-  //     text.each(function() {
-  //         var text = d3.select(this);
-  //         var words = text.text().split(/\s+/).reverse();
-  //         var lineHeight = 20;
-  //         var width = parseFloat(text.attr('width'));
-  //         var y = parseFloat(text.attr('y'));
-  //         var x = text.attr('x');
-  //         var anchor = text.attr('text-anchor');
-
-  //         var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('text-anchor', anchor);
-  //         var lineNumber = 0;
-  //         var line = [];
-  //         var word = words.pop();
-
-  //         while (word) {
-  //             line.push(word);
-  //             tspan.text(line.join(' '));
-  //             if (tspan.node().getComputedTextLength() > width) {
-  //                 lineNumber += 1;
-  //                 line.pop();
-  //                 tspan.text(line.join(' '));
-  //                 line = [word];
-  //                 tspan = text.append('tspan').attr('x', x).attr('y', y + lineNumber * lineHeight).attr('anchor', anchor).text(word);
-  //             }
-  //             word = words.pop();
-  //         }
-  //     });
-  // }
-
-  // function dotme(text) {
-  //     text.each(function() {
-  //         var text = d3.select(this);
-  //         var words = text.text().split(/\s+/);
-
-  //         var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
-  //         var width = parseFloat(text.attr('width')) - ellipsis.node().getComputedTextLength();
-  //         var numWords = words.length;
-
-  //         var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
-
-  //         // Try the whole line
-  //         // While it's too long, and we have words left, keep removing words
-
-  //         while (tspan.node().getComputedTextLength() > width && words.length) {
-  //             words.pop();
-  //             tspan.text(words.join(' '));
-  //         }
-
-  //         if (words.length === numWords) {
-  //             ellipsis.remove();
-  //         }
-  //     });
-  // }
-
-  // d3.selectAll('.wrapme').call(wrap);
-  // d3.selectAll('.dotme').call(dotme);
 }
 
 // // remove edges associated with a node
@@ -558,7 +498,6 @@ function rectDraghandler (context) {
     })
     .on('end', function (d) {
       if (context.state.editable) {
-        d.status.moving = false
         if (context.state.justDragged) {
           context.state.justDragged = false
           context.dragLine.classed('hidden', true)
@@ -646,16 +585,19 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const consts = thisGraph.constants
 
   const datas = thisGraph.nodes.getNodes()
-  const exits = d3Selection.select('.rect-group').selectAll('g').data(datas)
+  const exists = d3Selection.select('.rect-group').selectAll('g').data(datas, function (d) {
+    return d.id
+  })
 
-  exits.classed(thisGraph.constants.selectedClass, d => d.status.selected)
+  // exists.classed(thisGraph.constants.selectedClass, d => d.status.selected)
 
-  const newGs = exits
+  exists.exit().remove()
+
+  const newGs = exists
     .enter()
     .append('g')
 
   const rectDrag = rectDraghandler(thisGraph)
-
   newGs.classed(consts.nodeGClass, true)
     .attr('transform', function (d) {
       return `translate(${d.x},${d.y})`
@@ -663,7 +605,8 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .on('mouseover', function (d) {
       d3Selection.select(this).select('use')
         .classed(consts.nodeHoverClass, true)
-      if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNodeId() !== d.type)) {
+
+      if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNode().type !== d.type)) {
         d3Selection.select(this).classed(consts.connectClass, true)
         thisGraph.state.capturedTarget = d
       }
@@ -673,28 +616,14 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
       d3Selection.select(this).select('use')
         .classed(consts.nodeHoverClass, false)
       d3Selection.select(this).classed(consts.connectClass, false)
-      thisGraph.state.capturedTarget = null
     })
-    // .on('mousedown', function (d) {
-    // thisGraph.circleMouseDown(d3Selection.select(this), d)
-    // })
-    // .on('mouseup', function (d) {
-    //   thisGraph.circleMouseUp(d3Selection.select(this), d)
-    // })
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
     })
+    .on('dblclick', function (d) {
+      thisGraph.removeNode(d)
+    })
     .call(rectDrag)
-    // .on('dblclick', function (d) {
-    //   d.selected = true
-    //   d3Selection.select(this).classed(thisGraph.constants.selectedClass, true)
-    // })
-    // 2px solid #62b77a
-
-    // this.dragLine = svgG.append('svg:path')
-    // .attr('class', 'link dragline hidden')
-    // .attr('d', 'M0,0L0,0')
-    // .style('marker-end', 'url(#mark-end-arrow)')
 
   newGs.append('use')
     .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
@@ -702,29 +631,10 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   newGs.each(function (d) {
     thisGraph.appendText(d3Selection.select(this), d.title)
   })
-
-  exits.exit().remove()
-}
-
-// node를 선택한 다음 벌어지는 동작
-GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
-  const consts = this.constants
-
-  if (data) {
-    this.stateProxy.selectedNode = data
-    d3Selection.select(context)
-      .select('use').classed(consts.nodeSelectedClass, true)
-  } else {
-    this.rectsGroup.selectAll('g.node-wrap').selectAll('use.node-selected')
-      .classed(consts.nodeSelectedClass, false)
-    this.stateProxy.selectedNode = null
-  }
 }
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const thisGraph = this
-  // const state = thisGraph.state
-  // const consts = thisGraph.constants
 
   function draw () {
     const lineGenerator = d3Shape.linkHorizontal()
@@ -755,7 +665,6 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         }
 
         return lineGenerator(data)
-        // return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
       })
 
     // enter
@@ -768,24 +677,44 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
           target: [d.target.x, d.target.y]
         }
         return lineGenerator(data)
-        // return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`
       })
-      .on('click', function (d) {
-        console.log('--link click--')
-        console.log(d)
+      .on('dblclick', function (d) {
+        thisGraph.edges.remove(d)
+        thisGraph.drawLinks()
       })
-      // .on('mousedown', function (d) {
-      //   thisGraph.pathMouseDown(thisGraph, d3Selection.select(this), d)
-      // })
-      // .on('mouseup', function (d) {
-      //   state.mouseDownLink = null
-      // })
 
-    // remove
     exists.exit().remove()
   }
 
   draw()
+}
+
+// node를 선택한 다음 벌어지는 동작
+GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
+  const consts = this.constants
+
+  if (data) {
+    this.stateProxy.selectedNode = data
+    d3Selection.select(context)
+      .select('use').classed(consts.nodeSelectedClass, true)
+  } else {
+    this.rectsGroup.selectAll('g.node-wrap').selectAll('use.node-selected')
+      .classed(consts.nodeSelectedClass, false)
+    this.stateProxy.selectedNode = null
+  }
+}
+
+GraphCreator.prototype.removeNode = function removeNode (node) {
+  const relatedEdges = this.findRelatedEdges(node)
+  if (relatedEdges.length) {
+    relatedEdges.forEach(edge => this.edges.remove(edge))
+  }
+  this.nodes.remove(node)
+  this.drawGraph()
+}
+
+GraphCreator.prototype.findRelatedEdges = function findRelatedEdges (node) {
+  return this.edges.findEdges(node)
 }
 
 GraphCreator.prototype.zoomed = function zoomed () {

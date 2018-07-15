@@ -1,4 +1,4 @@
-import { getId } from '@/utils/normalize'
+import { getNodeId } from '@/utils/normalize'
 
 function GraphNodes (nodes) {
   this.nodes = nodes || {}
@@ -35,7 +35,11 @@ GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
 }
 
 GraphNodes.prototype.add = function add (node) {
-  this.nodes[getId(node)] = node
+  this.nodes[getNodeId(node)] = node
+}
+
+GraphNodes.prototype.remove = function add (node) {
+  delete this.nodes[getNodeId(node)]
 }
 
 export default GraphNodes

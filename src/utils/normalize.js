@@ -9,14 +9,23 @@ function normalizeArray (datas, pIdentity = 'id') {
   return null
 }
 
-function getId (data, pIdentity = 'id') {
+function getNodeId (data, pIdentity = 'id') {
   if (data) {
     return data[pIdentity]
   }
   return null
 }
 
+function getEdgeId (data, pIdentity = 'id') {
+  if (data) {
+    const { source, target } = data
+    return `${source[pIdentity]}-${target[pIdentity]}`
+  }
+  return null
+}
+
 export {
   normalizeArray,
-  getId
+  getNodeId,
+  getEdgeId
 }

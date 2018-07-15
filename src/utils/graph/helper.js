@@ -1,7 +1,7 @@
 function transformNode (node) {
   return {
     id: node.id,
-    type: node.id,
+    type: node.type,
     title: node.title,
     input: node.input,
     output: node.output,
