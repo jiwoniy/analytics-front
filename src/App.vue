@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <div id="tf-widget-container"></div> -->
     <router-view/>
   </div>
 </template>
@@ -8,13 +7,6 @@
 <script>
 export default {
   name: 'App'
-  // mounted () {
-  //   /* eslint-disable no-new */
-  //   /* eslint-disable no-undef */
-  //   new ChatWidget(document.getElementById('tf-widget-container'), {
-  //     provider_id: 10
-  //   })
-  // }
 }
 </script>
 

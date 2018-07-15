@@ -628,6 +628,12 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   newGs.append('use')
     .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
 
+  // d3Selection.selectAll('circle')
+  //   .on('mouseover', function (d) {
+  //     console.log(d)
+  //     console.log('--circle mouse over')
+  //   })
+
   newGs.each(function (d) {
     thisGraph.appendText(d3Selection.select(this), d.title)
   })
