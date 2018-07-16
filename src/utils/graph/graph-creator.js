@@ -13,7 +13,7 @@ import {
   saveNodesTransformToNodes,
   saveEdgesTransformToEdges
 } from './helper'
-import getNodeShpae from './getNodeShpae'
+import getNodeShape from './getNodeShape'
 import GraphNodes from './graph-nodes'
 import GraphEddes from './graph-edges'
 
@@ -36,6 +36,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     mouseDownNode: null,
     mouseDownLink: null,
     justDragged: false,
+    connecting: false,
     capturedTarget: null,
     justScaleTransGraph: false,
     lastKeyDown: -1,
@@ -193,7 +194,7 @@ GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
 }
 
 // Important Node drag handler
-function rectDraghandler (context) {
+function nodeDraghandler (context) {
   return d3Drag.drag()
     .subject(function (d) {
       return { x: d.x, y: d.y }
@@ -214,32 +215,32 @@ function rectDraghandler (context) {
 
           // when node draging edges also shoud be updated by new position
           context.drawLinks(d)
-        } else {
-          if (d.output > 0) {
-            context.state.justDragged = true
-            context.dragLine.classed('hidden', false)
-            context.dragLink(d)
-          }
+        // } else {
+        //   if (d.output > 0) {
+        //     context.state.justDragged = true
+        //     context.dragLine.classed('hidden', false)
+        //     context.dragLink(d)
+        //   }
         }
       }
     })
-    .on('end', function (d) {
-      if (context.state.editable) {
-        if (context.state.justDragged) {
-          context.state.justDragged = false
-          context.dragLine.classed('hidden', true)
-          if (context.state.capturedTarget) {
-            const newEdge = {
-              source: d,
-              target: context.state.capturedTarget
-            }
-            context.edges.add(newEdge)
-            context.drawLinks()
-            context.state.capturedTarget = null
-          }
-        }
-      }
-    })
+    // .on('end', function (d) {
+    //   if (context.state.editable) {
+    //     if (context.state.justDragged) {
+    //       context.state.justDragged = false
+    //       context.dragLine.classed('hidden', true)
+    //       if (context.state.capturedTarget) {
+    //         const newEdge = {
+    //           source: d,
+    //           target: context.state.capturedTarget
+    //         }
+    //         context.edges.add(newEdge)
+    //         context.drawLinks()
+    //         context.state.capturedTarget = null
+    //       }
+    //     }
+    //   }
+    // })
 }
 
 GraphCreator.prototype.addNode = function addNode (node) {
@@ -263,10 +264,6 @@ GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
   return false
 }
 
-// GraphCreator.prototype.appendNode = function appendNode (selection) {
-//   selection.call(getNodeShpae)
-// }
-
 GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
@@ -285,19 +282,19 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .enter()
     .append('g')
 
-  // const rectDrag = rectDraghandler(thisGraph)
+  const nodeDrag = nodeDraghandler(thisGraph)
 
   newGs.classed(consts.nodeWrapClass, true)
     .attr('transform', function (d) {
       return `translate(${d.x},${d.y})`
     })
     .on('mouseover', function (d) {
-      if (thisGraph.canNodeLink(thisGraph.nodes.getSelectNode(), d)) {
-        // d3Selection.select(this).classed(consts.connectClass, true)
-        console.log(this)
-        console.log(d3Selection.select(this).selectAll('.data-input'))
-        thisGraph.state.capturedTarget = d
-      }
+      // if (thisGraph.canNodeLink(thisGraph.nodes.getSelectNode(), d)) {
+      // d3Selection.select(this).classed(consts.connectClass, true)
+      // console.log(this)
+      // console.log(d3Selection.select(this).selectAll('.data-input'))
+      // thisGraph.state.capturedTarget = d
+      // }
     })
     .on('mouseout', function (d) {
       // d3Selection.select(this).classed(consts.nodeHoverClass, false)
@@ -311,18 +308,11 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .on('dblclick', function (d) {
       thisGraph.removeNode(d)
     })
-    .call(getNodeShpae)
-    // selection.call(getNodeShpae)
-    // .call(rectDrag)
+    .call((d) => getNodeShape(thisGraph, d))
+    .call(nodeDrag)
 
   // newGs.append('use')
   //   .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
-
-  // d3Selection.selectAll('circle')
-  //   .on('mouseover', function (d) {
-  //     console.log(d)
-  //     console.log('--circle mouse over')
-  //   })
 
   newGs.each(function (d) {
     thisGraph.appendText(d3Selection.select(this), d.title)

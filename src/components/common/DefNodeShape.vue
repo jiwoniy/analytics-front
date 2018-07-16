@@ -69,22 +69,8 @@
 </template>
 
 <script>
-// import * as d3Selection from 'd3-selection'
-
 export default {
   name: 'Define-Node-Shape'
-  // mounted () {
-  //   d3Selection.selectAll('.def-node circle')
-  //     .on('mouseover', function () {
-  //       d3Selection.select(this).classed('active', true)
-  //     })
-
-  //   d3Selection.selectAll('.active')
-  //     .on('mouseout', function () {
-  //       console.log('--mouseout-')
-  //       d3Selection.select(this).classed('active', false)
-  //     })
-  // }
 }
 
 </script>
@@ -101,16 +87,9 @@ export default {
   stroke: blue;
   stroke-width: 2;
 }
-/* .def-node .data-input.active {
-  fill: blue;
-} */
 
 .def-node .data-output {
   stroke: red;
   stroke-width: 2;
 }
-
-/* .def-node .data-output.active {
-  fill: red; */
-/* } */
 </style>

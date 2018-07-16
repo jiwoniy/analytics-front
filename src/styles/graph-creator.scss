@@ -80,8 +80,6 @@ path.link.selected  {
   stroke: rgb(229, 172, 247);
 }
 
-// node css
-
 .node-wrap {
   rect {
     cursor: pointer;
@@ -94,9 +92,22 @@ path.link.selected  {
     text-anchor: middle;
   }
 
-  circle .data-input {
+  .data-input {
+    fill: #ffffff;
     stroke: blue;
     stroke-width: 2;
+  }
+  .data-input.hover {
+    fill: blue;
+  }
+
+  .data-output {
+    fill: #ffffff;
+    stroke: red;
+    stroke-width: 2;
+  }
+  .data-output.hover {
+    fill: red;
   }
 }
 
