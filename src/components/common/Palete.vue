@@ -2,7 +2,6 @@
   <transition>
     <div id="svgContainer" class="palete">
       <svg>
-        <!-- <def-node-shape></def-node-shape> -->
       </svg>
     </div>
   </transition>
@@ -13,15 +12,11 @@ import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
-// import DefNodeShape from '@/components/common/DefNodeShape'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
   name: 'Svg-palete',
-  // components: {
-  //   DefNodeShape
-  // },
   data () {
     return {
       svgContainer: null,
@@ -47,7 +42,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      setPipeline: 'pipeline/setPipeline'
+      savePipeline: 'pipeline/savePipeline'
     }),
     svgContainerResize () {
       d3Selection.select('#svgContainer').select('svg')
@@ -127,7 +122,7 @@ export default {
 
     eventController.addListner('SAVE', () => {
       const saveFile = this.svgGraph.save()
-      this.setPipeline(saveFile)
+      this.savePipeline(saveFile)
     })
 
     eventController.addListner('EDIT', () => {
@@ -136,13 +131,11 @@ export default {
 
     eventController.addListner('REFRESH', () => {
       this.removeSvgGraph()
-      this.setSvgContainer()
     })
 
-    // eventController.addListner('LOAD', () => {
-    //   this.removeSvgGraph()
-    //   this.setSvgContainer()
-    // })
+    eventController.addListner('LOAD', () => {
+      this.setSvgContainer()
+    })
 
     this.init()
 

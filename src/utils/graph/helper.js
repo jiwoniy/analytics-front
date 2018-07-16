@@ -1,4 +1,19 @@
-function transformNode (node) {
+function transformNode (node, isEdges = false) {
+  if (isEdges) {
+    return {
+      id: node.id,
+      type: node.type,
+      title: node.title,
+      input: node.input,
+      output: node.output,
+      linkInput: node.linkInput || null,
+      linkOutput: node.linkOutput || null,
+      position: {
+        x: node.x,
+        y: node.y
+      }
+    }
+  }
   return {
     id: node.id,
     type: node.type,
@@ -12,7 +27,28 @@ function transformNode (node) {
   }
 }
 
-function saveNodeTransformNode (node) {
+function saveNodeTransformNode (node, isEdges = false) {
+  if (isEdges) {
+    return {
+      id: node.id,
+      type: node.type,
+      input: node.input,
+      output: node.output,
+      title: node.title,
+      linkInput: node.linkInput || null,
+      linkOutput: node.linkOutput || null,
+      status: {
+        moving: false,
+        selected: false
+      },
+      x: node.position.x,
+      y: node.position.y
+    }
+  }
+
+  // console.log('-------')
+  // console.log(node)
+
   return {
     id: node.id,
     type: node.type,
@@ -36,8 +72,8 @@ function edgesTransformForSave (edges) {
   return edges.map(edge => {
     const { source, target } = edge
     return {
-      source: transformNode(source),
-      target: transformNode(target)
+      source: transformNode(source, true),
+      target: transformNode(target, true)
     }
   })
 }
@@ -50,8 +86,8 @@ function saveEdgesTransformToEdges (edges) {
   return edges.map(edge => {
     const { source, target } = edge
     return {
-      source: saveNodeTransformNode(source),
-      target: saveNodeTransformNode(target)
+      source: saveNodeTransformNode(source, true),
+      target: saveNodeTransformNode(target, true)
     }
   })
 }

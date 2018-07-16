@@ -19,7 +19,7 @@ function getNodeId (data, pIdentity = 'id') {
 function getEdgeId (data, pIdentity = 'id') {
   if (data) {
     const { source, target } = data
-    return `${source[pIdentity]}-${target[pIdentity]}`
+    return `${source[pIdentity]}:${source.linkOutput.id}-${target[pIdentity]}:${target.linkInput.id}`
   }
   return null
 }

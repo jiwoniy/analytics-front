@@ -27,6 +27,7 @@ GraphEdges.prototype.findEdges = function findEdges (node) {
 
 GraphEdges.prototype.add = function add (edge) {
   const thisGraphEdges = this
+
   if (!thisGraphEdges.isDuplicate(edge)) {
     thisGraphEdges.edges[getEdgeId(edge)] = {
       ...edge,

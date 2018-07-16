@@ -1,8 +1,8 @@
 export default {
-  setPipeline: ({ commit, state }, pipeline) => {
+  savePipeline: ({ commit, state }, pipeline) => {
     if (pipeline) {
       // TODO type check
-      commit('SET_PIPELINE', pipeline)
+      commit('SAVE_PIPELINE', pipeline)
     }
   }
 }

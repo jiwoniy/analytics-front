@@ -1,5 +1,5 @@
 export default {
-  SET_PIPELINE: (state, pipeline) => {
+  SAVE_PIPELINE: (state, pipeline) => {
     if (pipeline) {
       state.pipeline = pipeline
     }

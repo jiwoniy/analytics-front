@@ -5,6 +5,7 @@ import * as d3Zoom from 'd3-zoom'
 import * as d3Shape from 'd3-shape'
 
 // import onChange from '@/helper/onChange'
+import { getEdgeId } from '@/utils/normalize'
 
 import {
   saveNodeTransformNode,
@@ -71,7 +72,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     .style('marker-end', 'url(#mark-end-arrow)')
 
   this.pathsGroup = this.svgG.append('g').classed('path-group', true)
-  this.rectsGroup = this.svgG.append('g').classed('node-group', true)
+  this.nodesGroup = this.svgG.append('g').classed('node-group', true)
 
   if (options.saveFile) {
     const file = JSON.parse(options.saveFile)
@@ -269,54 +270,39 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const consts = thisGraph.constants
 
   const datas = thisGraph.nodes.getNodes()
-  const exists = d3Selection.select('.node-group').selectAll('g').data(datas, function (d) {
+
+  const exists = this.nodesGroup.selectAll('g').data(datas, function (d) {
     return d.id
   })
 
   // exists.classed(thisGraph.constants.selectedClass, d => d.status.selected)
-
-  exists.exit().remove()
-
+  const nodeDrag = nodeDraghandler(thisGraph)
   // .node-wrap
   const newGs = exists
     .enter()
     .append('g')
+    .classed(consts.nodeWrapClass, true)
 
-  const nodeDrag = nodeDraghandler(thisGraph)
-
-  newGs.classed(consts.nodeWrapClass, true)
+  newGs
     .attr('transform', function (d) {
       return `translate(${d.x},${d.y})`
     })
-    .on('mouseover', function (d) {
-      // if (thisGraph.canNodeLink(thisGraph.nodes.getSelectNode(), d)) {
-      // d3Selection.select(this).classed(consts.connectClass, true)
-      // console.log(this)
-      // console.log(d3Selection.select(this).selectAll('.data-input'))
-      // thisGraph.state.capturedTarget = d
-      // }
-    })
-    .on('mouseout', function (d) {
-      // d3Selection.select(this).classed(consts.nodeHoverClass, false)
-      // d3Selection.select(this).select('use')
-      //   .classed(consts.nodeHoverClass, false)
-      // d3Selection.select(this).classed(consts.connectClass, false)
-    })
+    // .on('mouseover', function (d) {})
+    // .on('mouseout', function (d) {})
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
     })
     .on('dblclick', function (d) {
       thisGraph.removeNode(d)
     })
-    .call((d) => getNodeShape(thisGraph, d))
     .call(nodeDrag)
-
-  // newGs.append('use')
-  //   .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
+    .call(d => getNodeShape(thisGraph, d))
 
   newGs.each(function (d) {
     thisGraph.appendText(d3Selection.select(this), d.title)
   })
+
+  this.nodesGroup.exit().remove()
 }
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
@@ -326,7 +312,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
     const lineGenerator = d3Shape.linkHorizontal()
 
     const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.edges.getEdges(), function (d) {
-      return `${String(d.source.id)}-${String(d.target.id)}`
+      return getEdgeId(d)
     })
 
     // update
@@ -346,8 +332,10 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         }
 
         const data = {
-          source: [d.source.x, d.source.y],
-          target: [d.target.x, d.target.y]
+          source: [d.source.x + d.source.linkOutput.cx, d.source.y + d.source.linkOutput.cy],
+          target: [d.target.x + d.target.linkInput.cx, d.target.y + d.target.linkInput.cy]
+          // source: [d.source.x, d.source.y],
+          // target: [d.target.x, d.target.y]
         }
 
         return lineGenerator(data)
@@ -359,8 +347,8 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       .classed('link', true)
       .attr('d', function (d) {
         const data = {
-          source: [d.source.x, d.source.y],
-          target: [d.target.x, d.target.y]
+          source: [d.source.x + d.source.linkOutput.cx, d.source.y + d.source.linkOutput.cy],
+          target: [d.target.x + d.target.linkInput.cx, d.target.y + d.target.linkInput.cy]
         }
         return lineGenerator(data)
       })
@@ -384,7 +372,7 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
     d3Selection.select(context)
       .classed(consts.nodeSelectedClass, true)
   } else {
-    this.rectsGroup.selectAll('.node-selected')
+    this.nodesGroup.selectAll('.node-selected')
       .classed(consts.nodeSelectedClass, false)
     this.stateProxy.selectedNode = null
   }
