@@ -1,10 +1,6 @@
 <template>
   <transition>
     <section class="div--Working__page">
-      <div class="div--Button">
-        <!-- <span @click="openLeftPanel"> left </span>
-        <span @click="openRightPanel"> right </span> -->
-      </div>
       <drop-comp>
         <svg-palete
           slot="svg-container"

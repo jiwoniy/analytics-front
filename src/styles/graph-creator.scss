@@ -82,16 +82,21 @@ path.link.selected  {
 
 // node css
 
-.node-wrap use {
-  fill: #ffffff;
-  stroke: #676a6c;
-  stroke-width: 1.5;
-}
-
 .node-wrap {
+  rect {
+    cursor: pointer;
+    fill: #ffffff;
+    stroke: #676a6c;
+    stroke-width: 1.5;
+  }
+
   text {
     text-anchor: middle;
-    // alignment-baseline: central;
+  }
+
+  circle .data-input {
+    stroke: blue;
+    stroke-width: 2;
   }
 }
 
@@ -110,13 +115,19 @@ path.link.selected  {
 //   stroke-width: 2;
 // }
 
-// data-node node-hover
-.node-wrap use.node-hover  {
-  stroke: red;
-  stroke-width: 3;
-}
+// .node-wrap use {
+//   fill: #ffffff;
+//   stroke: #676a6c;
+//   stroke-width: 1.5;
+// }
 
-.node-wrap use.node-selected  {
+// // data-node node-hover
+// .node-wrap use.node-hover  {
+//   stroke: red;
+//   stroke-width: 3;
+// }
+
+.node-wrap.node-selected  {
   fill: blue;
 }
 

@@ -13,6 +13,7 @@ import {
   saveNodesTransformToNodes,
   saveEdgesTransformToEdges
 } from './helper'
+import getNodeShpae from './getNodeShpae'
 import GraphNodes from './graph-nodes'
 import GraphEddes from './graph-edges'
 
@@ -69,7 +70,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     .style('marker-end', 'url(#mark-end-arrow)')
 
   this.pathsGroup = this.svgG.append('g').classed('path-group', true)
-  this.rectsGroup = this.svgG.append('g').classed('rect-group', true)
+  this.rectsGroup = this.svgG.append('g').classed('node-group', true)
 
   if (options.saveFile) {
     const file = JSON.parse(options.saveFile)
@@ -83,36 +84,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     // thisGraph.addNodes(nodes)
     // thisGraph.updateLinksGraph()
   }
-
-  /*
-  thisGraph.drag = d3Drag.drag()
-    .subject(function (d) {
-      return { x: d.x, y: d.y }
-      // return d == null ? {x: d3Selection.event.x, y: d3Selection.event.y} : d
-    })
-    .on('drag', function (args) {
-      // thisGraph.state.justDragged = true
-      // thisGraph.dragmove(args)
-    })
-    .on('end', function () {
-      // thisGraph.dragLine.classed('hidden', false)
-      // todo check if edge-mode is selected
-    })
-  */
-
-  // listen for key events
-  // d3Selection.select(window).on('keydown', function () {
-  //   // thisGraph.svgKeyDown(thisGraph
-  //   thisGraph.svgKeyDown()
-  // }).on('keyup', function () {
-  //   // thisGraph.svgKeyUp(thisGraph)
-  //   thisGraph.svgKeyUp()
-  // })
-  // .on('mouseup', function () {
-  //   // thisGraph.svgKeyDown()
-  // }).on('mousedown', function () {
-  //   // thisGraph.svgKeyDown()
-  // })
 
   this.svg.on('mousedown', function (d) {
     thisGraph.setSelectNode(this, null)
@@ -168,7 +139,8 @@ GraphCreator.prototype.constants = {
   selectedClass: 'selected',
   // circleGClass: 'conceptG',
   // rectGClass: 'conceptG',
-  nodeGClass: 'node-wrap',
+  nodeGClass: 'node-group',
+  nodeWrapClass: 'node-wrap',
   nodeHoverClass: 'node-hover',
   nodeSelectedClass: 'node-selected',
   connectClass: 'connect-node',
@@ -179,19 +151,6 @@ GraphCreator.prototype.constants = {
   nodeRadius: 50
 }
 
-/* PROTOTYPE FUNCTIONS */
-// GraphCreator.prototype.dragmove = function dragmove (d) {
-//   var thisGraph = this
-//   if (thisGraph.state.shiftNodeDrag) {
-//     thisGraph.dragLine.attr('d',
-//       `M${d.x},${d.y}L${d3Selection.mouse(thisGraph.svgG.node())[0]},${d3Selection.mouse(this.svgG.node())[1]}`)
-//   } else {
-//     d.x += d3Selection.event.dx
-//     d.y += d3Selection.event.dy
-//     thisGraph.updateGraph()
-//   }
-// }
-
 GraphCreator.prototype.dragLink = function dragLink (d) {
   const thisGraph = this
   const x = d3Selection.mouse(thisGraph.svgG.node())[0]
@@ -200,29 +159,6 @@ GraphCreator.prototype.dragLink = function dragLink (d) {
   thisGraph.dragLine.attr('d',
     `M${d.x},${d.y}L${x},${y}`)
 }
-
-// EDITABLE
-// GraphCreator.prototype.deleteGraph = function deleteGraph (skipPrompt) {
-//   const thisGraph = this
-//   let doDelete = true
-//   if (!skipPrompt) {
-//     doDelete = window.confirm('Press OK to delete this graph')
-//   }
-//   if (doDelete) {
-//     // thisGraph.nodes = []
-//     // thisGraph.edges = []
-//     thisGraph.updateGraph()
-//   }
-// }
-
-// /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
-// GraphCreator.prototype.selectElementContents = function selectElementContents (el) {
-//   const range = document.createRange()
-//   range.selectNodeContents(el)
-//   const sel = window.getSelection()
-//   sel.removeAllRanges()
-//   sel.addRange(range)
-// }
 
 GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
   function dotme (selectText) {
@@ -256,218 +192,6 @@ GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
   })
 }
 
-// GraphCreator.prototype.replaceSelectEdge = function (d3Path, edgeData) {
-//   const thisGraph = this
-//   d3Path.classed(thisGraph.constants.selectedClass, true)
-//   if (thisGraph.state.selectedEdge) {
-//     thisGraph.removeSelectFromEdge()
-//   }
-//   thisGraph.state.selectedEdge = edgeData
-// }
-
-// GraphCreator.prototype.replaceSelectNode = function (d3Node, nodeData) {
-//   const thisGraph = this
-//   d3Node.classed(this.constants.selectedClass, true)
-//   if (thisGraph.state.selectedNode) {
-//     thisGraph.removeSelectFromNode()
-//   }
-//   thisGraph.state.selectedNode = nodeData
-// }
-
-// GraphCreator.prototype.removeSelectFromNode = function () {
-//   const thisGraph = this
-//   thisGraph.rects.filter(function (cd) {
-//     return cd.id === thisGraph.state.selectedNode.id
-//   }).classed(thisGraph.constants.selectedClass, false)
-//   thisGraph.state.selectedNode = null
-// }
-
-// GraphCreator.prototype.removeSelectFromEdge = function () {
-//   const thisGraph = this
-//   thisGraph.paths.filter(function (cd) {
-//     return cd === thisGraph.state.selectedEdge
-//   }).classed(thisGraph.constants.selectedClass, false)
-//   thisGraph.state.selectedEdge = null
-// }
-
-// GraphCreator.prototype.pathMouseDown = function pathMouseDown (d3path, d) {
-//   const thisGraph = this
-//   const state = thisGraph.state
-//   d3Selection.event.stopPropagation()
-//   state.mouseDownLink = d
-
-//   if (state.selectedNode) {
-//     thisGraph.removeSelectFromNode()
-//   }
-
-//   var prevEdge = state.selectedEdge
-//   if (!prevEdge || prevEdge !== d) {
-//     thisGraph.replaceSelectEdge(d3path, d)
-//   } else {
-//     thisGraph.removeSelectFromEdge()
-//   }
-// }
-
-// mousedown on node
-// GraphCreator.prototype.rectMouseDown = function rectMouseDown (d3node, d) {
-//   const thisGraph = this
-//   const state = thisGraph.state
-//   d3Selection.event.stopPropagation()
-//   state.mouseDownNode = d
-//   if (d3Selection.event.shiftKey) {
-//     state.shiftNodeDrag = d3Selection.event.shiftKey
-//     // reposition dragged directed edge
-//     // thisGraph.dragLine.classed('hidden', false)
-//       .attr('d', `M${d.x},${d.y}L${d.x},${d.y}`)
-//     // return
-//   }
-// }
-
-/* place editable text on node in place of svg text */
-// GraphCreator.prototype.changeTextOfNode = function (d3node, d) {
-//   const thisGraph = this
-//   const constants = thisGraph.constants
-//   const htmlEl = d3node.node()
-//   d3node.selectAll('text').remove()
-//   const nodeBCR = htmlEl.getBoundingClientRect()
-//   const curScale = nodeBCR.width / constants.nodeRadius
-//   const placePad = 5 * curScale
-//   const useHW = curScale > 1 ? (nodeBCR.width * 0.71) : (constants.nodeRadius * 1.42)
-//   // replace with editableconent text
-//   const d3txt = thisGraph.svg.selectAll('foreignObject')
-//     .data([d])
-//     .enter()
-//     .append('foreignObject')
-//     .attr('x', nodeBCR.left + placePad)
-//     .attr('y', nodeBCR.top + placePad)
-//     .attr('height', 2 * useHW)
-//     .attr('width', useHW)
-//     .append('xhtml:p')
-//     .attr('id', constants.activeEditId)
-//     .attr('contentEditable', 'true')
-//     .text(d.title)
-//     .on('mousedown', function (d) {
-//       d3Selection.event.stopPropagation()
-//     })
-//     .on('keydown', function (d) {
-//       d3Selection.event.stopPropagation()
-//       if (d3Selection.event.keyCode === constants.ENTER_KEY && !d3Selection.event.shiftKey) {
-//         this.blur()
-//       }
-//     })
-//     .on('blur', function (d) {
-//       d.title = this.textContent
-//       thisGraph.insertTitleLinebreaks(d3node, d.title)
-//       d3Selection.select(this.parentElement).remove()
-//     })
-//   return d3txt
-// }
-
-// mouseup on nodes
-// GraphCreator.prototype.rectMouseUp = function (d3node, d) {
-//   const thisGraph = this
-//   const state = thisGraph.state
-//   const constants = thisGraph.constants
-//   // reset the states
-//   state.shiftNodeDrag = false
-//   d3node.classed(constants.connectClass, false)
-
-//   const mouseDownNode = state.mouseDownNode
-
-//   if (!mouseDownNode) {
-//     return
-//   }
-
-//   // thisGraph.dragLine.classed('hidden', true)
-
-//   if (mouseDownNode !== d) {
-//     // we're in a different node: create new edge for mousedown edge and add to graph
-//     const newEdge = {source: mouseDownNode, target: d}
-//     const filtRes = thisGraph.paths.filter(function (d) {
-//       if (d.source === newEdge.target && d.target === newEdge.source) {
-//         // thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1)
-//       }
-//       return d.source === newEdge.source && d.target === newEdge.target
-//     })
-//     if (!filtRes[0].length) {
-//       // thisGraph.edges.push(newEdge)
-//       thisGraph.updateGraph()
-//     }
-//   } else {
-//     // we're in the same node
-//     if (state.justDragged) {
-//       // dragged, not clicked
-//       // state.justDragged = false
-//     } else {
-//       // clicked, not dragged
-//       if (d3Selection.event.shiftKey) {
-//         // shift-clicked node: edit text content
-//         const d3txt = thisGraph.changeTextOfNode(d3node, d)
-//         const txtNode = d3txt.node()
-//         thisGraph.selectElementContents(txtNode)
-//         txtNode.focus()
-//       } else {
-//         if (state.selectedEdge) {
-//           thisGraph.removeSelectFromEdge()
-//         }
-//         const prevNode = state.selectedNode
-
-//         if (!prevNode || prevNode.id !== d.id) {
-//           thisGraph.replaceSelectNode(d3node, d)
-//         } else {
-//           thisGraph.removeSelectFromNode()
-//         }
-//       }
-//     }
-//   }
-//   state.mouseDownNode = null
-//   // return
-// } // end of circles mouseup
-
-// mousedown on main svg
-// GraphCreator.prototype.svgMouseDown = function svgMouseDown () {
-//   this.state.graphMouseDown = true
-// }
-
-// mouseup on main svg
-// GraphCreator.prototype.svgMouseUp = function svgMouseUp () {
-//   const thisGraph = this
-//   const state = thisGraph.state
-//   const constants = thisGraph.constants
-
-//   if (state.justScaleTransGraph) {
-//     // dragged not clicked
-//     state.justScaleTransGraph = false
-//   } else if (state.graphMouseDown && d3Selection.event.shiftKey) {
-//     // clicked not dragged from svg
-//     const xycoords = d3Selection.mouse(thisGraph.svgG.node())
-//     const d = {
-//       id: thisGraph.idct++,
-//       title: constants.defaultTitle,
-//       x: xycoords[0],
-//       y: xycoords[1]
-//     }
-//     thisGraph.nodes.add(d)
-//     thisGraph.updateGraph()
-
-//     // make title of text immediently editable
-//     const d3txt = thisGraph.changeTextOfNode(thisGraph.rects.filter(function (dval) {
-//       return dval.id === d.id
-//     }), d)
-//     const txtNode = d3txt.node()
-//     thisGraph.selectElementContents(txtNode)
-//     txtNode.focus()
-//   } else if (state.shiftNodeDrag) {
-//     // dragged from node
-//     state.shiftNodeDrag = false
-//     // thisGraph.dragLine.classed('hidden', true)
-//   }
-//   state.graphMouseDown = false
-// }
-
-// GraphCreator.prototype.svgClicked = function svgClicked () {
-// }
-
 // Important Node drag handler
 function rectDraghandler (context) {
   return d3Drag.drag()
@@ -482,6 +206,7 @@ function rectDraghandler (context) {
     .on('drag', function (d) {
       if (context.state.editable) {
         if (!d.status.selected) {
+          // move node
           d3Selection.select(this)
             .attr('transform', `translate(${d3Selection.event.x}, ${d3Selection.event.y})`)
           d.x = d3Selection.event.x
@@ -490,9 +215,11 @@ function rectDraghandler (context) {
           // when node draging edges also shoud be updated by new position
           context.drawLinks(d)
         } else {
-          context.state.justDragged = true
-          context.dragLine.classed('hidden', false)
-          context.dragLink(d)
+          if (d.output > 0) {
+            context.state.justDragged = true
+            context.dragLine.classed('hidden', false)
+            context.dragLink(d)
+          }
         }
       }
     })
@@ -515,57 +242,6 @@ function rectDraghandler (context) {
     })
 }
 
-// let data
-// if (dragingNode.id === d.source.id) {
-//   data = {
-//     source: [d3Selection.event.x, d3Selection.event.y],
-//     target: [d.target.x, d.target.y]
-//   }
-//   // edges를 업데이트 해줘야 한다.
-// } else {
-//   data = {
-//     source: [d.source.x, d.source.y],
-//     target: [d3Selection.event.x, d3Selection.event.y]
-//   }
-// }
-
-// keydown on main svg
-// GraphCreator.prototype.svgKeyDown = function svgKeyDown () {
-//   const thisGraph = this
-//   const state = thisGraph.state
-//   const constants = thisGraph.constants
-
-//   // make sure repeated key presses don't register for each keydown
-//   if (state.lastKeyDown !== -1) {
-//     return
-//   }
-
-//   state.lastKeyDown = d3Selection.event.keyCode
-//   const selectedNode = state.selectedNode
-//   const selectedEdge = state.selectedEdge
-
-//   switch (d3Selection.event.keyCode) {
-//     case constants.BACKSPACE_KEY:
-//     case constants.DELETE_KEY:
-//       d3Selection.event.preventDefault()
-//       if (selectedNode) {
-//         thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1)
-//         thisGraph.spliceLinksForNode(selectedNode)
-//         state.selectedNode = null
-//         thisGraph.updateGraph()
-//       } else if (selectedEdge) {
-//         thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1)
-//         state.selectedEdge = null
-//         thisGraph.updateGraph()
-//       }
-//       break
-//   }
-// }
-
-// GraphCreator.prototype.svgKeyUp = function svgKeyUp () {
-//   this.state.lastKeyDown = -1
-// }
-
 GraphCreator.prototype.addNode = function addNode (node) {
   if (this.state.editable) {
     this.nodes.add(saveNodeTransformNode(node))
@@ -580,12 +256,23 @@ GraphCreator.prototype.drawGraph = function drawGraph () {
   thisGraph.drawNodes()
 }
 
+GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
+  if (this.state.justDragged && target.input > 0 && source.type !== target.type) {
+    return true
+  }
+  return false
+}
+
+// GraphCreator.prototype.appendNode = function appendNode (selection) {
+//   selection.call(getNodeShpae)
+// }
+
 GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
 
   const datas = thisGraph.nodes.getNodes()
-  const exists = d3Selection.select('.rect-group').selectAll('g').data(datas, function (d) {
+  const exists = d3Selection.select('.node-group').selectAll('g').data(datas, function (d) {
     return d.id
   })
 
@@ -593,29 +280,30 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
   exists.exit().remove()
 
+  // .node-wrap
   const newGs = exists
     .enter()
     .append('g')
 
-  const rectDrag = rectDraghandler(thisGraph)
-  newGs.classed(consts.nodeGClass, true)
+  // const rectDrag = rectDraghandler(thisGraph)
+
+  newGs.classed(consts.nodeWrapClass, true)
     .attr('transform', function (d) {
       return `translate(${d.x},${d.y})`
     })
     .on('mouseover', function (d) {
-      d3Selection.select(this).select('use')
-        .classed(consts.nodeHoverClass, true)
-
-      if (thisGraph.state.justDragged && (thisGraph.nodes.getSelectNode().type !== d.type)) {
-        d3Selection.select(this).classed(consts.connectClass, true)
+      if (thisGraph.canNodeLink(thisGraph.nodes.getSelectNode(), d)) {
+        // d3Selection.select(this).classed(consts.connectClass, true)
+        console.log(this)
+        console.log(d3Selection.select(this).selectAll('.data-input'))
         thisGraph.state.capturedTarget = d
       }
     })
     .on('mouseout', function (d) {
       // d3Selection.select(this).classed(consts.nodeHoverClass, false)
-      d3Selection.select(this).select('use')
-        .classed(consts.nodeHoverClass, false)
-      d3Selection.select(this).classed(consts.connectClass, false)
+      // d3Selection.select(this).select('use')
+      //   .classed(consts.nodeHoverClass, false)
+      // d3Selection.select(this).classed(consts.connectClass, false)
     })
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
@@ -623,10 +311,12 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .on('dblclick', function (d) {
       thisGraph.removeNode(d)
     })
-    .call(rectDrag)
+    .call(getNodeShpae)
+    // selection.call(getNodeShpae)
+    // .call(rectDrag)
 
-  newGs.append('use')
-    .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
+  // newGs.append('use')
+  //   .attr('xlink:href', d => `#nodeShape_${d.input}_${d.output}`)
 
   // d3Selection.selectAll('circle')
   //   .on('mouseover', function (d) {
@@ -702,9 +392,9 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
   if (data) {
     this.stateProxy.selectedNode = data
     d3Selection.select(context)
-      .select('use').classed(consts.nodeSelectedClass, true)
+      .classed(consts.nodeSelectedClass, true)
   } else {
-    this.rectsGroup.selectAll('g.node-wrap').selectAll('use.node-selected')
+    this.rectsGroup.selectAll('.node-selected')
       .classed(consts.nodeSelectedClass, false)
     this.stateProxy.selectedNode = null
   }

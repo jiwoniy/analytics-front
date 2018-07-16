@@ -2,7 +2,7 @@
   <transition>
     <div id="svgContainer" class="palete">
       <svg>
-        <def-node-shape></def-node-shape>
+        <!-- <def-node-shape></def-node-shape> -->
       </svg>
     </div>
   </transition>
@@ -13,15 +13,15 @@ import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
-import DefNodeShape from '@/components/common/DefNodeShape'
+// import DefNodeShape from '@/components/common/DefNodeShape'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
   name: 'Svg-palete',
-  components: {
-    DefNodeShape
-  },
+  // components: {
+  //   DefNodeShape
+  // },
   data () {
     return {
       svgContainer: null,
