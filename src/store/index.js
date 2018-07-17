@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger'
 
 import common from './common'
 import pipeline from './pipeline'
+import myProject from './myProject'
 
 import configureMediator from '@/helper/mediator'
 
@@ -14,7 +15,8 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
   modules: {
     common,
-    pipeline
+    pipeline,
+    myProject
     // auth
   },
 

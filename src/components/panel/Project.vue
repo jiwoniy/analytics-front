@@ -7,12 +7,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import MainPanel from '@/components/panel/Main'
 
 export default {
   name: 'project',
   components: {
     MainPanel
+  },
+  methods: {
+    ...mapActions({
+      getProjects: 'myProject/getProjects'
+    })
+  },
+  mounted () {
+    this.getProjects()
   }
 }
 </script>

@@ -4,12 +4,16 @@
       <li>
         <input id="rad1" type="radio" name="rad" checked="checked"/>
         <label for="rad1">
-          <div> Project List </div>
+          <div> {{ $t('Project List') }} </div>
         </label>
         <div class="accslide">
           <div class="content">
-            <h1>Just keep going with longer text</h1>
-            <p>Lorem ipsum...</p>
+            <h1> {{ $t('Project List') }} </h1>
+            <list-view
+              :items="projectList"
+              :selected-item-id="selectedProject.id"
+              :item-click="projectClick"
+            ></list-view>
           </div>
         </div>
       </li>
@@ -17,12 +21,16 @@
       <li>
         <input id="rad2" type="radio" name="rad"/>
         <label for="rad2">
-          <div> Worksheet List </div>
+          <div> {{ $t('Worksheet List') }} </div>
         </label>
         <div class="accslide">
           <div class="content">
-            <h1>Second panel</h1>
-            <p>Lorem ipsum...</p>
+            <h1> {{ $t('Worksheet List') }} </h1>
+            <list-view
+              :items="worksheetList"
+              :selected-item-id="selectedWorksheet.id"
+              :item-click="worksheetClick"
+            ></list-view>
           </div>
         </div>
       </li>
@@ -30,11 +38,11 @@
       <li>
         <input id="rad3" type="radio" name="rad"/>
         <label for="rad3">
-          <div> Pipeline Design Tool </div>
+          <div> {{ $t('Pipeline Design Tool') }} </div>
         </label>
         <div class="accslide">
           <div class="content">
-            <h1>Third panel</h1>
+            <h1> {{ $t('Pipeline Design Tool') }} </h1>
             <p>Lorem ipsum...</p>
           </div>
         </div>
@@ -44,8 +52,65 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
+import ListView from '@/components/ui/ListView'
+
 export default {
-  name: 'Vertical-Accordion'
+  name: 'Vertical-Accordion',
+  components: {
+    ListView
+  },
+  i18n: {
+    messages: {
+      'en': {
+        'Project List': 'Project List',
+        'Worksheet List': 'Worksheet List',
+        'Pipeline Design Tool': 'Pipeline Design Tool'
+      },
+      'ko': {
+        'Project List': '프로젝트',
+        'Worksheet List': '워크시트',
+        'Pipeline Design Tool': '파이프라인 설계'
+      }
+    }
+  },
+  props: {
+    projectList: {
+      type: Array,
+      default: () => []
+    },
+    selectedProject: {
+      type: Object,
+      default: () => {}
+    },
+    worksheetList: {
+      type: Array,
+      default: () => []
+    },
+    selectedWorksheet: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  methods: {
+    ...mapActions({
+      setSelectedProject: 'myProject/setSelectedProject',
+      setSelectedWorksheet: 'myProject/setSelectedWorksheet'
+    }),
+    projectClick (event) {
+      if (event.target) {
+        const projectId = event.target.id || event.target.parentElement.id
+        this.setSelectedProject(projectId)
+      }
+    },
+    worksheetClick (event) {
+      if (event.target) {
+        const worksheetId = event.target.id || event.target.parentElement.id
+        this.setSelectedWorksheet(worksheetId)
+      }
+    }
+  }
 }
 </script>
 

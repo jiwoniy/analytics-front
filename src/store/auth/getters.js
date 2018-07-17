@@ -1,3 +1,3 @@
 export default {
-  getLocale: state => state.locale
+  // getLocale: state => state.locale
 }

@@ -7,7 +7,10 @@
         <left-panel
           id="leftPanel"
           :is-show="isLeftPanelShow"
-          :node-tree="nodeTree"
+          :project-list="projectList"
+          :selected-project="selectedProject"
+          :worksheet-list="worksheetList"
+          :selected-worksheet="selectedWorksheet"
         >
         </left-panel>
 
@@ -26,6 +29,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 // import faker from 'faker'
 // import * as d3Random from 'd3-random'
 
@@ -46,38 +50,46 @@ export default {
   data () {
     return {
       // blocks: [],
-      nodeTree: {
-        name: 'Project List',
-        children: [
-          { name: 'Project - 1' },
-          { name: 'Project - 2' },
-          {
-            name: 'Project - 3',
-            children: [
-              {
-                name: 'Data Source',
-                children: [
-                  { name: 'Data Source - 1' },
-                  { name: 'Data Source - 2' }
-                ]
-              },
-              { name: 'Extra 123' },
-              { name: 'Extra 456' },
-              {
-                name: 'Algorithm',
-                children: [
-                  { name: 'Algorithm - 1' },
-                  { name: 'Algorithm - 2' }
-                ]
-              }
-            ]
-          }
-        ]
-      },
+      // nodeTree: {
+      //   name: 'Project List',
+      //   children: [
+      //     { name: 'Project - 1' },
+      //     { name: 'Project - 2' },
+      //     {
+      //       name: 'Project - 3',
+      //       children: [
+      //         {
+      //           name: 'Data Source',
+      //           children: [
+      //             { name: 'Data Source - 1' },
+      //             { name: 'Data Source - 2' }
+      //           ]
+      //         },
+      //         { name: 'Extra 123' },
+      //         { name: 'Extra 456' },
+      //         {
+      //           name: 'Algorithm',
+      //           children: [
+      //             { name: 'Algorithm - 1' },
+      //             { name: 'Algorithm - 2' }
+      //           ]
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
       isLeftPanelShow: true,
       isRightPanelShow: false,
       currentNodeItem: null
     }
+  },
+  computed: {
+    ...mapGetters({
+      projectList: 'myProject/getProjectList',
+      selectedProject: 'myProject/getSelectedProject',
+      worksheetList: 'myProject/getWorksheetList',
+      selectedWorksheet: 'myProject/getSelectedWorksheet'
+    })
   },
   created () {
     // for (let i = 0; i <= 10; i += 1) {

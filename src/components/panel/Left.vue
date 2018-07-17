@@ -6,7 +6,12 @@
     <!-- <v-accordion></v-accordion> -->
     <transition name="fade">
       <div class="left-panel__contents" v-show="isShow">
-        <v-accordion></v-accordion>
+        <v-accordion
+          :project-list="projectList"
+          :selected-project="selectedProject"
+          :worksheet-list="worksheetList"
+          :selected-worksheet="selectedWorksheet"
+        ></v-accordion>
         <!-- <tree-view
           :nodeTree="nodeTree"
         >
@@ -41,7 +46,19 @@ export default {
     //   type: Array,
     //   default: () => []
     // },
-    nodeTree: {
+    projectList: {
+      type: Array,
+      default: () => []
+    },
+    selectedProject: {
+      type: Object,
+      default: () => {}
+    },
+    worksheetList: {
+      type: Array,
+      default: () => []
+    },
+    selectedWorksheet: {
       type: Object,
       default: () => {}
     },

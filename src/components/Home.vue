@@ -7,12 +7,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import Project from '@/components/panel/Project'
 
 export default {
   name: 'home',
   components: {
     Project
+  },
+  methods: {
+    ...mapActions({
+      setLocale: 'common/setLocale'
+    })
+  },
+  mounted () {
+    this.setLocale()
   }
 }
 </script>

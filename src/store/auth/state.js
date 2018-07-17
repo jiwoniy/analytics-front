@@ -1,3 +1,3 @@
 export default {
-  locale: 'zh_hk'
+  // locale: 'zh_hk'
 }
