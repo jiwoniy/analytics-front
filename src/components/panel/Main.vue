@@ -7,7 +7,7 @@
         <left-panel
           id="leftPanel"
           :is-show="isLeftPanelShow"
-          :data-tree="dataTree"
+          :node-tree="nodeTree"
         >
         </left-panel>
 
@@ -46,7 +46,7 @@ export default {
   data () {
     return {
       // blocks: [],
-      dataTree: {
+      nodeTree: {
         name: 'Project List',
         children: [
           { name: 'Project - 1' },

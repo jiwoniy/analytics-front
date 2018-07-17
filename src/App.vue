@@ -25,6 +25,8 @@ head {
 
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
@@ -34,5 +36,11 @@ body {
   text-align: center;
 
   height: 100%;
+}
+
+/* remove webkit~~ */
+* {
+  margin: 0;
+  padding: 0;
 }
 </style>

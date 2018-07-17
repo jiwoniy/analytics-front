@@ -3,12 +3,14 @@
     id="leftPanel"
     class="left-panel__page"
   >
+    <!-- <v-accordion></v-accordion> -->
     <transition name="fade">
       <div class="left-panel__contents" v-show="isShow">
-        <item
-          :models="dataTree"
+        <v-accordion></v-accordion>
+        <!-- <tree-view
+          :nodeTree="nodeTree"
         >
-        </item>
+        </tree-view> -->
         <!-- <drag-item
           v-for="block in blocks"
           :key="block.id"
@@ -24,20 +26,22 @@
 <script>
 import eventController from '@/utils/EventController'
 // import DragItem from '@/components/common/DragItem'
-import TreeView from '@/components/common/TreeView'
+// import TreeView from '@/components/ui/TreeView'
+import VAccordion from '@/components/ui/VAccordion'
 
 export default {
   name: 'LEFT-Panel',
   components: {
+    VAccordion
     // DragItem,
-    TreeView
+    // TreeView
   },
   props: {
     // blocks: {
     //   type: Array,
     //   default: () => []
     // },
-    dataTree: {
+    nodeTree: {
       type: Object,
       default: () => {}
     },
@@ -58,6 +62,7 @@ export default {
 .left-panel__page {
   position: relative;
   display: block;
+  // width: var(--app-left_panel-width);
 
   .left-panel__contents {
     width: var(--app-left_panel-width);
