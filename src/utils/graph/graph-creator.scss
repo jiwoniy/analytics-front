@@ -1,0 +1,61 @@
+
+marker {
+  // fill: #333;
+  fill: none;
+  stroke-width: 1px;
+}
+
+path.link {
+  fill: none;
+  stroke: #333;
+  stroke-width: 3px;
+  cursor: default;
+}
+
+path.link:hover {
+  stroke: rgb(94, 196, 204);
+}
+
+path.link.hidden {
+  stroke-width: 0;
+}
+
+path.link.selected  {
+  stroke: rgb(229, 172, 247);
+}
+
+.node-wrap {
+  rect {
+    cursor: pointer;
+    fill: #ffffff;
+    stroke: #676a6c;
+    stroke-width: 1.5;
+  }
+
+  text {
+    cursor: pointer;
+    text-anchor: middle;
+  }
+
+  .data-input {
+    fill: #ffffff;
+    stroke: blue;
+    stroke-width: 2;
+  }
+  .data-input.hover {
+    fill: blue;
+  }
+
+  .data-output {
+    fill: #ffffff;
+    stroke: red;
+    stroke-width: 2;
+  }
+  .data-output.hover {
+    fill: red;
+  }
+}
+
+.node-wrap.node-selected  {
+  fill: blue;
+}

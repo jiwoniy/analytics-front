@@ -4,13 +4,17 @@
     class="left-panel__page"
   >
     <transition name="fade">
-      <div class="drag-item-list" v-show="isShow">
-        <drag-comp
+      <div class="left-panel__contents" v-show="isShow">
+        <item
+          :models="dataTree"
+        >
+        </item>
+        <!-- <drag-item
           v-for="block in blocks"
           :key="block.id"
           :item="block"
         >
-        </drag-comp>
+        </drag-item> -->
       </div>
     </transition>
     <button class="folder__button" @click="closeLeftPanel"> x </button>
@@ -19,17 +23,23 @@
 
 <script>
 import eventController from '@/utils/EventController'
-import DragComp from '@/components/common/Drag'
+// import DragItem from '@/components/common/DragItem'
+import TreeView from '@/components/common/TreeView'
 
 export default {
   name: 'LEFT-Panel',
   components: {
-    DragComp
+    // DragItem,
+    TreeView
   },
   props: {
-    blocks: {
-      type: Array,
-      default: () => []
+    // blocks: {
+    //   type: Array,
+    //   default: () => []
+    // },
+    dataTree: {
+      type: Object,
+      default: () => {}
     },
     isShow: {
       type: Boolean,
@@ -49,7 +59,7 @@ export default {
   position: relative;
   display: block;
 
-  .drag-item-list {
+  .left-panel__contents {
     width: var(--app-left_panel-width);
     display: flex;
     flex-direction: column;

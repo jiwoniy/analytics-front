@@ -17,6 +17,7 @@ import {
 import getNodeShape from './getNodeShape'
 import GraphNodes from './graph-nodes'
 import GraphEddes from './graph-edges'
+// import contextMenu from './context-menu'
 
 // This source from https://github.com/cjrd/directed-graph-creator
 const GraphCreator = function GraphCreatorConstructor (svg, options) {
@@ -67,9 +68,9 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
 
   // displayed when dragging between nodes
   this.dragLine = this.svg.append('svg:path')
-    .attr('class', 'link dragline hidden')
+    .attr('class', 'link hidden')
     .attr('d', 'M0,0L0,0')
-    .style('marker-end', 'url(#mark-end-arrow)')
+    .style('marker-end', 'url(#marker-arrow)')
 
   this.pathsGroup = this.svgG.append('g').classed('path-group', true)
   this.nodesGroup = this.svgG.append('g').classed('node-group', true)
@@ -81,22 +82,28 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
 
     this.drawNodes()
     this.drawLinks()
-    // thisGraph.nodes.getNodes().forEach(node => thisGraph.addNode(node))
-    // const nodes = thisGraph.transfromInitNodes(thisGraph.nodes.getNodes())
-    // thisGraph.addNodes(nodes)
-    // thisGraph.updateLinksGraph()
   }
 
-  this.svg.on('mousedown', function (d) {
-    thisGraph.setSelectNode(this, null)
-  })
+  // listen for key events
+  d3Selection.select(window)
+    .on('keydown', function () {
+      thisGraph.svgKeyDown()
+    })
+    .on('keyup', function () {
+      thisGraph.svgKeyUp()
+    })
 
-  // thisGraph.svg.on('mouseup', function (d) {
-  // thisGraph.svgMouseUp(d)
-  // })
-
-  // thisGraph.svg.on('click', function (d) {
-  // })
+  // const menu = contextMenu().items('first item', 'second option', 'whatever, man')
+  this.svg
+    .on('mousedown', function () {
+      // console.log(d3Selection.event.buttons)
+      thisGraph.setSelectNode(this, null)
+    })
+    // var x = event.buttons;
+    // .on('contextmenu', function () {
+    //   d3Selection.event.preventDefault()
+    // menu(d3Selection.mouse(this)[0], d3Selection.mouse(this)[1])
+    // })
 
   // listen for dragging
   const dragSvg = d3Zoom.zoom()
@@ -124,16 +131,11 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     })
 
   this.svg.call(dragSvg).on('dblclick.zoom', null)
-
-  // listen for resize
-  // window.onresize = function windowResize () {
-  //   thisGraph.updateWindow(svg)
-  // }
 }
 
-// GraphCreator.prototype.setIdCt = function setIdCt (idct) {
-//   this.idct = idct
-// }
+GraphCreator.prototype.svgKeyDown = function svgKeyDown () {}
+
+GraphCreator.prototype.svgKeyUp = function svgKeyUp () {}
 
 GraphCreator.prototype.constants = {
   // graphClass: 'graph',
@@ -154,11 +156,10 @@ GraphCreator.prototype.constants = {
 }
 
 GraphCreator.prototype.dragLink = function dragLink (d) {
-  const thisGraph = this
-  const x = d3Selection.mouse(thisGraph.svgG.node())[0]
+  const x = d3Selection.mouse(this.svgG.node())[0]
   const y = d3Selection.mouse(this.svgG.node())[1]
   // TODO
-  thisGraph.dragLine.attr('d',
+  this.dragLine.attr('d',
     `M${d.x},${d.y}L${x},${y}`)
 }
 

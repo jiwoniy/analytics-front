@@ -7,7 +7,7 @@
         <left-panel
           id="leftPanel"
           :is-show="isLeftPanelShow"
-          :blocks="blocks"
+          :data-tree="dataTree"
         >
         </left-panel>
 
@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import faker from 'faker'
-import * as d3Random from 'd3-random'
+// import faker from 'faker'
+// import * as d3Random from 'd3-random'
 
 import eventController from '@/utils/EventController'
 import TopPanel from '@/components/panel/Top'
@@ -45,21 +45,49 @@ export default {
   },
   data () {
     return {
-      blocks: [],
+      // blocks: [],
+      dataTree: {
+        name: 'Project List',
+        children: [
+          { name: 'Project - 1' },
+          { name: 'Project - 2' },
+          {
+            name: 'Project - 3',
+            children: [
+              {
+                name: 'Data Source',
+                children: [
+                  { name: 'Data Source - 1' },
+                  { name: 'Data Source - 2' }
+                ]
+              },
+              { name: 'Extra 123' },
+              { name: 'Extra 456' },
+              {
+                name: 'Algorithm',
+                children: [
+                  { name: 'Algorithm - 1' },
+                  { name: 'Algorithm - 2' }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       isLeftPanelShow: true,
       isRightPanelShow: false,
       currentNodeItem: null
     }
   },
   created () {
-    for (let i = 0; i <= 10; i += 1) {
-      this.blocks.push({
-        id: i,
-        title: faker.company.bs(),
-        input: Math.floor(d3Random.randomUniform(0, 3)()),
-        output: Math.floor(d3Random.randomUniform(0, 3)())
-      })
-    }
+    // for (let i = 0; i <= 10; i += 1) {
+    //   this.blocks.push({
+    //     id: i,
+    //     title: faker.company.bs(),
+    //     input: Math.floor(d3Random.randomUniform(0, 3)()),
+    //     output: Math.floor(d3Random.randomUniform(0, 3)())
+    //   })
+    // }
   },
   mounted () {
     eventController.addListner('LEFT_PANEL', (payload) => {

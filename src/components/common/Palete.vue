@@ -2,6 +2,7 @@
   <transition>
     <div id="svgContainer" class="palete">
       <svg>
+        <def-svg></def-svg>
       </svg>
     </div>
   </transition>
@@ -12,11 +13,15 @@ import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 
+import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 
 export default {
   name: 'Svg-palete',
+  components: {
+    DefSvg
+  },
   data () {
     return {
       svgContainer: null,
@@ -152,9 +157,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../styles/graph-creator.scss';
+@import '../../utils/graph/graph-creator.scss';
 </style>
-
 <style lang="scss" scoped>
 .palete {
   width: 100%;

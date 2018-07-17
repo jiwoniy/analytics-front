@@ -7,10 +7,14 @@ import App from '@/App'
 import router from '@/router'
 import store from '@/store'
 
+import TreeView from '@/components/common/TreeView'
+
 import i18n from '@/plugins/vue-i18n'
 import '@/plugins/axios'
 
 Vue.config.productionTip = false
+
+Vue.component('item', TreeView)
 
 /* eslint-disable no-new */
 new Vue({
