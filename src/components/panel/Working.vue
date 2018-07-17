@@ -1,6 +1,12 @@
 <template>
   <transition>
     <section class="div--Working__page">
+      <div id="tool-box" class="tool-box">
+        <button @click="save"> save </button>
+        <button @click="edit"> edit </button>
+        <button @click="refresh"> refresh </button>
+        <button @click="load"> load </button>
+      </div>
       <drop-comp>
         <svg-palete
           slot="svg-container"
@@ -36,6 +42,18 @@ export default {
     },
     openRightPanel (payload) {
       eventController.RIGHT_PANEL(payload)
+    },
+    save () {
+      eventController.SAVE({})
+    },
+    edit () {
+      eventController.EDIT({})
+    },
+    refresh () {
+      eventController.REFRESH({})
+    },
+    load () {
+      eventController.LOAD({})
     }
   }
 }
@@ -43,18 +61,16 @@ export default {
 
 <style lang="scss" scoped>
 .div--Working__page {
+  position: relative;
   display: block;
   width: 100%;
 }
 
-.div--Working__page .div--Button {
+.div--Working__page .tool-box {
+  position: absolute;
   display: flex;
-  flex-direction: row;
-  width: 200px;
-  height: 30px;
-
-  span {
-    width: 50px;
-  }
+  flex-direction: column;
+  width: 50px;
+  top: 50px;
 }
 </style>

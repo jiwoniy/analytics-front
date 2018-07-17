@@ -10,42 +10,45 @@
           :project-list="projectList"
           :selected-project="selectedProject"
           :worksheet-list="worksheetList"
-          :selected-worksheet="selectedWorksheet"
-        ></v-accordion>
+          :selected-worksheet="selectedWorksheet">
+          <drag-item
+            v-for="block in blocks"
+            :key="block.id"
+            :item="block"
+          >
+          </drag-item>
+        </v-accordion>
         <!-- <tree-view
           :nodeTree="nodeTree"
         >
         </tree-view> -->
-        <!-- <drag-item
-          v-for="block in blocks"
-          :key="block.id"
-          :item="block"
-        >
-        </drag-item> -->
       </div>
     </transition>
-    <button class="folder__button" @click="closeLeftPanel"> x </button>
+    <div class="folder__button" @click="closeLeftPanel">
+      <i v-if="isShow" class="fa fa-angle-double-left" style="font-size:24px"></i>
+      <i v-if="!isShow" class="fa fa-angle-double-right" style="font-size:24px"></i>
+    </div>
   </section>
 </template>
 
 <script>
 import eventController from '@/utils/EventController'
-// import DragItem from '@/components/common/DragItem'
+import DragItem from '@/components/ui/DragItem'
 // import TreeView from '@/components/ui/TreeView'
 import VAccordion from '@/components/ui/VAccordion'
 
 export default {
   name: 'LEFT-Panel',
   components: {
-    VAccordion
-    // DragItem,
+    VAccordion,
+    DragItem
     // TreeView
   },
   props: {
-    // blocks: {
-    //   type: Array,
-    //   default: () => []
-    // },
+    blocks: {
+      type: Array,
+      default: () => []
+    },
     projectList: {
       type: Array,
       default: () => []
@@ -79,6 +82,8 @@ export default {
 .left-panel__page {
   position: relative;
   display: block;
+  // overflow-x: hidden;
+  // overflow-y: auto;
   // width: var(--app-left_panel-width);
 
   .left-panel__contents {
@@ -90,11 +95,19 @@ export default {
 }
 
 .left-panel__page .folder__button {
+  display: block;
   position: absolute;
+  cursor: pointer;
   top: 0px;
-  right: calc(0px - var(--left-panel-folder-button));
-  width: var(--left-panel-folder-button);
-  height: var(--left-panel-folder-button);
+  right: calc(0px - var(--app-left-panel-folder-button));
+  width: var(--app-left-panel-folder-button);
+  height: var(--app-left-panel-folder-button);
+  z-index: var(--app-left-panel-zIndex);
+  i {
+    position: relative;
+    top: 40%;
+    transform: perspective(1px) translateY(-50%);
+  }
 }
 
 .fade-enter-active {

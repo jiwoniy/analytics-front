@@ -43,7 +43,7 @@
         <div class="accslide">
           <div class="content">
             <h1> {{ $t('Pipeline Design Tool') }} </h1>
-            <p>Lorem ipsum...</p>
+            <slot></slot>
           </div>
         </div>
       </li>
@@ -130,6 +130,8 @@ export default {
   $clr-primary: $clr-blue;
 
   width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   ul {
     list-style: none;

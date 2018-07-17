@@ -1,9 +1,14 @@
 #app {
   font-family: 'Roboto', sans-serif !important;
-  --app-left_panel-width: 350px;
-  --app-top_panel-height: 58px;
 
-  --left-panel-folder-button: 35px;
+  --app-left_panel-width: 350px;
+  --app-left-panel-folder-button: 35px;
+  --app-left-panel-zIndex: 100;
+
+  --app-top_panel-color: #1E90FF;
+  --app-top_panel-height: 40px;
+
+
   // --widget-header-color: #ff5a60;
   // --widget-header-height: 52px;
   // --widget-input-height: 89px;

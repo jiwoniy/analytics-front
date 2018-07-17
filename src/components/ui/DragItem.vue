@@ -6,7 +6,7 @@
       draggable="true"
     >
       <div class="drag-item">
-        <h2> {{ item.title }} </h2>
+        <h5> {{ item.title }} </h5>
       </div>
     </div>
   </transition>
@@ -31,13 +31,12 @@ export default {
 
 <style lang="scss" scoped>
 .drag-container {
-  height: 200px;
   display: block;
 
   .drag-item {
     padding: 10px;
     margin: 10px;
-    height: 100px;
+    height: 50px;
     background: rgba(black, 0.4);
 
     &.is-moving {

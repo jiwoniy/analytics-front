@@ -11,6 +11,7 @@
           :selected-project="selectedProject"
           :worksheet-list="worksheetList"
           :selected-worksheet="selectedWorksheet"
+          :blocks="blocks"
         >
         </left-panel>
 
@@ -30,8 +31,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import faker from 'faker'
-// import * as d3Random from 'd3-random'
+import faker from 'faker'
+import * as d3Random from 'd3-random'
 
 import eventController from '@/utils/EventController'
 import TopPanel from '@/components/panel/Top'
@@ -49,7 +50,7 @@ export default {
   },
   data () {
     return {
-      // blocks: [],
+      blocks: [],
       // nodeTree: {
       //   name: 'Project List',
       //   children: [
@@ -92,14 +93,14 @@ export default {
     })
   },
   created () {
-    // for (let i = 0; i <= 10; i += 1) {
-    //   this.blocks.push({
-    //     id: i,
-    //     title: faker.company.bs(),
-    //     input: Math.floor(d3Random.randomUniform(0, 3)()),
-    //     output: Math.floor(d3Random.randomUniform(0, 3)())
-    //   })
-    // }
+    for (let i = 0; i <= 10; i += 1) {
+      this.blocks.push({
+        id: i,
+        title: faker.company.bs(),
+        input: Math.floor(d3Random.randomUniform(0, 3)()),
+        output: Math.floor(d3Random.randomUniform(0, 3)())
+      })
+    }
   },
   mounted () {
     eventController.addListner('LEFT_PANEL', (payload) => {
@@ -109,7 +110,6 @@ export default {
 
     eventController.addListner('RIGHT_PANEL', (payload) => {
       const { open, item } = payload
-      // console.log(payload)
       if (open && item) {
         this.currentNodeItem = item
       } else {

@@ -1,33 +1,33 @@
 <template>
   <transition>
     <div class="top-panel__page">
-      <button @click="save"> save </button>
+      <!-- <button @click="save"> save </button>
       <button @click="edit"> edit </button>
       <button @click="refresh"> refresh </button>
-      <button @click="load"> load </button>
+      <button @click="load"> load </button> -->
     </div>
   </transition>
 </template>
 
 <script>
-import eventController from '@/utils/EventController'
+// import eventController from '@/utils/EventController'
 
 export default {
-  name: 'TOP-Panel',
-  methods: {
-    save () {
-      eventController.SAVE({})
-    },
-    edit () {
-      eventController.EDIT({})
-    },
-    refresh () {
-      eventController.REFRESH({})
-    },
-    load () {
-      eventController.LOAD({})
-    }
-  }
+  name: 'TOP-Panel'
+  // methods: {
+  //   save () {
+  //     eventController.SAVE({})
+  //   },
+  //   edit () {
+  //     eventController.EDIT({})
+  //   },
+  //   refresh () {
+  //     eventController.REFRESH({})
+  //   },
+  //   load () {
+  //     eventController.LOAD({})
+  //   }
+  // }
 }
 </script>
 
@@ -35,5 +35,6 @@ export default {
 .top-panel__page {
   width: 100%;
   height: var(--app-top_panel-height);
+  background-color: var(--app-top_panel-color)
 }
 </style>
