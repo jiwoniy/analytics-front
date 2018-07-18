@@ -5,5 +5,6 @@ export default {
   SAVE: 'SAVE',
   EDIT: 'EDIT',
   REFRESH: 'REFRESH',
-  LOAD: 'LOAD'
+  LOAD: 'LOAD',
+  SHOW_MODAL: 'SHOE_MODAL'
 }

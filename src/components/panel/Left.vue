@@ -17,7 +17,7 @@
             v-for="pipeline in pipelineNodes"
             :key="pipeline.id">
             <tree-items
-              :tree-item="pipeline.pipelineNode"
+              :tree-item="pipeline"
               :is-dragable="true">
             </tree-items>
           </div>
@@ -93,6 +93,7 @@ export default {
   }
 
   .left-panel__contents .pipeline-item {
+    cursor: pointer;
     margin: 10px;
     background: rgba(black, 0.4);
   }

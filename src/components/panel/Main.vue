@@ -28,14 +28,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import faker from 'faker'
-import * as d3Random from 'd3-random'
 
 import eventController from '@/utils/EventController'
 import TopPanel from '@/components/panel/Top'
 import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
+import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
 
 export default {
   name: 'Work-Panel',
@@ -47,36 +46,7 @@ export default {
   },
   data () {
     return {
-      pipelineNodes: [],
-      pipelineNode: {
-        id: 'abc',
-        name: 'Project List',
-        children: [
-          { name: 'Project - 1' },
-          { name: 'Project - 2' },
-          {
-            name: 'Project - 3',
-            children: [
-              {
-                name: 'Data Source',
-                children: [
-                  { name: 'Data Source - 1' },
-                  { name: 'Data Source - 2' }
-                ]
-              },
-              { name: 'Extra 123' },
-              { name: 'Extra 456' },
-              {
-                name: 'Algorithm',
-                children: [
-                  { name: 'Algorithm - 1' },
-                  { name: 'Algorithm - 2' }
-                ]
-              }
-            ]
-          }
-        ]
-      },
+      pipelineNodes: pipelineNodesSchema,
       isLeftPanelShow: true,
       isRightPanelShow: false,
       currentNodeItem: null
@@ -89,17 +59,6 @@ export default {
       worksheetList: 'myProject/getWorksheetList',
       selectedWorksheet: 'myProject/getSelectedWorksheet'
     })
-  },
-  created () {
-    for (let i = 0; i <= 3; i += 1) {
-      this.pipelineNodes.push({
-        id: i,
-        name: faker.company.bs(),
-        input: Math.floor(d3Random.randomUniform(0, 3)()),
-        output: Math.floor(d3Random.randomUniform(0, 3)()),
-        pipelineNode: this.pipelineNode
-      })
-    }
   },
   mounted () {
     eventController.addListner('LEFT_PANEL', (payload) => {

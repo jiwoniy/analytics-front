@@ -19,7 +19,9 @@ GraphNodes.prototype.getSelectNode = function getSelectNode () {
 
 GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
   if (selectNode) {
+    // TODO check!!
     if (selectNode.status.selected) {
+      console.log(selectNode)
       this.nodes[selectNode.id].status.selected = false
       this.selectNodeId = null
     } else if (!selectNode.status.selected) {

@@ -2,8 +2,8 @@ function transformNode (node, isEdges = false) {
   if (isEdges) {
     return {
       id: node.id,
-      type: node.type,
-      title: node.title,
+      node_type: node.node_type,
+      name: node.name,
       input: node.input,
       output: node.output,
       linkInput: node.linkInput || null,
@@ -16,8 +16,8 @@ function transformNode (node, isEdges = false) {
   }
   return {
     id: node.id,
-    type: node.type,
-    title: node.title,
+    node_type: node.node_type,
+    name: node.name,
     input: node.input,
     output: node.output,
     position: {
@@ -31,10 +31,10 @@ function saveNodeTransformNode (node, isEdges = false) {
   if (isEdges) {
     return {
       id: node.id,
-      type: node.type,
+      node_type: node.node_type,
       input: node.input,
       output: node.output,
-      title: node.title,
+      name: node.name,
       linkInput: node.linkInput || null,
       linkOutput: node.linkOutput || null,
       status: {
@@ -51,10 +51,10 @@ function saveNodeTransformNode (node, isEdges = false) {
 
   return {
     id: node.id,
-    type: node.type,
+    node_type: node.node_type,
     input: node.input,
     output: node.output,
-    title: node.title,
+    name: node.name,
     status: {
       moving: false,
       selected: false

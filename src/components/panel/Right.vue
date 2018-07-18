@@ -1,35 +1,62 @@
 <template>
   <section
     class="right-panel__page"
-    :class="{ active: isShow }"
+    :class="{ active: localIsShow }"
   >
-      <!-- <button @click="closeRightPanel"> x </button> -->
     <transition name="fade">
-      <div>
-        {{ currentItem && currentItem.title }}
-      </div>
+      <manage-view
+        :node-info="filterCurrentItem">
+      </manage-view>
     </transition>
+    <div class="folder__button">
+      <i id="close" @click="closeRightPanel" v-if="localIsShow" class="fa fa-angle-double-right" style="font-size:24px"></i>
+      <i id="open" @click="closeRightPanel" v-if="!localIsShow" class="fa fa-angle-double-left" style="font-size:24px"></i>
+    </div>
   </section>
 </template>
 
 <script>
-import eventController from '@/utils/EventController'
+import ManageView from '@/components/ui/ManageView'
 
 export default {
   name: 'Right-Panel',
+  components: {
+    ManageView
+  },
+  data () {
+    return {
+      localIsShow: false
+    }
+  },
   props: {
     currentItem: {
       type: Object,
-      default: () => {}
+      default: () => null
     },
     isShow: {
       type: Boolean,
       default: () => false
     }
   },
+  computed: {
+    filterCurrentItem () {
+      // only throw editable info
+      return this.currentItem
+    }
+  },
   methods: {
-    closeRightPanel () {
-      eventController.RIGHT_PANEL({ open: false })
+    closeRightPanel (event) {
+      const id = event.target.id
+      if (id === 'open' && this.isShow) {
+        this.localIsShow = true
+      } else {
+        this.localIsShow = false
+      }
+    }
+  },
+  watch: {
+    isShow (newValue) {
+      this.localIsShow = newValue
     }
   }
 }
@@ -49,6 +76,22 @@ export default {
 
 .right-panel__page.active {
   width: 250px;
+}
+
+.right-panel__page .folder__button {
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  top: 0px;
+  left: calc(0px - var(--app-left-panel-folder-button));
+  width: var(--app-left-panel-folder-button);
+  height: var(--app-left-panel-folder-button);
+  z-index: var(--app-left-panel-zIndex);
+  i {
+    position: relative;
+    top: 40%;
+    transform: perspective(1px) translateY(-50%);
+  }
 }
 
 .fade-enter-active {

@@ -55,11 +55,15 @@ export default {
         .attr('height', this.height)
     },
     setGraph (svgContainer, options) {
+      const callback = {
+        node_select: this.nodeSelect
+      }
       this.svgGraph = new GraphCreator(svgContainer, {
-        ...options,
-        nodeSelectCallback: this.nodeSelect,
-        saveFile: this.pipeline
-      })
+        options: {
+          ...options,
+          saveFile: this.pipeline
+        },
+        callback })
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -117,7 +121,7 @@ export default {
       this.svgGraph.addNode({
         ...data,
         id: uuidv4(),
-        type: data.id,
+        type: data.node_type,
         position: {
           x: data.position.x * 0.3,
           y: data.position.y * 0.7

@@ -20,10 +20,11 @@ import GraphEddes from './graph-edges'
 // import contextMenu from './context-menu'
 
 // This source from https://github.com/cjrd/directed-graph-creator
-const GraphCreator = function GraphCreatorConstructor (svg, options) {
+const GraphCreator = function GraphCreatorConstructor (svg, { options, callback }) {
   const thisGraph = this
 
   this.options = options || {}
+  this.callback = callback || null
   this.width = options.width
   this.hegith = options.hegith
 
@@ -51,11 +52,9 @@ const GraphCreator = function GraphCreatorConstructor (svg, options) {
     set (target, key, value) {
       target[key] = value
       if (key === 'selectedNode') {
-        if (thisGraph.options && thisGraph.options.nodeSelectCallback) {
-          // node 중에 선택된 값이 무엇인지 확인하고..
-          // 오른창을 닫기 위해 클릭...
+        if (thisGraph.callback && thisGraph.callback.node_select) {
           thisGraph.nodes.setSelectedNode(value)
-          thisGraph.options.nodeSelectCallback(value)
+          thisGraph.callback.node_select(value)
         }
       }
       return true
@@ -215,14 +214,7 @@ function nodeDraghandler (context) {
           d.x = d3Selection.event.x
           d.y = d3Selection.event.y
 
-          // when node draging edges also shoud be updated by new position
           context.drawLinks(d)
-        // } else {
-        //   if (d.output > 0) {
-        //     context.state.justDragged = true
-        //     context.dragLine.classed('hidden', false)
-        //     context.dragLink(d)
-        //   }
         }
       }
     })
@@ -260,7 +252,7 @@ GraphCreator.prototype.drawGraph = function drawGraph () {
 }
 
 GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
-  if (this.state.justDragged && target.input > 0 && source.type !== target.type) {
+  if (this.state.justDragged && target.input > 0 && source.id !== target.id) {
     return true
   }
   return false
@@ -300,7 +292,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .call(d => getNodeShape(thisGraph, d))
 
   newGs.each(function (d) {
-    thisGraph.appendText(d3Selection.select(this), d.title)
+    thisGraph.appendText(d3Selection.select(this), d.name)
   })
 
   this.nodesGroup.exit().remove()

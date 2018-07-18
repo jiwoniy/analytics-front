@@ -6,6 +6,7 @@
         <button @click="edit"> edit </button>
         <button @click="refresh"> refresh </button>
         <button @click="load"> load </button>
+        <button @click="showModal"> modal </button>
       </div>
       <drop-comp>
         <svg-palete
@@ -54,6 +55,9 @@ export default {
     },
     load () {
       eventController.LOAD({})
+    },
+    showModal () {
+      eventController.SHOW_MODAL({})
     }
   }
 }

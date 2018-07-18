@@ -179,7 +179,6 @@ export default {
     padding: 10px 0;
     float: left;
     overflow-x: hidden;
-    // font-sizes: 12px;
     line-height: 1.5;
     transition: all 700ms ease;
   }

@@ -5,11 +5,11 @@
       <i v-if="open" class="fa fa-angle-down"></i>
 
       <drag-item
-        v-if="isDragable"
+        v-if="isNodeitemDragable"
         slot="pipeline-item"
         :item="treeItem">
       </drag-item>
-      <span v-if="!isDragable" class="label"> {{ treeItem.name }} </span>
+      <span v-if="!isNodeitemDragable" class="label"> {{ treeItem.name }} </span>
     </div>
 
     <ul
@@ -54,6 +54,9 @@ export default {
     isFolder () {
       return this.treeItem.children &&
         this.treeItem.children.length
+    },
+    isNodeitemDragable () {
+      return true && (this.treeItem.input || this.treeItem.output)
     }
   },
   methods: {
