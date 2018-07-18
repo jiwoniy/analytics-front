@@ -11,18 +11,15 @@
           :selected-project="selectedProject"
           :worksheet-list="worksheetList"
           :selected-worksheet="selectedWorksheet"
-          :blocks="blocks"
-        >
+          :pipeline-nodes="pipelineNodes">
         </left-panel>
 
-        <work-panel
-          :is-left-panel-show="isLeftPanelShow"
-        >
+        <work-panel :is-left-panel-show="isLeftPanelShow">
         </work-panel>
+
         <right-panel
           :isShow="isRightPanelShow"
-          :current-item="currentNodeItem"
-        >
+          :current-item="currentNodeItem">
         </right-panel>
       </div>
     </section>
@@ -50,35 +47,36 @@ export default {
   },
   data () {
     return {
-      blocks: [],
-      // nodeTree: {
-      //   name: 'Project List',
-      //   children: [
-      //     { name: 'Project - 1' },
-      //     { name: 'Project - 2' },
-      //     {
-      //       name: 'Project - 3',
-      //       children: [
-      //         {
-      //           name: 'Data Source',
-      //           children: [
-      //             { name: 'Data Source - 1' },
-      //             { name: 'Data Source - 2' }
-      //           ]
-      //         },
-      //         { name: 'Extra 123' },
-      //         { name: 'Extra 456' },
-      //         {
-      //           name: 'Algorithm',
-      //           children: [
-      //             { name: 'Algorithm - 1' },
-      //             { name: 'Algorithm - 2' }
-      //           ]
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // },
+      pipelineNodes: [],
+      pipelineNode: {
+        id: 'abc',
+        name: 'Project List',
+        children: [
+          { name: 'Project - 1' },
+          { name: 'Project - 2' },
+          {
+            name: 'Project - 3',
+            children: [
+              {
+                name: 'Data Source',
+                children: [
+                  { name: 'Data Source - 1' },
+                  { name: 'Data Source - 2' }
+                ]
+              },
+              { name: 'Extra 123' },
+              { name: 'Extra 456' },
+              {
+                name: 'Algorithm',
+                children: [
+                  { name: 'Algorithm - 1' },
+                  { name: 'Algorithm - 2' }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       isLeftPanelShow: true,
       isRightPanelShow: false,
       currentNodeItem: null
@@ -93,12 +91,13 @@ export default {
     })
   },
   created () {
-    for (let i = 0; i <= 10; i += 1) {
-      this.blocks.push({
+    for (let i = 0; i <= 3; i += 1) {
+      this.pipelineNodes.push({
         id: i,
-        title: faker.company.bs(),
+        name: faker.company.bs(),
         input: Math.floor(d3Random.randomUniform(0, 3)()),
-        output: Math.floor(d3Random.randomUniform(0, 3)())
+        output: Math.floor(d3Random.randomUniform(0, 3)()),
+        pipelineNode: this.pipelineNode
       })
     }
   },
@@ -129,18 +128,13 @@ export default {
 
 .main-panel__page .top {
   width: 100%;
-  height: var(--app-top_panel-height);
+  height: var(--app-top-panel-height);
 }
 
 .main-panel__page .work {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100% - var(--app-top_panel-height));
+  height: calc(100% - var(--app-top-panel-height));
 }
-
-// .main-panel__page .Working__page {
-  // width: 100%;
-  // margin-left: 250px;
-// }
 </style>

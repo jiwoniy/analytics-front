@@ -6,7 +6,7 @@
       draggable="true"
     >
       <div class="drag-item">
-        <h5> {{ item.title }} </h5>
+        <h5> {{ item.name }} </h5>
       </div>
     </div>
   </transition>
@@ -34,14 +34,13 @@ export default {
   display: block;
 
   .drag-item {
-    padding: 10px;
-    margin: 10px;
-    height: 50px;
-    background: rgba(black, 0.4);
+    // padding: 10px;
+    // margin: 10px;
+    // background: rgba(black, 0.4);
 
     &.is-moving {
       transform: scale(1.5);
-      background: rgba(black, 0.8);
+      // background: rgba(black, 0.8);
     }
   }
 }

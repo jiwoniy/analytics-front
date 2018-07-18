@@ -34,7 +34,7 @@ export default {
 <style lang="scss" scoped>
 .top-panel__page {
   width: 100%;
-  height: var(--app-top_panel-height);
-  background-color: var(--app-top_panel-color)
+  height: var(--app-top-panel-height);
+  background-color: var(--app-top-panel-color)
 }
 </style>

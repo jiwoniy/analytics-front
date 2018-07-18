@@ -3,25 +3,26 @@
     id="leftPanel"
     class="left-panel__page"
   >
-    <!-- <v-accordion></v-accordion> -->
     <transition name="fade">
       <div class="left-panel__contents" v-show="isShow">
-        <v-accordion
+        <h-accordion
           :project-list="projectList"
           :selected-project="selectedProject"
           :worksheet-list="worksheetList"
           :selected-worksheet="selectedWorksheet">
-          <drag-item
-            v-for="block in blocks"
-            :key="block.id"
-            :item="block"
-          >
-          </drag-item>
-        </v-accordion>
-        <!-- <tree-view
-          :nodeTree="nodeTree"
-        >
-        </tree-view> -->
+
+          <div
+            class="pipeline-item"
+            slot="pipeline-item"
+            v-for="pipeline in pipelineNodes"
+            :key="pipeline.id">
+            <tree-items
+              :tree-item="pipeline.pipelineNode"
+              :is-dragable="true">
+            </tree-items>
+          </div>
+
+        </h-accordion>
       </div>
     </transition>
     <div class="folder__button" @click="closeLeftPanel">
@@ -33,19 +34,17 @@
 
 <script>
 import eventController from '@/utils/EventController'
-import DragItem from '@/components/ui/DragItem'
-// import TreeView from '@/components/ui/TreeView'
-import VAccordion from '@/components/ui/VAccordion'
+import TreeItems from '@/components/ui/TreeItems'
+import HAccordion from '@/components/ui/HAccordion'
 
 export default {
   name: 'LEFT-Panel',
   components: {
-    VAccordion,
-    DragItem
-    // TreeView
+    HAccordion,
+    TreeItems
   },
   props: {
-    blocks: {
+    pipelineNodes: {
       type: Array,
       default: () => []
     },
@@ -87,10 +86,15 @@ export default {
   // width: var(--app-left_panel-width);
 
   .left-panel__contents {
-    width: var(--app-left_panel-width);
+    width: var(--app-left-panel-width);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .left-panel__contents .pipeline-item {
+    margin: 10px;
+    background: rgba(black, 0.4);
   }
 }
 

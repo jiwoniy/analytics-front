@@ -1,6 +1,7 @@
 <template>
   <div class="div--Accordion">
     <ul>
+
       <li>
         <input id="rad1" type="radio" name="rad" checked="checked"/>
         <label for="rad1">
@@ -12,8 +13,8 @@
             <list-view
               :items="projectList"
               :selected-item-id="selectedProject.id"
-              :item-click="projectClick"
-            ></list-view>
+              :item-click="projectClick">
+            </list-view>
           </div>
         </div>
       </li>
@@ -29,8 +30,8 @@
             <list-view
               :items="worksheetList"
               :selected-item-id="selectedWorksheet.id"
-              :item-click="worksheetClick"
-            ></list-view>
+              :item-click="worksheetClick">
+            </list-view>
           </div>
         </div>
       </li>
@@ -43,10 +44,11 @@
         <div class="accslide">
           <div class="content">
             <h1> {{ $t('Pipeline Design Tool') }} </h1>
-            <slot></slot>
+            <slot name="pipeline-item"></slot>
           </div>
         </div>
       </li>
+
     </ul>
   </div>
 </template>
@@ -57,7 +59,7 @@ import { mapActions } from 'vuex'
 import ListView from '@/components/ui/ListView'
 
 export default {
-  name: 'Vertical-Accordion',
+  name: 'Horizontal-Accordion',
   components: {
     ListView
   },
@@ -118,9 +120,10 @@ export default {
 .div--Accordion {
   $max-tabs: 3;
   $label-tab-width: 40px;
+
   $clr-bg: #1C1F2B;
   $clr-white: #ffffff;
-  $clr-blue: blue;
+  $clr-blue: var(--app-left-panel-color);
   $clr-bg-light: lighten($clr-bg, 10%);
   $clr-bg-lighter: lighten($clr-bg, 15%);
   $clr-bg-dark: darken($clr-bg, 2.5%);

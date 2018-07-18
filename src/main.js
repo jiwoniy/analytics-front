@@ -7,14 +7,14 @@ import App from '@/App'
 import router from '@/router'
 import store from '@/store'
 
-import NodeTree from '@/components/ui/NodeTree'
+import TreeItem from '@/components/ui/TreeItem'
 
 import i18n from '@/plugins/vue-i18n'
 import '@/plugins/axios'
 
 Vue.config.productionTip = false
 
-Vue.component('node-tree', NodeTree)
+Vue.component('tree-item', TreeItem)
 
 /* eslint-disable no-new */
 new Vue({

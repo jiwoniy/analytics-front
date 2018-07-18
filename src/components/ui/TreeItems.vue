@@ -1,22 +1,29 @@
 <template>
   <div class="tree">
     <ul class="tree-list">
-      <node-tree :node-tree="nodeTree"></node-tree>
+      <tree-item
+        :tree-item="treeItem"
+        :is-dragable="isDragable">
+      </tree-item>
     </ul>
   </div>
 </template>
 
 <script>
-import NodeTree from './NodeTree'
+import TreeItem from './TreeItem'
 
 export default {
   components: {
-    NodeTree
+    TreeItem
   },
   props: {
-    nodeTree: {
+    treeItem: {
       type: Object,
       default: () => {}
+    },
+    isDragable: {
+      type: Boolean,
+      default: () => false
     }
   }
 }
@@ -24,6 +31,8 @@ export default {
 
 <style>
 .tree-list ul {
+  list-style: none;
+
   padding-left: 16px;
   margin: 6px 0;
 }
