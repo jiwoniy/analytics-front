@@ -1,7 +1,7 @@
 import isPromise from '@/utils/isPromise'
 
 function run (prev, next, arg) {
-  if (isPromise(prev(arg))) {
+  if (isPromise(prev)) {
     return prev(arg)
       .then(res => next(res))
   }
@@ -14,7 +14,7 @@ const compose = (fns, left = true) => {
     const fun = left ? 'reduce' : 'reduceRight'
     return fns[fun](function (prev, next) {
       if (typeof prev === 'function' && typeof next === 'function') {
-        return function (arg) {
+        return function (...arg) {
           try {
             if (arg === null || arg === undefined) {
               return run(prev, next, null)
@@ -31,8 +31,5 @@ const compose = (fns, left = true) => {
   }
   return new Error('first argument should be array')
 }
-
-// flow
-// pipeline
 
 export default compose

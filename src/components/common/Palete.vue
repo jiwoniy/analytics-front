@@ -18,6 +18,7 @@ import * as d3Selection from 'd3-selection'
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
+import compose from '@/utils/compose'
 
 export default {
   name: 'Svg-palete',
@@ -61,10 +62,33 @@ export default {
       const callback = {
         node_select: this.nodeSelect
       }
+
+      // TODO method chaning
+      function validate (isFirst) {
+        return function (args) {
+          if (isFirst) {
+            // 비교로직
+            return [true, ...args]
+          } else {
+            // 비교로직
+            if (!args[0]) {
+              return false
+            } else {
+              // 비교로직
+              return [true, ...args]
+            }
+          }
+        }
+      }
+      const composeValidate = compose([
+        validate(true),
+        validate()
+      ], true)
       this.svgGraph = new GraphCreator(svgContainer, {
         options: {
           ...options,
-          saveFile: this.pipeline
+          saveFile: this.pipeline,
+          connectValidation: composeValidate
         },
         callback })
     },
@@ -88,7 +112,7 @@ export default {
       this.svgContainer = d3Selection.select('#svgContainer').select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
-      this.svgContainerG = this.svgContainer
+      this.svgContainerGroup = this.svgContainer
         .append('g')
         .attr('id', 'graphG')
         .classed('graph', true)

@@ -289,7 +289,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
       thisGraph.removeNode(d)
     })
     .call(nodeDrag)
-    .call(d => getNodeShape(thisGraph, d))
+    .call(d => getNodeShape(thisGraph, d, thisGraph.options.connectValidation))
 
   newGs.each(function (d) {
     thisGraph.appendText(d3Selection.select(this), d.name)
@@ -401,7 +401,7 @@ GraphCreator.prototype.save = function save () {
     nodes: []
   }
 
-  if (this.edges.getEdges().length && this.nodes.getNodes()) {
+  if (this.edges.getEdges().length || this.nodes.getNodes()) {
     saveFile.edges = edgesTransformForSave(this.edges.getEdges())
     saveFile.nodes = nodesTransformForSave(this.nodes.getNodes())
 
