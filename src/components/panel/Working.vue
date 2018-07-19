@@ -48,7 +48,7 @@ export default {
       eventController.SAVE({})
     },
     edit () {
-      eventController.EDIT({})
+      eventController.EDIT(true)
     },
     refresh () {
       eventController.REFRESH({})
@@ -57,7 +57,10 @@ export default {
       eventController.LOAD({})
     },
     showModal () {
-      eventController.SHOW_MODAL({})
+      eventController.SHOW_MODAL({
+        position: 'bottom',
+        size: 'large'
+      })
     }
   }
 }
@@ -75,6 +78,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 50px;
-  top: 50px;
+  top: 100px;
+  z-index: 999;
 }
 </style>

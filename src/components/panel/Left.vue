@@ -81,9 +81,6 @@ export default {
 .left-panel__page {
   position: relative;
   display: block;
-  // overflow-x: hidden;
-  // overflow-y: auto;
-  // width: var(--app-left_panel-width);
 
   .left-panel__contents {
     width: var(--app-left-panel-width);

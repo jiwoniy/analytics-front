@@ -1,23 +1,36 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask" @click="clickModal">
+    <div class="modal-page" @click="clickModal">
 
-      <div class="modal-wrapper">
-        <div class="modal-container">
-
-          <div class="modal-header">
+      <div class="modal-wrapper"
+        :class="{
+          'center': position === 'center',
+          'top': position === 'top',
+          'bottom': position === 'bottom'
+        }"
+      >
+        <!-- <slot></slot> -->
+        <!-- <h3 slot="header">custom header</h3> -->
+        <div class="modal-container"
+          :class="{
+            'small': size === 'small',
+            'medium': size === 'medium',
+            'large': size === 'large'
+          }"
+        >
+          <div class="header">
             <slot name="header">
               default header
             </slot>
           </div>
 
-          <div class="modal-body">
+          <div class="body">
             <slot name="body">
               default body
             </slot>
           </div>
 
-          <div class="modal-footer">
+          <div class="footer">
             <slot name="footer">
               default footer
               <button class="modal-close-button" @click="clickModal">
@@ -25,6 +38,7 @@
               </button>
             </slot>
           </div>
+
         </div>
       </div>
 
@@ -35,6 +49,16 @@
 <script>
 export default {
   name: 'Modal',
+  props: {
+    size: {
+      type: String,
+      default: () => 'small'
+    },
+    position: {
+      type: String,
+      default: () => 'center'
+    }
+  },
   data () {
     return {
       showModal: false
@@ -43,7 +67,7 @@ export default {
   methods: {
     clickModal (event) {
       const id = event.target.className || ''
-      if (id === 'modal-mask' || id === 'modal-close-button') {
+      if (id.indexOf('modal-wrapper') > -1 || id === 'modal-close-button') {
         this.$emit('close')
       }
     }
@@ -51,8 +75,10 @@ export default {
 }
 </script>
 
-<style scoped>
-.modal-mask {
+<style scoped lang="scss">
+.modal-page {
+  --app-modal-margin: 2rem;
+  --app-modal-margin-double: 4rem;
   position: fixed;
   z-index: 9998;
   top: 0;
@@ -65,9 +91,18 @@ export default {
 }
 
 .modal-wrapper {
-  display: block;
-  margin: 0 auto;
-  /* vertical-align: middle; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: var(--app-modal-margin) auto;
+  height: calc(100% - var(--app-modal-margin-double));
+}
+
+.modal-wrapper.top {
+  align-items: flex-start;
+}
+.modal-wrapper.bottom {
+  align-items: flex-end;
 }
 
 .modal-container {
@@ -79,23 +114,36 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+
+  .header h3 {
+    margin-top: 0;
+    color: #42b983;
+  }
+  .body {
+    margin: 20px 0;
+  }
+  .footer {
+    .modal-close-button {
+      float: right;
+    }
+  }
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+.modal-container.small {
+  width: 40%;
+  min-width: 300px;
+  height: calc(40% - var(--app-modal-margin-double));
 }
-
-.modal-body {
-  margin: 20px 0;
+.modal-container.medium {
+  width: 60%;
+  height: calc(60% - var(--app-modal-margin-double));
 }
-
-.modal-close-button {
-  float: right;
+.modal-container.large {
+  width: 90%;
+  height: calc(90% - var(--app-modal-margin-double));
 }
 
 /* transition modal */
-
 .modal-enter {
   opacity: 0;
 }

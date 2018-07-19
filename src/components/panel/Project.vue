@@ -2,7 +2,7 @@
   <transition>
     <div class="div--Project__page">
       <main-panel></main-panel>
-      <modal v-if="showModal" @close="showModal = false">
+      <modal v-if="showModal" @close="showModal = false" :size="modalSize" :position="modalPosition">
         <h3 slot="header">custom header</h3>
       </modal>
     </div>
@@ -22,7 +22,9 @@ export default {
   },
   data () {
     return {
-      showModal: false
+      showModal: false,
+      modalSize: 'small',
+      modalPosition: 'center'
     }
   },
   methods: {
@@ -34,8 +36,16 @@ export default {
     this.getProjects()
   },
   mounted () {
-    eventController.addListner('SHOW_MODAL', () => {
+    eventController.addListner('SHOW_MODAL', (payload) => {
+      const { position, size } = payload
       this.showModal = true
+      if (position) {
+        this.modalPosition = position
+      }
+
+      if (size) {
+        this.modalSize = size
+      }
     })
   }
 }

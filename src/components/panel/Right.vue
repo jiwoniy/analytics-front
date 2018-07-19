@@ -9,8 +9,8 @@
       </manage-view>
     </transition>
     <div class="folder__button">
-      <i id="close" @click="closeRightPanel" v-if="localIsShow" class="fa fa-angle-double-right" style="font-size:24px"></i>
-      <i id="open" @click="closeRightPanel" v-if="!localIsShow" class="fa fa-angle-double-left" style="font-size:24px"></i>
+      <i id="close" @click="closeRightPanel" v-if="isShow && localIsShow" class="fa fa-angle-double-right" style="font-size:24px"></i>
+      <i id="open" @click="closeRightPanel" v-if="isShow && !localIsShow" class="fa fa-angle-double-left" style="font-size:24px"></i>
     </div>
   </section>
 </template>

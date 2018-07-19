@@ -1,6 +1,8 @@
 <template>
   <transition>
     <div id="svgContainer" class="palete">
+      <img class="lock" v-if="editable" src="@/assets/img/lock-open-solid.svg" />
+      <img class="lock" v-if="!editable" src="@/assets/img/lock-solid.svg" />
       <svg>
         <def-svg></def-svg>
       </svg>
@@ -25,8 +27,9 @@ export default {
   data () {
     return {
       svgContainer: null,
-      svgContainerG: null,
+      svgContainerGroup: null,
       svgGraph: null,
+      editable: false,
       leftPanelWidth: null
     }
   },
@@ -67,7 +70,7 @@ export default {
     },
     removeSvgGraph () {
       if (this.svgGraph) {
-        this.svgContainerG.remove()
+        this.svgContainerGroup.remove()
       }
     },
     setSvgContainer () {
@@ -135,7 +138,8 @@ export default {
     })
 
     eventController.addListner('EDIT', () => {
-      this.svgGraph.setEditable(true)
+      this.editable = !this.editable
+      this.svgGraph.setEditable(this.editable)
     })
 
     eventController.addListner('REFRESH', () => {
@@ -161,13 +165,24 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../utils/graph/graph-creator.scss';
+@import '@/utils/graph/graph-creator.scss';
 </style>
+
 <style lang="scss" scoped>
 .palete {
+  position: relative;
   width: 100%;
   height: 100%;
   display: block;
-  background-color: rgb(248, 248, 248)
+  background-color: rgb(248, 248, 248);
+
+  .lock {
+    position: absolute;
+    left: 0px;
+    top: var(--app-left-panel-folder-button);
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
 }
 </style>
