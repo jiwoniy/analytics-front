@@ -1,23 +1,38 @@
-const compose = (fns, right = true) => {
-  if (right) {
-    // return fns.reduceRight((prevFn, nextFn) => (...args) => nextFn(prevFn(...args)),
-    //   value => value)
-    return fns.reduceRight(function (prevFn, nextFn) {
-      return function (args) {
-        return nextFn(prevFn(...args))
-      }
-    }, value => value)
+import isPromise from '@/utils/isPromise'
+
+function run (prev, next, arg) {
+  if (isPromise(prev(arg))) {
+    return prev(arg)
+      .then(res => next(res))
   }
-  return fns.reduce((prevFn, nextFn) => (...args) => nextFn(prevFn(...args)),
-    value => value)
+
+  return next(prev(arg))
 }
 
-// const compose2 = (f, g) => (...args) => f(g(...args))
-// const compose = (...fns) => fns.reduce(compose2)
-// const pipe = (...fns) => fns.reduceRight(compose2)
+const compose = (fns, left = true) => {
+  if (fns && Array.isArray(fns)) {
+    const fun = left ? 'reduce' : 'reduceRight'
+    return fns[fun](function (prev, next) {
+      if (typeof prev === 'function' && typeof next === 'function') {
+        return function (arg) {
+          try {
+            if (arg === null || arg === undefined) {
+              return run(prev, next, null)
+            }
 
-// [0, 1, 2, 3, 4].reduce(function(accumulator, currentValue, currentIndex, array) {
-//   return accumulator + currentValue;
-// }, 10);
+            return run(prev, next, arg)
+          } catch (e) {
+            return new Error(`exception in function: ${e}`)
+          }
+        }
+      }
+      return new Error('The array must consist of functions.')
+    }, value => value)
+  }
+  return new Error('first argument should be array')
+}
+
+// flow
+// pipeline
 
 export default compose
