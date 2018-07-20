@@ -12,7 +12,6 @@
         <svg-palete
           slot="svg-container"
           :open-right-panel="openRightPanel"
-          :is-open-left-panel="isLeftPanelShow"
         >
         </svg-palete>
       </drop-comp>
@@ -31,16 +30,7 @@ export default {
     DropComp,
     SvgPalete
   },
-  props: {
-    isLeftPanelShow: {
-      type: Boolean,
-      default: () => true
-    }
-  },
   methods: {
-    openLeftPanel (status = true) {
-      eventController.LEFT_PANEL({ open: true })
-    },
     openRightPanel (payload) {
       eventController.RIGHT_PANEL(payload)
     },

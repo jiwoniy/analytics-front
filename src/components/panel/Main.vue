@@ -1,56 +1,46 @@
 <template>
   <transition>
     <section class="main-panel__page">
-      <div class="work" ref="dragable">
-        <!-- <left-panel
-          id="leftPanel"
-          :is-show="isLeftPanelShow"
-          :project-list="projectList"
-          :selected-project="selectedProject"
-          :worksheet-list="worksheetList"
-          :selected-worksheet="selectedWorksheet"
-          :pipeline-nodes="pipelineNodes">
-        </left-panel>
-
-        <work-panel :is-left-panel-show="isLeftPanelShow">
-        </work-panel> -->
-
-        <!-- <right-panel
-          :isShow="isRightPanelShow"
-          :current-item="currentNodeItem">
-        </right-panel> -->
 
         <Split ref="Main_Split">
-          <SplitArea :size="20" :minSize="50">
-            <left-panel
-              id="leftPanel"
-              :is-show="isLeftPanelShow"
-              :project-list="projectList"
-              :selected-project="selectedProject"
-              :worksheet-list="worksheetList"
-              :selected-worksheet="selectedWorksheet"
-              :pipeline-nodes="pipelineNodes">
-            </left-panel>
+          <SplitArea :size="size.left" :minSize="50">
+            <div class="work" ref="dragable">
+              <left-panel
+                id="leftPanel"
+                :project-list="projectList"
+                :selected-project="selectedProject"
+                :worksheet-list="worksheetList"
+                :selected-worksheet="selectedWorksheet"
+                :pipeline-nodes="pipelineNodes">
+              </left-panel>
+            </div>
           </SplitArea>
-          <SplitArea :size="75" :minSize="100">
-            <work-panel :is-left-panel-show="isLeftPanelShow">
+          <SplitArea class="center-section" :size="size.center" :minSize="100">
+             <div class="folder__button" @click="minimizeLeftPanel">
+              <img v-show="isLeftMinimize" src="@/assets/img/angle-right-solid.svg" />
+              <img v-show="!isLeftMinimize" src="@/assets/img/angle-left-solid.svg" />
+            </div>
+            <work-panel>
             </work-panel>
+            <div class="folder__button_right" @click="minimizeRightPanel">
+              <img v-show="!isRightMinimize" src="@/assets/img/angle-right-solid.svg" />
+              <img v-show="isRightMinimize" src="@/assets/img/angle-left-solid.svg" />
+            </div>
           </SplitArea>
-          <SplitArea :size="5" :minSize="50">
+          <SplitArea :size="size.right" :minSize="50">
             <right-panel
               :isShow="isRightPanelShow"
               :current-item="currentNodeItem">
             </right-panel>
           </SplitArea>
         </Split>
-      </div>
+
     </section>
   </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-// import splitPane from 'vue-splitpane'
 
 import eventController from '@/utils/EventController'
 import LeftPanel from '@/components/panel/Left'
@@ -68,9 +58,15 @@ export default {
   data () {
     return {
       pipelineNodes: pipelineNodesSchema,
-      isLeftPanelShow: true,
+      isLeftMinimize: false,
+      isRightMinimize: true,
       isRightPanelShow: false,
-      currentNodeItem: null
+      currentNodeItem: null,
+      size: {
+        left: 20,
+        center: 75,
+        right: 5
+      }
     }
   },
   computed: {
@@ -82,19 +78,39 @@ export default {
     })
   },
   methods: {
-    resize () {
-      console.log('resize')
+    minimizeLeftPanel () {
+      // TODO observe drag
+      this.isLeftMinimize = !this.isLeftMinimize
+      const remain = 100 - this.size.right
+      if (this.isLeftMinimize) {
+        this.size.left = 5
+        this.size.center = remain - this.size.left
+      } else {
+        this.size.left = 20
+        this.size.center = remain - this.size.left
+      }
     },
-    reset () {
-      console.log(this.$refs.mySplit.reset())
+    minimizeRightPanel () {
+      // TODO observe drag
+      this.isRightMinimize = !this.isRightMinimize
+      const remain = 100 - this.size.left
+      if (this.isRightMinimize) {
+        // left
+        this.size.right = 5
+        this.size.center = remain - this.size.right
+      } else {
+        this.size.right = 20
+        this.size.center = remain - this.size.right
+      }
     }
+    // resize () {
+    //   console.log('resize')
+    // },
+    // reset () {
+    //   console.log(this.$refs.mySplit.reset())
+    // }
   },
   mounted () {
-    eventController.addListner('LEFT_PANEL', (payload) => {
-      const { open } = payload
-      this.isLeftPanelShow = open
-    })
-
     eventController.addListner('RIGHT_PANEL', (payload) => {
       const { open, item } = payload
       if (open && item) {
@@ -119,5 +135,39 @@ export default {
   flex-direction: row;
   width: 100%;
   height: 100%;
+}
+
+.main-panel__page .center-section {
+  position: relative;
+  .folder__button {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    left: 0px;
+    width: var(--app-left-panel-folder-button);
+    height: var(--app-left-panel-folder-button);
+    z-index: var(--app-left-panel-zIndex);
+    img {
+      position: relative;
+      width: 30px;
+      height: 30px;
+    }
+  }
+  .folder__button_right {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    right: 0px;
+    width: var(--app-left-panel-folder-button);
+    height: var(--app-left-panel-folder-button);
+    z-index: var(--app-left-panel-zIndex);
+    img {
+      position: relative;
+      width: 30px;
+      height: 30px;
+    }
+  }
 }
 </style>

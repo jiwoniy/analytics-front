@@ -20,8 +20,8 @@
       </li> -->
 
       <li>
-        <input id="rad1" type="radio" name="rad" checked="checked"/>
-        <label for="rad1">
+        <input id="worksheet" type="radio" name="rad" checked="checked"  value="worksheet" v-model="selectMenu"/>
+        <label for="worksheet">
           <div> {{ $t('Worksheet List') }} </div>
         </label>
         <div class="accslide">
@@ -37,8 +37,8 @@
       </li>
 
       <li>
-        <input id="rad2" type="radio" name="rad"/>
-        <label for="rad2">
+        <input id="tools" type="radio" name="rad" value="tools" v-model="selectMenu"/>
+        <label for="tools">
           <div> {{ $t('Pipeline Design Tool') }} </div>
         </label>
         <div class="accslide">
@@ -66,26 +66,31 @@ export default {
   i18n: {
     messages: {
       'en': {
-        'Project List': 'Project List',
+        // 'Project List': 'Project List',
         'Worksheet List': 'Worksheet List',
         'Pipeline Design Tool': 'Pipeline Design Tool'
       },
       'ko': {
-        'Project List': '프로젝트',
+        // 'Project List': '프로젝트',
         'Worksheet List': '워크시트',
         'Pipeline Design Tool': '파이프라인 설계'
       }
     }
   },
+  data () {
+    return {
+      selectMenu: 'worksheet'
+    }
+  },
   props: {
-    projectList: {
-      type: Array,
-      default: () => []
-    },
-    selectedProject: {
-      type: Object,
-      default: () => {}
-    },
+    // projectList: {
+    //   type: Array,
+    //   default: () => []
+    // },
+    // selectedProject: {
+    //   type: Object,
+    //   default: () => {}
+    // },
     worksheetList: {
       type: Array,
       default: () => []
@@ -97,20 +102,27 @@ export default {
   },
   methods: {
     ...mapActions({
-      setSelectedProject: 'myProject/setSelectedProject',
+      // setSelectedProject: 'myProject/setSelectedProject',
       setSelectedWorksheet: 'myProject/setSelectedWorksheet'
     }),
-    projectClick (event) {
-      if (event.target) {
-        const projectId = event.target.id || event.target.parentElement.id
-        this.setSelectedProject(projectId)
-      }
-    },
+    // projectClick (event) {
+    //   if (event.target) {
+    //     const projectId = event.target.id || event.target.parentElement.id
+    //     this.setSelectedProject(projectId)
+    //   }
+    // },
     worksheetClick (event) {
       if (event.target) {
         const worksheetId = event.target.id || event.target.parentElement.id
         this.setSelectedWorksheet(worksheetId)
+        this.selectMenu = 'tools'
       }
+    }
+  },
+  watch: {
+    selectMenu (newVal) {
+      console.log('---selectMenu---')
+      console.log(newVal)
     }
   }
 }

@@ -1,18 +1,12 @@
 <template>
   <section
     id="rightPanel"
-    class="right-panel__page"
-    :class="{ active: localIsShow }"
-  >
+    class="right-panel__page">
     <transition name="fade">
       <manage-view
         :node-info="filterCurrentItem">
       </manage-view>
     </transition>
-    <div class="folder__button">
-      <i id="close" @click="closeRightPanel" v-if="isShow && localIsShow" class="fa fa-angle-double-right" style="font-size:24px"></i>
-      <i id="open" @click="closeRightPanel" v-if="isShow && !localIsShow" class="fa fa-angle-double-left" style="font-size:24px"></i>
-    </div>
   </section>
 </template>
 
@@ -24,40 +18,16 @@ export default {
   components: {
     ManageView
   },
-  data () {
-    return {
-      localIsShow: false
-    }
-  },
   props: {
     currentItem: {
       type: Object,
       default: () => null
-    },
-    isShow: {
-      type: Boolean,
-      default: () => false
     }
   },
   computed: {
     filterCurrentItem () {
-      // only throw editable info
+      // TODO only throw editable info
       return this.currentItem
-    }
-  },
-  methods: {
-    closeRightPanel (event) {
-      const id = event.target.id
-      if (id === 'open' && this.isShow) {
-        this.localIsShow = true
-      } else {
-        this.localIsShow = false
-      }
-    }
-  },
-  watch: {
-    isShow (newValue) {
-      this.localIsShow = newValue
     }
   }
 }
@@ -77,22 +47,6 @@ export default {
 
 .right-panel__page.active {
   width: 250px;
-}
-
-.right-panel__page .folder__button {
-  display: block;
-  position: absolute;
-  cursor: pointer;
-  top: 0px;
-  left: calc(0px - var(--app-left-panel-folder-button));
-  width: var(--app-left-panel-folder-button);
-  height: var(--app-left-panel-folder-button);
-  z-index: var(--app-left-panel-zIndex);
-  i {
-    position: relative;
-    top: 40%;
-    transform: perspective(1px) translateY(-50%);
-  }
 }
 
 .fade-enter-active {
