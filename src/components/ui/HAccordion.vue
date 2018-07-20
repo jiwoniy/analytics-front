@@ -2,7 +2,7 @@
   <div class="div--Accordion">
     <ul>
 
-      <li>
+      <!-- <li>
         <input id="rad1" type="radio" name="rad" checked="checked"/>
         <label for="rad1">
           <div> {{ $t('Project List') }} </div>
@@ -17,11 +17,11 @@
             </list-view>
           </div>
         </div>
-      </li>
+      </li> -->
 
       <li>
-        <input id="rad2" type="radio" name="rad"/>
-        <label for="rad2">
+        <input id="rad1" type="radio" name="rad" checked="checked"/>
+        <label for="rad1">
           <div> {{ $t('Worksheet List') }} </div>
         </label>
         <div class="accslide">
@@ -37,8 +37,8 @@
       </li>
 
       <li>
-        <input id="rad3" type="radio" name="rad"/>
-        <label for="rad3">
+        <input id="rad2" type="radio" name="rad"/>
+        <label for="rad2">
           <div> {{ $t('Pipeline Design Tool') }} </div>
         </label>
         <div class="accslide">
@@ -118,7 +118,10 @@ export default {
 
 <style lang="scss" scoped>
 .div--Accordion {
-  $max-tabs: 3;
+  display: inline-block;
+  width: 100%;
+  // height: calc(100vh - var(--app-top-panel-height));
+  $max-tabs: 2;
   $label-tab-width: 40px;
 
   $clr-bg: #1C1F2B;
@@ -131,10 +134,6 @@ export default {
   $clr-text: $clr-white;
   $clr-text-hint: rgba($clr-text, .6);
   $clr-primary: $clr-blue;
-
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
 
   ul {
     list-style: none;
@@ -150,8 +149,8 @@ export default {
   label {
     display: block;
     float: left;
-    height: 100vh;
     width: $label-tab-width;
+    height: calc(100vh - var(--app-top-panel-height));
     overflow: hidden;
 
     background: $clr-bg-light;
@@ -174,9 +173,8 @@ export default {
 
   .accslide {
     display: block;
-    height: 100%;
     width: 0px;
-    padding: 10px 0;
+    height: calc(100vh - var(--app-top-panel-height));
     float: left;
     overflow-x: hidden;
     line-height: 1.5;
@@ -186,12 +184,13 @@ export default {
   input[type="radio"]:checked ~ label {
     background: $clr-primary;
     color: #fff;
+    width: 0px;
     cursor: default !important;
   }
 
   input[type="radio"]:not(:checked) ~ label > * {
     padding-left: 7px;
-    // font-size: 1.2em;
+    width: $label-tab-width;
     white-space: nowrap;
     transform: rotate(90deg);
   }
@@ -200,12 +199,18 @@ export default {
     display: none;
   }
 
-  @for $i from 2 through $max-tabs {
-    @for $j from 1 through $i {
-      li:nth-child(#{$j}):nth-last-child(#{$i - $j + 1}) input[type="radio"]:checked ~ .accslide {
-        width: calc(100% - #{$i * $label-tab-width});
-      }
+  @for $i from 1 through $max-tabs {
+    li:nth-child(#{$i}) input[type="radio"]:checked ~ .accslide {
+      width: calc(100% - #{$label-tab-width});
     }
   }
 }
+
+// @for $i from 1 through $max-tabs {
+// @for $j from 1 through $i {
+  // li:nth-child(#{$j}):nth-last-child(#{$i - $j + 1}) input[type="radio"]:checked ~ .accslide {
+      // width: calc(100% - #{$i * $label-tab-width});
+//     }
+//   }
+// }
 </style>

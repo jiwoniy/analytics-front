@@ -79,11 +79,12 @@ export default {
 
 <style lang="scss" scoped>
 .left-panel__page {
+  width: 100%;
   position: relative;
   display: block;
 
   .left-panel__contents {
-    width: var(--app-left-panel-width);
+    // width: var(--app-left-panel-width);
     display: flex;
     flex-direction: column;
     align-items: flex-start;

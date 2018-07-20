@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/jiwon.yoon/.nvm/versions/node/v9.5.0/bin/node /usr/local/Cellar/yarn/1.3.2/libexec/bin/yarn.js add d3.transform
+  /Users/jiwon.yoon/.nvm/versions/node/v9.5.0/bin/node /usr/local/Cellar/yarn/1.3.2/libexec/bin/yarn.js add vue-splitpanel
 
 PATH: 
   /Users/jiwon.yoon/.nvm/versions/node/v9.5.0/bin:/Users/jiwon.yoon/Library/Python/3.6/bin:/usr/local/bin:/usr/local/Cellar/ruby/2.5.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -24,6 +24,7 @@ npm manifest:
       "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
       "start": "npm run dev",
       "unit": "jest --config test/unit/jest.conf.js --coverage",
+      "jest:unit": "jest --config test/unit/jest.conf.js",
       "e2e": "node test/e2e/runner.js",
       "test": "npm run unit && npm run e2e",
       "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
@@ -31,10 +32,18 @@ npm manifest:
     },
     "dependencies": {
       "axios": "^0.18.0",
+      "d3-array": "^1.2.1",
       "d3-axis": "^1.0.8",
+      "d3-drag": "^1.2.1",
+      "d3-force": "^1.1.0",
+      "d3-random": "^1.1.0",
       "d3-scale": "^2.1.0",
       "d3-selection": "^1.3.0",
+      "d3-shape": "^1.2.0",
+      "d3-transform": "^1.0.5",
+      "d3-transition": "^1.1.1",
       "d3-zoom": "^1.7.1",
+      "uuid": "^3.3.2",
       "vue": "^2.5.2",
       "vue-i18n": "^8.0.0",
       "vue-native-websocket": "^2.0.8",
@@ -71,11 +80,13 @@ npm manifest:
       "eslint-plugin-standard": "^3.0.1",
       "eslint-plugin-vue": "^4.0.0",
       "extract-text-webpack-plugin": "^3.0.0",
+      "faker": "^4.1.0",
       "file-loader": "^1.1.4",
       "friendly-errors-webpack-plugin": "^1.6.1",
       "html-webpack-plugin": "^2.30.1",
       "jest": "^22.0.4",
       "jest-serializer-vue": "^0.3.0",
+      "lodash.debounce": "^4.0.8",
       "nightwatch": "^0.9.12",
       "node-notifier": "^5.1.2",
       "node-sass": "^4.9.0",
@@ -2190,7 +2201,7 @@ Lockfile:
     version "0.2.2"
     resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
   
-  d3-array@^1.2.0:
+  d3-array@^1.2.0, d3-array@^1.2.1:
     version "1.2.1"
     resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
   
@@ -2210,7 +2221,7 @@ Lockfile:
     version "1.0.3"
     resolved "https://registry.yarnpkg.com/d3-dispatch/-/d3-dispatch-1.0.3.tgz#46e1491eaa9b58c358fce5be4e8bed626e7871f8"
   
-  d3-drag@1:
+  d3-drag@1, d3-drag@^1.2.1:
     version "1.2.1"
     resolved "https://registry.yarnpkg.com/d3-drag/-/d3-drag-1.2.1.tgz#df8dd4c502fb490fc7462046a8ad98a5c479282d"
     dependencies:
@@ -2221,6 +2232,15 @@ Lockfile:
     version "1.0.3"
     resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-1.0.3.tgz#68bfbc349338a380c44d8acc4fbc3304aa2d8c0e"
   
+  d3-force@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-1.1.0.tgz#cebf3c694f1078fcc3d4daf8e567b2fbd70d4ea3"
+    dependencies:
+      d3-collection "1"
+      d3-dispatch "1"
+      d3-quadtree "1"
+      d3-timer "1"
+  
   d3-format@1:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.3.0.tgz#a3ac44269a2011cdb87c7b5693040c18cddfff11"
@@ -2230,6 +2250,18 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.2.0.tgz#40d81bd8e959ff021c5ea7545bc79b8d22331c41"
     dependencies:
       d3-color "1"
+  
+  d3-path@1:
+    version "1.0.5"
+    resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
+  
+  d3-quadtree@1:
+    version "1.0.3"
+    resolved "https://registry.yarnpkg.com/d3-quadtree/-/d3-quadtree-1.0.3.tgz#ac7987e3e23fe805a990f28e1b50d38fcb822438"
+  
+  d3-random@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/d3-random/-/d3-random-1.1.0.tgz#6642e506c6fa3a648595d2b2469788a8d12529d3"
   
   d3-scale@^2.1.0:
     version "2.1.0"
@@ -2246,6 +2278,12 @@ Lockfile:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/d3-selection/-/d3-selection-1.3.0.tgz#d53772382d3dc4f7507bfb28bcd2d6aed2a0ad6d"
   
+  d3-shape@^1.2.0:
+    version "1.2.0"
+    resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
+    dependencies:
+      d3-path "1"
+  
   d3-time-format@2:
     version "2.1.1"
     resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.1.1.tgz#85b7cdfbc9ffca187f14d3c456ffda268081bb31"
@@ -2260,7 +2298,11 @@ Lockfile:
     version "1.0.7"
     resolved "https://registry.yarnpkg.com/d3-timer/-/d3-timer-1.0.7.tgz#df9650ca587f6c96607ff4e60cc38229e8dd8531"
   
-  d3-transition@1:
+  d3-transform@^1.0.5:
+    version "1.0.5"
+    resolved "https://registry.yarnpkg.com/d3-transform/-/d3-transform-1.0.5.tgz#8e127b0200ca923aa8efd29e0bd5a8ee06e32377"
+  
+  d3-transition@1, d3-transition@^1.1.1:
     version "1.1.1"
     resolved "https://registry.yarnpkg.com/d3-transition/-/d3-transition-1.1.1.tgz#d8ef89c3b848735b060e54a39b32aaebaa421039"
     dependencies:
@@ -3135,6 +3177,10 @@ Lockfile:
   extsprintf@^1.2.0:
     version "1.4.0"
     resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
+  
+  faker@^4.1.0:
+    version "4.1.0"
+    resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
   
   fast-deep-equal@^1.0.0:
     version "1.1.0"
@@ -8007,7 +8053,7 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   
-  uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+  uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
     version "3.3.2"
     resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   
@@ -8514,7 +8560,7 @@ Lockfile:
       fd-slicer "~1.0.1"
 
 Trace: 
-  Error: https://registry.yarnpkg.com/d3.transform: Not found
+  Error: https://registry.yarnpkg.com/vue-splitpanel: Not found
       at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:62098:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.3.2/libexec/lib/cli.js:123085:22)
       at Request.emit (events.js:160:13)

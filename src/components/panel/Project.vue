@@ -1,6 +1,6 @@
 <template>
   <transition>
-    <div class="div--Project__page">
+    <div class="div--project__page">
       <main-panel></main-panel>
       <modal v-if="showModal" @close="showModal = false" :size="modalSize" :position="modalPosition">
         <h3 slot="header">custom header</h3>
@@ -52,9 +52,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.div--Project__page {
-  height: 100%;
+.div--project__page {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  height: 100%;
 }
 </style>

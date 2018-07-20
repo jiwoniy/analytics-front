@@ -27,11 +27,13 @@ export default {
   },
   data () {
     return {
+      leftPanel: null,
       svgContainer: null,
       svgContainerGroup: null,
       svgGraph: null,
       editable: false,
-      leftPanelWidth: null
+      leftPanelWidth: null,
+      rightPanelWidth: null
     }
   },
   props: {
@@ -97,16 +99,18 @@ export default {
         this.svgContainerGroup.remove()
       }
     },
+    // TODO resizable
     setSvgContainer () {
       const windowWidth = window.innerWidth
       const windowHeight = window.innerHeight
 
       // TODO make constant
-      const leftPanelWidth = 250
+      // const leftPanelWidth = 250
       const topPanelHeight = 50
 
       const margin = { top: 10, right: 10, bottom: 10, left: 10 }
-      this.width = windowWidth - leftPanelWidth - margin.left - margin.right
+      this.width = windowWidth - this.leftPanelWidth - this.rightPanelWidth
+      console.log(this.leftPanelWidth)
       this.height = windowHeight - topPanelHeight - margin.top - margin.bottom
 
       this.svgContainer = d3Selection.select('#svgContainer').select('svg')
@@ -174,10 +178,10 @@ export default {
       this.setSvgContainer()
     })
 
-    this.init()
-
     this.$nextTick(() => {
-      this.leftPanelWidth = document.getElementById('leftPanel').offsetWidth
+      this.init()
+      this.leftPanelWidth = document.getElementById('leftPanel').clientWidth
+      this.rightPanelWidth = document.getElementById('rightPanel').clientWidth
     })
   },
   watch: {

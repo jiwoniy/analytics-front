@@ -11,6 +11,7 @@ import TreeItem from '@/components/ui/TreeItem'
 import Modal from '@/components/ui/Modal'
 
 import i18n from '@/plugins/vue-i18n'
+import '@/plugins/vue-split-panel'
 import '@/plugins/axios'
 
 Vue.config.productionTip = false

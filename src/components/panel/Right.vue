@@ -1,5 +1,6 @@
 <template>
   <section
+    id="rightPanel"
     class="right-panel__page"
     :class="{ active: localIsShow }"
   >
