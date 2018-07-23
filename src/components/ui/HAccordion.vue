@@ -2,23 +2,6 @@
   <div class="div--Accordion">
     <ul>
 
-      <!-- <li>
-        <input id="rad1" type="radio" name="rad" checked="checked"/>
-        <label for="rad1">
-          <div> {{ $t('Project List') }} </div>
-        </label>
-        <div class="accslide">
-          <div class="content">
-            <h1> {{ $t('Project List') }} </h1>
-            <list-view
-              :items="projectList"
-              :selected-item-id="selectedProject.id"
-              :item-click="projectClick">
-            </list-view>
-          </div>
-        </div>
-      </li> -->
-
       <li>
         <input id="worksheet" type="radio" name="rad" checked="checked"  value="worksheet" v-model="selectMenu"/>
         <label for="worksheet">
@@ -66,12 +49,10 @@ export default {
   i18n: {
     messages: {
       'en': {
-        // 'Project List': 'Project List',
         'Worksheet List': 'Worksheet List',
         'Pipeline Design Tool': 'Pipeline Design Tool'
       },
       'ko': {
-        // 'Project List': '프로젝트',
         'Worksheet List': '워크시트',
         'Pipeline Design Tool': '파이프라인 설계'
       }
@@ -103,13 +84,13 @@ export default {
         this.selectMenu = 'tools'
       }
     }
-  },
-  watch: {
-    selectMenu (newVal) {
-      console.log('---selectMenu---')
-      console.log(newVal)
-    }
   }
+  // watch: {
+  //   selectMenu (newVal) {
+  //     console.log('---selectMenu---')
+  //     console.log(newVal)
+  //   }
+  // }
 }
 </script>
 

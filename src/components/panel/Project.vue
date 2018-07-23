@@ -10,8 +10,6 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
-
 import eventController from '@/utils/EventController'
 import MainPanel from '@/components/panel/Main'
 
@@ -27,14 +25,6 @@ export default {
       modalPosition: 'center'
     }
   },
-  // methods: {
-  //   ...mapActions({
-  //     getProjects: 'myProject/getProjects'
-  //   })
-  // },
-  // created () {
-  //   this.getProjects()
-  // },
   mounted () {
     eventController.addListner('SHOW_MODAL', (payload) => {
       const { position, size } = payload

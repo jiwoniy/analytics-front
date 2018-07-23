@@ -114,7 +114,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     svg.call(dragSvg).on("dblclick.zoom", null);
 
     // listen for resize
-    window.onresize = function(){thisGraph.updateWindow(svg);};
+    // window.onresize = function(){thisGraph.updateWindow(svg);};
 
     // handle download data
     d3.select("#download-input").on("click", function(){

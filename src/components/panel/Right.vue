@@ -4,7 +4,7 @@
     class="right-panel__page">
     <transition name="fade">
       <manage-view
-        :node-info="filterCurrentItem">
+        :item-info="filterCurrentItem && filterCurrentItem.item">
       </manage-view>
     </transition>
   </section>
@@ -19,6 +19,10 @@ export default {
     ManageView
   },
   props: {
+    type: {
+      type: String,
+      default: () => 'worksheet' // worksheet, node
+    },
     currentItem: {
       type: Object,
       default: () => null
@@ -35,18 +39,15 @@ export default {
 
 <style lang="scss" scoped>
 .right-panel__page {
-  width: 0px;
-  height: 100%;
   display: block;
-  position: fixed;
+  position: relative;
+  margin: 0 10px;
+  width: calc(100% - 20px);
+  height: 100%;
   z-index: 1;
   top: var(--app-top_panel-height);
   right: 0;
   background-color: #ffffff;
-}
-
-.right-panel__page.active {
-  width: 250px;
 }
 
 .fade-enter-active {

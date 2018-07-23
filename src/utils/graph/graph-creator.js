@@ -25,8 +25,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.options = options || {}
   this.callback = callback || null
-  this.width = options.width
-  this.hegith = options.hegith
+  // this.width = options.width || null
+  // this.height = options.height || null
 
   this.nodes = new GraphNodes()
   this.edges = new GraphEddes()
@@ -130,11 +130,53 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     })
 
   this.svg.call(dragSvg).on('dblclick.zoom', null)
+
+  this.setWidth = function setWidth (payload) {
+    this.width = payload
+  }
+  function getWidth () {
+    return this.width
+  }
+  this.setHeight = function setHeight (payload) {
+    this.height = payload
+  }
+  function getHeight () {
+    return this.height
+  }
+
+  this.setWidth(options.width || null)
+  this.setHeight(options.height || null)
+
+  return {
+    addNode: function addNode (node) {
+      if (this.state.editable) {
+        this.nodes.add(saveNodeTransformNode(node))
+        this.drawNodes()
+      }
+    },
+    save: function save () {
+      const saveFile = {
+        edges: [],
+        nodes: []
+      }
+
+      if (this.edges.getEdges().length || this.nodes.getNodes()) {
+        saveFile.edges = edgesTransformForSave(this.edges.getEdges())
+        saveFile.nodes = nodesTransformForSave(this.nodes.getNodes())
+
+        return JSON.stringify(saveFile)
+      }
+      return null
+    },
+    setEditable: function setEditable (status) {
+      this.state.editable = status
+    },
+    setWidth: this.setWidth,
+    getWidth,
+    setHeight: this.setHeight,
+    getHeight
+  }
 }
-
-GraphCreator.prototype.svgKeyDown = function svgKeyDown () {}
-
-GraphCreator.prototype.svgKeyUp = function svgKeyUp () {}
 
 GraphCreator.prototype.constants = {
   // graphClass: 'graph',
@@ -183,7 +225,7 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
     .call(dotme)
 }
 
-// // remove edges associated with a node
+// remove edges associated with a node
 GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
   const thisGraph = this
   const toSplice = thisGraph.edges.filter(function (l) {
@@ -235,13 +277,6 @@ function nodeDraghandler (context) {
     //     }
     //   }
     // })
-}
-
-GraphCreator.prototype.addNode = function addNode (node) {
-  if (this.state.editable) {
-    this.nodes.add(saveNodeTransformNode(node))
-    this.drawNodes()
-  }
 }
 
 // call to propagate changes to graph
@@ -389,25 +424,6 @@ GraphCreator.prototype.zoomed = function zoomed () {
 
   d3Selection.select(`.${this.constants.graphClass}`)
     .attr('transform', d3Selection.event.transform)
-}
-
-GraphCreator.prototype.setEditable = function setEditable (status) {
-  this.state.editable = status
-}
-
-GraphCreator.prototype.save = function save () {
-  const saveFile = {
-    edges: [],
-    nodes: []
-  }
-
-  if (this.edges.getEdges().length || this.nodes.getNodes()) {
-    saveFile.edges = edgesTransformForSave(this.edges.getEdges())
-    saveFile.nodes = nodesTransformForSave(this.nodes.getNodes())
-
-    return JSON.stringify(saveFile)
-  }
-  return null
 }
 
 export default GraphCreator

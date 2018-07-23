@@ -1,19 +1,19 @@
 <template>
   <div class="manage-node">
-    <div class="node-title">
+    <div class="item-title">
       <label>
-        {{ nodeInfo && nodeInfo.name }}
+        {{ itemInfo && itemInfo.name }}
       </label>
     </div>
 
     <div
-      class="node-item"
-      v-if="nodeItemsKey"
-      v-for="key in nodeItemsKey"
+      class="item-node"
+      v-if="itemItemsKey"
+      v-for="key in itemItemsKey"
       :key="key"
     >
       <label>
-        {{ key }} : {{ nodeInfo[key] }}
+        {{ key }} : {{ itemInfo[key] }}
       </label>
     </div>
 
@@ -24,15 +24,15 @@
 export default {
   name: 'Manage-View',
   props: {
-    nodeInfo: {
+    itemInfo: {
       type: Object,
       default: () => {}
     }
   },
   computed: {
-    nodeItemsKey () {
-      if (this.nodeInfo) {
-        return Object.keys(this.nodeInfo)
+    itemItemsKey () {
+      if (this.itemInfo) {
+        return Object.keys(this.itemInfo)
       }
       return null
     }
@@ -42,17 +42,18 @@ export default {
 
 <style lang="scss" scoped>
 .manage-node {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
 
-  .node-title label {
+  .item-title label {
     text-align: center;
     // margin: 10px auto;
     font-size: 24px;
   }
 
-  .node-item label {
+  .item-node label {
     text-align: left;
     font-size: 18px;
     // margin: 10px 10px;

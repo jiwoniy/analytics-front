@@ -1,6 +1,6 @@
 <template>
   <transition>
-    <div id="svgContainer" class="palete">
+    <div id="svgContainer" class="palete" v-resize:debounce.250="onResize">
       <img class="lock" v-if="editable" src="@/assets/img/lock-open-solid.svg" />
       <img class="lock" v-if="!editable" src="@/assets/img/lock-solid.svg" />
       <svg>
@@ -14,6 +14,7 @@
 import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
+import resize from 'vue-resize-directive'
 
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
@@ -24,6 +25,9 @@ export default {
   name: 'Svg-palete',
   components: {
     DefSvg
+  },
+  directives: {
+    resize
   },
   data () {
     return {
@@ -40,10 +44,6 @@ export default {
     openRightPanel: {
       type: Function,
       default: () => {}
-    },
-    isOpenLeftPanel: {
-      type: Boolean,
-      default: () => true
     }
   },
   computed: {
@@ -55,10 +55,17 @@ export default {
     ...mapActions({
       savePipeline: 'pipeline/savePipeline'
     }),
-    svgContainerResize () {
-      d3Selection.select('#svgContainer').select('svg')
-        .attr('width', this.isOpenLeftPanel ? this.width : this.width + this.leftPanelWidth)
-        .attr('height', this.height)
+    onResize (elem) {
+      if (this.svgContainer) {
+        this.svgContainer
+          .attr('width', elem.offsetWidth)
+          .attr('height', elem.offsetHeight)
+      }
+
+      if (this.svgGraph) {
+        this.svgGraph.setWidth(elem.offsetWidth)
+        this.svgGraph.setHeight(elem.offsetHeight)
+      }
     },
     setGraph (svgContainer, options) {
       const callback = {
@@ -99,19 +106,10 @@ export default {
         this.svgContainerGroup.remove()
       }
     },
-    // TODO resizable
     setSvgContainer () {
-      const windowWidth = window.innerWidth
-      const windowHeight = window.innerHeight
-
-      // TODO make constant
-      // const leftPanelWidth = 250
-      const topPanelHeight = 50
-
-      const margin = { top: 10, right: 10, bottom: 10, left: 10 }
-      this.width = windowWidth - this.leftPanelWidth - this.rightPanelWidth
-      console.log(this.leftPanelWidth)
-      this.height = windowHeight - topPanelHeight - margin.top - margin.bottom
+      // const margin = { top: 10, right: 10, bottom: 10, left: 10 }
+      this.width = this.$el.offsetWidth
+      this.height = this.$el.offsetHeight
 
       this.svgContainer = d3Selection.select('#svgContainer').select('svg')
         .attr('width', this.width)
@@ -129,16 +127,12 @@ export default {
     nodeSelect (nodeItem) {
       if (nodeItem && nodeItem.status.selected) {
         this.openRightPanel({
-          open: true,
+          // open: true,
           item: nodeItem
-        })
-      } else if (nodeItem && !nodeItem.status.selected) {
-        this.openRightPanel({
-          open: false
         })
       } else {
         this.openRightPanel({
-          open: false
+          item: null
         })
       }
     },
@@ -147,6 +141,7 @@ export default {
     }
   },
   mounted () {
+    // window.onresize = function(){thisGraph.updateWindow(svg);}
     eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
       const { data } = payload
       this.svgGraph.addNode({
@@ -183,11 +178,6 @@ export default {
       this.leftPanelWidth = document.getElementById('leftPanel').clientWidth
       this.rightPanelWidth = document.getElementById('rightPanel').clientWidth
     })
-  },
-  watch: {
-    isOpenLeftPanel (newVal) {
-      this.svgContainerResize()
-    }
   }
 }
 </script>

@@ -10,9 +10,7 @@
       </div>
       <drop-comp>
         <svg-palete
-          slot="svg-container"
-          :open-right-panel="openRightPanel"
-        >
+          slot="svg-container">
         </svg-palete>
       </drop-comp>
     </section>
@@ -31,9 +29,6 @@ export default {
     SvgPalete
   },
   methods: {
-    openRightPanel (payload) {
-      eventController.RIGHT_PANEL(payload)
-    },
     save () {
       eventController.SAVE({})
     },
@@ -61,6 +56,7 @@ export default {
   position: relative;
   display: block;
   width: 100%;
+  height: calc(100% - var(--app-top-panel-height));
 }
 
 .div--Working__page .tool-box {

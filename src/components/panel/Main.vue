@@ -2,9 +2,9 @@
   <transition>
     <section class="main-panel__page">
 
-      <Split ref="Main_Split">
-        <SplitArea :size="size.left" :minSize="50">
-          <div class="work" ref="dragable">
+      <Split ref="main_split" @onDragEnd="onDragSplitPanel">
+        <SplitArea :size="split_size.left" :minSize="50">
+          <div class="left-section" ref="dragable">
             <left-panel
               id="leftPanel"
               :worksheet-list="worksheetList"
@@ -14,7 +14,7 @@
           </div>
         </SplitArea>
 
-        <SplitArea class="center-section" :size="size.center" :minSize="100">
+        <SplitArea class="center-section" :size="split_size.center" :minSize="100">
           <div class="folder__button" @click="minimizeLeftPanel">
             <img v-show="isLeftMinimize" src="@/assets/img/angle-right-solid.svg" />
             <img v-show="!isLeftMinimize" src="@/assets/img/angle-left-solid.svg" />
@@ -27,10 +27,8 @@
           </div>
         </SplitArea>
 
-        <SplitArea :size="size.right" :minSize="50">
-          <right-panel
-            :isShow="isRightPanelShow"
-            :current-item="currentNodeItem">
+        <SplitArea :size="split_size.right" :minSize="20">
+          <right-panel :current-item="currentNodeItem">
           </right-panel>
         </SplitArea>
       </Split>
@@ -59,66 +57,66 @@ export default {
     return {
       pipelineNodes: pipelineNodesSchema,
       isLeftMinimize: false,
-      isRightMinimize: true,
-      isRightPanelShow: false,
+      isRightMinimize: false,
       currentNodeItem: null,
-      size: {
+      split_size: {
         left: 20,
-        center: 75,
-        right: 5
+        center: 55,
+        right: 20
       }
     }
   },
   computed: {
     ...mapGetters({
-      // projectList: 'myProject/getProjectList',
-      // selectedProject: 'myProject/getSelectedProject',
       worksheetList: 'myProject/getWorksheetList',
       selectedWorksheet: 'myProject/getSelectedWorksheet'
     })
   },
   methods: {
     minimizeLeftPanel () {
-      // TODO observe drag
       this.isLeftMinimize = !this.isLeftMinimize
-      const remain = 100 - this.size.right
+      const remain = 100 - this.split_size.right
       if (this.isLeftMinimize) {
-        this.size.left = 5
-        this.size.center = remain - this.size.left
+        this.split_size.left = 1
+        this.split_size.center = remain - this.split_size.left
       } else {
-        this.size.left = 20
-        this.size.center = remain - this.size.left
+        this.split_size.left = 20
+        this.split_size.center = remain - this.split_size.left
       }
     },
     minimizeRightPanel () {
-      // TODO observe drag
       this.isRightMinimize = !this.isRightMinimize
-      const remain = 100 - this.size.left
+      const remain = 100 - this.split_size.left
       if (this.isRightMinimize) {
-        // left
-        this.size.right = 5
-        this.size.center = remain - this.size.right
+        this.split_size.right = 1
+        this.split_size.center = remain - this.split_size.right
       } else {
-        this.size.right = 20
-        this.size.center = remain - this.size.right
+        this.split_size.right = 20
+        this.split_size.center = remain - this.split_size.right
+      }
+    },
+    resize () {
+      this.$refs.main_split.reset()
+    },
+    onDragSplitPanel (size) {
+      this.split_size = {
+        left: size[0],
+        center: size[1],
+        right: size[2]
       }
     }
-    // resize () {
-    //   console.log('resize')
-    // },
-    // reset () {
-    //   console.log(this.$refs.mySplit.reset())
-    // }
   },
   mounted () {
     eventController.addListner('RIGHT_PANEL', (payload) => {
-      const { open, item } = payload
-      if (open && item) {
-        this.currentNodeItem = item
+      const { item, type } = payload
+      if (item) {
+        this.currentNodeItem = {
+          item,
+          type
+        }
       } else {
         this.currentNodeItem = null
       }
-      this.isRightPanelShow = open
     })
   }
 }
@@ -128,13 +126,12 @@ export default {
 .main-panel__page {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.main-panel__page .work {
+.main-panel__page .left-section {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  height: 100%;
 }
 
 .main-panel__page .center-section {
