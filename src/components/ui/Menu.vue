@@ -9,6 +9,11 @@
       <div class="menu-container" v-show="isOpen">
         <list-view
           :items="projectList"
+          :item-style="{
+            'font-size': '1.6rem',
+            'margin': '0.5rem'
+          }"
+          :item-class="'text-ellipsis'"
           :selected-item-id="selectedProject.id"
           :item-click="selectProject">
         </list-view>
@@ -64,6 +69,7 @@ export default {
 <style lang="scss" scroped>
 .Menu {
   position: relative;
+
   .menubar-container {
     display: inline-block;
     cursor: pointer;
@@ -87,9 +93,8 @@ export default {
     background-color: #eee;
     z-index: 999;
 
-    width: 200px;
-    min-height: 100px;
-    max-height: 200px;
+    width: 250px;
+    padding: 0.5rem;
     overflow-y: auto;
 
     // a {

@@ -28,6 +28,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-size: 62.5%;
+  /* 14px: 1.4rem, 16px: 1.6rem, 24px: 2.4rem */
 }
 
 #app {

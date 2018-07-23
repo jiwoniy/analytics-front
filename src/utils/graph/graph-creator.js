@@ -25,8 +25,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.options = options || {}
   this.callback = callback || null
-  // this.width = options.width || null
-  // this.height = options.height || null
+  this.width = options.width || null
+  this.height = options.height || null
 
   this.nodes = new GraphNodes()
   this.edges = new GraphEddes()
@@ -132,45 +132,51 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.svg.call(dragSvg).on('dblclick.zoom', null)
 
   this.setWidth = function setWidth (payload) {
-    this.width = payload
-  }
-  function getWidth () {
-    return this.width
-  }
-  this.setHeight = function setHeight (payload) {
-    this.height = payload
-  }
-  function getHeight () {
-    return this.height
+    thisGraph.width = payload
   }
 
-  this.setWidth(options.width || null)
-  this.setHeight(options.height || null)
+  function getWidth () {
+    return thisGraph.width
+  }
+
+  this.setHeight = function setHeight (payload) {
+    thisGraph.height = payload
+  }
+
+  function getHeight () {
+    return thisGraph.height
+  }
+
+  this.setEditable = function setEditable (status) {
+    thisGraph.state.editable = status
+  }
+
+  this.addNode = function addNode (node) {
+    if (thisGraph.state.editable) {
+      thisGraph.nodes.add(saveNodeTransformNode(node))
+      thisGraph.drawNodes()
+    }
+  }
+
+  this.save = function save (node) {
+    const saveFile = {
+      edges: [],
+      nodes: []
+    }
+
+    if (thisGraph.edges.getEdges().length || thisGraph.nodes.getNodes()) {
+      saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdges())
+      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
+
+      return JSON.stringify(saveFile)
+    }
+    return null
+  }
 
   return {
-    addNode: function addNode (node) {
-      if (this.state.editable) {
-        this.nodes.add(saveNodeTransformNode(node))
-        this.drawNodes()
-      }
-    },
-    save: function save () {
-      const saveFile = {
-        edges: [],
-        nodes: []
-      }
-
-      if (this.edges.getEdges().length || this.nodes.getNodes()) {
-        saveFile.edges = edgesTransformForSave(this.edges.getEdges())
-        saveFile.nodes = nodesTransformForSave(this.nodes.getNodes())
-
-        return JSON.stringify(saveFile)
-      }
-      return null
-    },
-    setEditable: function setEditable (status) {
-      this.state.editable = status
-    },
+    addNode: this.addNode,
+    save: this.save,
+    setEditable: this.setEditable,
     setWidth: this.setWidth,
     getWidth,
     setHeight: this.setHeight,
@@ -194,6 +200,22 @@ GraphCreator.prototype.constants = {
   DELETE_KEY: 46,
   ENTER_KEY: 13,
   nodeRadius: 50
+}
+
+GraphCreator.prototype.state = {
+  editable: false,
+  selectedNode: null,
+  contextNode: null,
+  selectedEdge: null,
+  mouseDownNode: null,
+  mouseDownLink: null,
+  justDragged: false,
+  connecting: false,
+  capturedTarget: null,
+  justScaleTransGraph: false,
+  lastKeyDown: -1,
+  shiftNodeDrag: false,
+  selectedText: null
 }
 
 GraphCreator.prototype.dragLink = function dragLink (d) {

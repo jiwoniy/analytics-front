@@ -21,3 +21,9 @@
   // mobile safari doesn't work vh
   // content: 'viewport-units-buggyfill; --widget-height: 100vh';
 }
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

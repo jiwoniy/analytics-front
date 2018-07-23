@@ -12,6 +12,11 @@
             <h1> {{ $t('Worksheet List') }} </h1>
             <list-view
               :items="worksheetList"
+              :item-class="'text-ellipsis'"
+              :item-style="{
+                'font-size': '1.4rem',
+                'margin': '0.5rem'
+              }"
               :selected-item-id="selectedWorksheet.id"
               :item-click="worksheetClick">
             </list-view>

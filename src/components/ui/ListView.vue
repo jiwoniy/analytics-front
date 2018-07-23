@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="list-view">
     <li
       class="item-list"
       v-for="(item, itemIndex) in items"
@@ -7,6 +7,8 @@
     >
       <div
         class="item"
+        :class="itemClass"
+        :style="itemStyle"
         @click="itemClick"
         :id="item.id"
       >
@@ -31,20 +33,32 @@ export default {
     itemClick: {
       type: Function,
       default: () => null
+    },
+    itemStyle: {
+      type: Object,
+      default: () => null
+    },
+    itemClass: {
+      type: String,
+      default: () => null
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.list-view {
+  width: 100%;
+}
+
 .item-list > .item {
   cursor: pointer;
-    span {
-    font-weight: 500;
-    color: #6e7eac;
+
+  span {
+    color: black;
   }
   .selected {
-    color:red;
+    color: #6e7eac;
     font-weight: 500;
   }
 }
