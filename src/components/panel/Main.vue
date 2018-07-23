@@ -2,38 +2,38 @@
   <transition>
     <section class="main-panel__page">
 
-        <Split ref="Main_Split">
-          <SplitArea :size="size.left" :minSize="50">
-            <div class="work" ref="dragable">
-              <left-panel
-                id="leftPanel"
-                :project-list="projectList"
-                :selected-project="selectedProject"
-                :worksheet-list="worksheetList"
-                :selected-worksheet="selectedWorksheet"
-                :pipeline-nodes="pipelineNodes">
-              </left-panel>
-            </div>
-          </SplitArea>
-          <SplitArea class="center-section" :size="size.center" :minSize="100">
-             <div class="folder__button" @click="minimizeLeftPanel">
-              <img v-show="isLeftMinimize" src="@/assets/img/angle-right-solid.svg" />
-              <img v-show="!isLeftMinimize" src="@/assets/img/angle-left-solid.svg" />
-            </div>
-            <work-panel>
-            </work-panel>
-            <div class="folder__button_right" @click="minimizeRightPanel">
-              <img v-show="!isRightMinimize" src="@/assets/img/angle-right-solid.svg" />
-              <img v-show="isRightMinimize" src="@/assets/img/angle-left-solid.svg" />
-            </div>
-          </SplitArea>
-          <SplitArea :size="size.right" :minSize="50">
-            <right-panel
-              :isShow="isRightPanelShow"
-              :current-item="currentNodeItem">
-            </right-panel>
-          </SplitArea>
-        </Split>
+      <Split ref="Main_Split">
+        <SplitArea :size="size.left" :minSize="50">
+          <div class="work" ref="dragable">
+            <left-panel
+              id="leftPanel"
+              :worksheet-list="worksheetList"
+              :selected-worksheet="selectedWorksheet"
+              :pipeline-nodes="pipelineNodes">
+            </left-panel>
+          </div>
+        </SplitArea>
+
+        <SplitArea class="center-section" :size="size.center" :minSize="100">
+          <div class="folder__button" @click="minimizeLeftPanel">
+            <img v-show="isLeftMinimize" src="@/assets/img/angle-right-solid.svg" />
+            <img v-show="!isLeftMinimize" src="@/assets/img/angle-left-solid.svg" />
+          </div>
+          <work-panel>
+          </work-panel>
+          <div class="folder__button_right" @click="minimizeRightPanel">
+            <img v-show="!isRightMinimize" src="@/assets/img/angle-right-solid.svg" />
+            <img v-show="isRightMinimize" src="@/assets/img/angle-left-solid.svg" />
+          </div>
+        </SplitArea>
+
+        <SplitArea :size="size.right" :minSize="50">
+          <right-panel
+            :isShow="isRightPanelShow"
+            :current-item="currentNodeItem">
+          </right-panel>
+        </SplitArea>
+      </Split>
 
     </section>
   </transition>
@@ -71,8 +71,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      projectList: 'myProject/getProjectList',
-      selectedProject: 'myProject/getSelectedProject',
+      // projectList: 'myProject/getProjectList',
+      // selectedProject: 'myProject/getSelectedProject',
       worksheetList: 'myProject/getWorksheetList',
       selectedWorksheet: 'myProject/getSelectedWorksheet'
     })

@@ -1,20 +1,45 @@
 <template>
   <transition>
     <div class="top-panel__page">
+      <menu-list
+        class="menu-icon"
+        :project-list="projectList"
+        :selected-project="selectedProject">
+      </menu-list>
     </div>
   </transition>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+import MenuList from '@/components/ui/Menu'
+
 export default {
-  name: 'TOP-Panel'
+  name: 'TOP-Panel',
+  components: {
+    MenuList
+  },
+  computed: {
+    ...mapGetters({
+      projectList: 'myProject/getProjectList',
+      selectedProject: 'myProject/getSelectedProject'
+    })
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .top-panel__page {
+  position: relative;
   width: 100%;
   height: var(--app-top-panel-height);
-  background-color: var(--app-top-panel-color)
+  background-color: var(--app-top-panel-color);
+
+  .menu-icon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
 }
 </style>

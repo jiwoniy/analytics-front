@@ -1,8 +1,7 @@
 <template>
   <transition>
     <div class="div--home__page">
-      <top-panel id="topPanel" class="top">
-      </top-panel>
+      <top-panel id="topPanel" class="top"></top-panel>
       <project class="project"></project>
     </div>
   </transition>
@@ -22,8 +21,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      setLocale: 'common/setLocale'
+      setLocale: 'common/setLocale',
+      getProjects: 'myProject/getProjects'
     })
+  },
+  created () {
+    this.getProjects()
   },
   mounted () {
     this.setLocale()

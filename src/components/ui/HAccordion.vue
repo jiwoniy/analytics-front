@@ -83,14 +83,6 @@ export default {
     }
   },
   props: {
-    // projectList: {
-    //   type: Array,
-    //   default: () => []
-    // },
-    // selectedProject: {
-    //   type: Object,
-    //   default: () => {}
-    // },
     worksheetList: {
       type: Array,
       default: () => []
@@ -102,15 +94,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      // setSelectedProject: 'myProject/setSelectedProject',
       setSelectedWorksheet: 'myProject/setSelectedWorksheet'
     }),
-    // projectClick (event) {
-    //   if (event.target) {
-    //     const projectId = event.target.id || event.target.parentElement.id
-    //     this.setSelectedProject(projectId)
-    //   }
-    // },
     worksheetClick (event) {
       if (event.target) {
         const worksheetId = event.target.id || event.target.parentElement.id
