@@ -96,14 +96,6 @@ export default {
     width: 250px;
     padding: 0.5rem;
     overflow-y: auto;
-
-    // a {
-    //   width: 100%;
-    //   margin: 10px;
-    //   color: black;
-    //   display: block;
-    //   text-decoration: none;
-    // }
   }
 }
 </style>

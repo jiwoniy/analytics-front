@@ -33,6 +33,8 @@
         </SplitArea>
       </Split>
 
+      <foot-panel></foot-panel>
+
     </section>
   </transition>
 </template>
@@ -44,6 +46,7 @@ import eventController from '@/utils/EventController'
 import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
+import FootPanel from '@/components/panel/Foot'
 import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
 
 export default {
@@ -51,7 +54,8 @@ export default {
   components: {
     LeftPanel,
     RightPanel,
-    WorkPanel
+    WorkPanel,
+    FootPanel
   },
   data () {
     return {
@@ -144,7 +148,6 @@ export default {
     left: 0px;
     width: var(--app-left-panel-folder-button);
     height: var(--app-left-panel-folder-button);
-    z-index: var(--app-left-panel-zIndex);
     img {
       position: relative;
       width: 30px;
@@ -159,7 +162,6 @@ export default {
     right: 0px;
     width: var(--app-left-panel-folder-button);
     height: var(--app-left-panel-folder-button);
-    z-index: var(--app-left-panel-zIndex);
     img {
       position: relative;
       width: 30px;

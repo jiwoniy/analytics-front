@@ -44,7 +44,6 @@ export default {
   margin: 0 10px;
   width: calc(100% - 20px);
   height: 100%;
-  z-index: 1;
   top: var(--app-top_panel-height);
   right: 0;
   background-color: #ffffff;
