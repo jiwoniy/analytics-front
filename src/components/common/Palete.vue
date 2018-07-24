@@ -166,7 +166,8 @@ export default {
     })
 
     eventController.addListner('REFRESH', () => {
-      this.removeSvgGraph()
+      this.svgGraph.setInit()
+      // this.removeSvgGraph()
     })
 
     eventController.addListner('LOAD', () => {

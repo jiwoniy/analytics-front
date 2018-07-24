@@ -92,45 +92,28 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       thisGraph.svgKeyUp()
     })
 
+  const dragSvg = d3Zoom.zoom()
+    .on('zoom', function () {
+      thisGraph.zoomed()
+    })
+    .on('start', function () {
+      thisGraph.svg.style('cursor', 'move')
+    })
+    .on('end', function () {
+      thisGraph.svg.style('cursor', 'auto')
+    })
+
   // const menu = contextMenu().items('first item', 'second option', 'whatever, man')
   this.svg
     .on('mousedown', function () {
-      // console.log(d3Selection.event.buttons)
       thisGraph.setSelectNode(this, null)
     })
-    // var x = event.buttons;
-    // .on('contextmenu', function () {
-    //   d3Selection.event.preventDefault()
-    // menu(d3Selection.mouse(this)[0], d3Selection.mouse(this)[1])
+    // .on('mouseup', function (d) {
+    //   thisGraph.svgMouseUp(this, null)
     // })
+    .call(dragSvg).on('dblclick.zoom', null)
 
   // listen for dragging
-  const dragSvg = d3Zoom.zoom()
-    .on('zoom', function () {
-      if (d3Selection.event.sourceEvent.shiftKey) {
-        // TODO  the internal d3 state is still changing
-        return false
-      } else {
-        thisGraph.zoomed()
-        // thisGraph.zoomed(thisGraph)
-      }
-      return true
-    })
-    .on('start', function () {
-      const ael = d3Selection.select(`#${thisGraph.constants.activeEditId}`).node()
-      if (ael) {
-        ael.blur()
-      }
-      if (!d3Selection.event.sourceEvent.shiftKey) {
-        d3Selection.select('#svgContainer').style('cursor', 'auto')
-      }
-    })
-    .on('end', function () {
-      d3Selection.select('#svgContainer').style('cursor', 'auto')
-    })
-
-  this.svg.call(dragSvg).on('dblclick.zoom', null)
-
   this.setWidth = function setWidth (payload) {
     thisGraph.width = payload
   }
@@ -173,11 +156,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     return null
   }
 
+  this.initZoomState = function initZoomState () {
+    const t = d3Zoom.zoomIdentity.translate(0, 0).scale(1)
+    thisGraph.svg.call(dragSvg.transform, t)
+  }
+
   return {
     addNode: this.addNode,
     save: this.save,
     setEditable: this.setEditable,
     setWidth: this.setWidth,
+    setInit: this.initZoomState,
     getWidth,
     setHeight: this.setHeight,
     getHeight
@@ -185,11 +174,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 }
 
 GraphCreator.prototype.constants = {
-  // graphClass: 'graph',
-  // defaultTitle: 'random variable',
   selectedClass: 'selected',
-  // circleGClass: 'conceptG',
-  // rectGClass: 'conceptG',
   nodeGClass: 'node-group',
   nodeWrapClass: 'node-wrap',
   nodeHoverClass: 'node-hover',
@@ -448,8 +433,24 @@ GraphCreator.prototype.findRelatedEdges = function findRelatedEdges (node) {
 GraphCreator.prototype.zoomed = function zoomed () {
   this.state.justScaleTransGraph = true
 
-  d3Selection.select(`.${this.constants.graphClass}`)
-    .attr('transform', d3Selection.event.transform)
+  this.svgG.attr('transform', d3Selection.event.transform)
 }
+
+GraphCreator.prototype.svgMouseDown = function svgMouseDown () {
+  console.log('--mouse down--')
+  //   this.state.graphMouseDown = true
+  // const t = d3Zoom.zoomIdentity.translate(0, 0).scale(1)
+  // console.log(d3Selection(this).transform)
+  // console.log(t)
+  // this.svgG.call(() => d3Selection.transform, t)
+}
+
+// GraphCreator.prototype.svgMouseUp = function svgMouseUp () {
+//   if (this.state.justScaleTransGraph) {
+//     this.state.justScaleTransGraph = false
+//   }
+
+//   this.state.graphMouseDown = false
+// }
 
 export default GraphCreator

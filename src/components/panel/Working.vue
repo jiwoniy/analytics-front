@@ -56,7 +56,7 @@ export default {
   position: relative;
   display: block;
   width: 100%;
-  height: calc(100% - var(--app-top-panel-height));
+  height: 100%;
 }
 
 .div--Working__page .tool-box {
