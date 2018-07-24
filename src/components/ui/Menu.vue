@@ -11,12 +11,17 @@
           :items="projectList"
           :item-style="{
             'font-size': '1.6rem',
-            'margin': '0.5rem'
+            'margin': '0.5rem 0.4rem'
           }"
           :item-class="'text-ellipsis'"
           :selected-item-id="selectedProject.id"
           :item-click="selectProject">
         </list-view>
+
+        <div class="add-project">
+          <img class="close" src="/static/img/plus-circle-solid.svg" />
+          <span> {{ $t('Add project') }} </span>
+        </div>
       </div>
     </div>
   </transition>
@@ -35,6 +40,16 @@ export default {
   data () {
     return {
       isOpen: false
+    }
+  },
+  i18n: {
+    messages: {
+      'en': {
+        'Add project': 'Add project'
+      },
+      'ko': {
+        'Add project': '프로젝트 추가'
+      }
     }
   },
   props: {
@@ -59,7 +74,6 @@ export default {
       }
     },
     clickMenuBar (ev) {
-      // ev.currentTarget.classList.toggle('change')
       this.isOpen = !this.isOpen
     }
   }
@@ -94,8 +108,20 @@ export default {
     z-index: 999;
 
     width: 250px;
-    padding: 0.5rem;
     overflow-y: auto;
+
+    .add-project {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 1.6rem;
+      margin: 0.5rem 0.4rem;
+      img {
+        padding-right: 0.2rem;
+        width: 30px;
+      }
+    }
   }
 }
 </style>

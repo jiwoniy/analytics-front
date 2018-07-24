@@ -21,6 +21,11 @@
               :item-click="worksheetClick">
             </list-view>
           </div>
+
+          <div class="add-worksheet">
+            <img class="close" src="/static/img/plus-circle-solid.svg" />
+            <span> {{ $t('Add worksheet') }} </span>
+          </div>
         </div>
       </li>
 
@@ -55,11 +60,13 @@ export default {
     messages: {
       'en': {
         'Worksheet List': 'Worksheet List',
-        'Pipeline Design Tool': 'Pipeline Design Tool'
+        'Pipeline Design Tool': 'Pipeline Design Tool',
+        'Add worksheet': 'Add worksheet'
       },
       'ko': {
         'Worksheet List': '워크시트',
-        'Pipeline Design Tool': '파이프라인 설계'
+        'Pipeline Design Tool': '파이프라인 설계',
+        'Add worksheet': '워크시트 추가'
       }
     }
   },
@@ -155,9 +162,12 @@ export default {
   }
 
   .accslide {
-    display: block;
+    // display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 0px;
-    height: calc(100vh - var(--app-top-panel-height));
+    height: calc(100vh - var(--app-top-panel-height) - var(--app-foot-panel-height));
     float: left;
     overflow-x: hidden;
     line-height: 1.5;
@@ -186,6 +196,23 @@ export default {
     li:nth-child(#{$i}) input[type="radio"]:checked ~ .accslide {
       width: calc(100% - #{$label-tab-width});
     }
+  }
+}
+
+.add-worksheet {
+  cursor: pointer;
+  // position: absolute;
+  // bottom: 40px;
+  vertical-align: bottom;
+  display: flex;
+  float: bottom;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.6rem;
+  margin: 0.5rem 0.4rem;
+  img {
+    padding-right: 0.2rem;
+    width: 30px;
   }
 }
 

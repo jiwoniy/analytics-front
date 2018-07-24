@@ -16,14 +16,14 @@
 
         <SplitArea class="center-section" :size="split_size.center" :minSize="100">
           <div class="folder__button" @click="minimizeLeftPanel">
-            <img v-show="isLeftMinimize" src="@/assets/img/angle-right-solid.svg" />
-            <img v-show="!isLeftMinimize" src="@/assets/img/angle-left-solid.svg" />
+            <img v-show="isLeftMinimize" src="/static/img/angle-right-solid.svg" />
+            <img v-show="!isLeftMinimize" src="/static/img/angle-left-solid.svg" />
           </div>
           <work-panel>
           </work-panel>
           <div class="folder__button_right" @click="minimizeRightPanel">
-            <img v-show="!isRightMinimize" src="@/assets/img/angle-right-solid.svg" />
-            <img v-show="isRightMinimize" src="@/assets/img/angle-left-solid.svg" />
+            <img v-show="!isRightMinimize" src="/static/img/angle-right-solid.svg" />
+            <img v-show="isRightMinimize" src="/static/img/angle-left-solid.svg" />
           </div>
         </SplitArea>
 
@@ -131,6 +131,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+  z-index: 1;
 }
 
 .main-panel__page .left-section {
@@ -141,6 +142,7 @@ export default {
 .main-panel__page .center-section {
   position: relative;
   .folder__button {
+    z-index: 2;
     display: block;
     position: absolute;
     cursor: pointer;
@@ -155,6 +157,7 @@ export default {
     }
   }
   .folder__button_right {
+    z-index: 2;
     display: block;
     position: absolute;
     cursor: pointer;

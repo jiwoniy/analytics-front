@@ -1,10 +1,8 @@
 <template>
   <transition>
-    <div id="Footer" class="Foot-panel__page">
-      <div v-if="!isOpen" class="fixed">
-        <button @click="openReport">
-          report
-        </button>
+    <div id="Footer" class="Footer__page">
+      <div v-if="!isOpen" class="footer--fixed">
+        <span @click="openReport" class='report'> {{ $t('Report') }} </span>
       </div>
       <div v-show="isOpen" class="report">
         <div id="draggable" class="split" draggable="true"></div>
@@ -22,6 +20,16 @@
 
 export default {
   name: 'Foot-Panel',
+  i18n: {
+    messages: {
+      'en': {
+        'Report': 'Report'
+      },
+      'ko': {
+        'Report': '리포트'
+      }
+    }
+  },
   data () {
     return {
       Footer: null,
@@ -55,16 +63,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.Foot-panel__page {
+.Footer__page {
   position: fixed;
   width: 100%;
   background-color: #ffffff;
-  height: 30px;
+  height: var(--app-foot-panel-height);
   bottom: 0px;
 }
 
-.fixed {
+.footer--fixed {
   width: 100%;
+  height: var(--app-foot-panel-height);
+  .report {
+    padding: 0.4rem;
+    cursor: pointer;
+    font: italic bold 12px/30px Georgia, serif;
+  }
+  // background: no-repeat url('~/static/img/report.svg');
 }
 
 .report {
