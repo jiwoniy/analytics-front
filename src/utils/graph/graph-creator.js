@@ -221,28 +221,32 @@ GraphCreator.prototype.state = {
 GraphCreator.prototype.dragLink = function dragLink (d) {
   const x = d3Selection.mouse(this.svgG.node())[0]
   const y = d3Selection.mouse(this.svgG.node())[1]
-  // TODO
+
   this.dragLine.attr('d',
     `M${d.x},${d.y}L${x},${y}`)
 }
 
 GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
-  function dotme (selectText) {
+  function dotme (selectTextNode) {
     const words = insertText.split(/\s+/)
-    const insertedText = selectText.append('tspan').text(insertText)
-    const ellipsis = selectText.append('tspan').attr('class', 'elip').text('...')
+
+    const insertedTextNode = selectTextNode.append('tspan').text(insertText)
+    const ellipsis = selectTextNode.append('tspan').attr('class', 'elip').text('...')
 
     const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-    // const numWords = words.length
 
-    while (insertedText.node().getComputedTextLength() > width && words.length) {
-      words.pop()
-      insertedText.text(words.join(' '))
+    if (insertedTextNode.node().getComputedTextLength() > width) {
+      while (insertedTextNode.node().getComputedTextLength() > width && words.length) {
+        words.pop()
+        insertedTextNode.text(words.join(' '))
+      }
+    } else {
+      ellipsis.remove()
     }
   }
 
   nodeElement.append('text')
-    .attr('transform', 'translate(100, 25)')
+    .attr('transform', 'translate(100, 30)') // rect size is 200, 50
     .classed('dotme', true)
     .call(dotme)
 }

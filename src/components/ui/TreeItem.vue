@@ -1,15 +1,19 @@
 <template>
   <li>
     <div class="tree-item" @click="toggle">
-      <i v-if="!open && isFolder" class="fa fa-angle-right"></i>
-      <i v-if="open" class="fa fa-angle-down"></i>
+      <img v-if="!open && isFolder" src="@/assets/img/angle-right-solid.svg" />
+      <img v-if="open" src="@/assets/img/angle-down-solid.svg" />
+
+      <div v-if="!isNodeitemDragable" class="text-ellipsis">
+        <span> {{ treeItem.name }} </span>
+      </div>
 
       <drag-item
         v-if="isNodeitemDragable"
         slot="pipeline-item"
         :item="treeItem">
+        <p slot="drag-item" class="text-ellipsis"> {{ treeItem.name }} </p>
       </drag-item>
-      <span v-if="!isNodeitemDragable" class="label"> {{ treeItem.name }} </span>
     </div>
 
     <ul
@@ -78,10 +82,16 @@ li .tree-item {
   align-items: center;
   justify-content: flex-start;
   flex: 0 0 calc(100% - 30px);
-  font-size: 18px;
+  font-size: 1.4rem;
+
+  img {
+    width: 15px;
+    height: 15px;
+  }
 
   i {
     flex: 0 0 20px;
   }
 }
+
 </style>

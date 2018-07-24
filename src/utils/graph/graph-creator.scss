@@ -35,9 +35,11 @@ path.link.selected  {
   text {
     cursor: pointer;
     text-anchor: middle;
+    font-size: 1rem;
   }
 
   .data-input {
+    cursor: pointer;
     fill: #ffffff;
     stroke: blue;
     stroke-width: 2;
@@ -47,6 +49,7 @@ path.link.selected  {
   }
 
   .data-output {
+    cursor: pointer;
     fill: #ffffff;
     stroke: red;
     stroke-width: 2;
@@ -58,4 +61,19 @@ path.link.selected  {
 
 .node-wrap.node-selected  {
   fill: blue;
+}
+
+.tooltip {
+  pointer-events: none;
+  opacity: 1;
+
+  rect {
+    stroke: #606060;
+    stroke-width: 1px;
+    fill: #ffffff;
+  }
+  text {
+    // text-anchor: right;
+    font-size: 0.7rem;
+  }
 }

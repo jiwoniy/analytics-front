@@ -5,8 +5,8 @@
       @dragstart="drag($event, item)"
       draggable="true"
     >
-      <div class="drag-item">
-        <h5> {{ item.name }} </h5>
+      <div class="drag-item-container">
+        <slot name="drag-item"></slot>
       </div>
     </div>
   </transition>
@@ -31,9 +31,10 @@ export default {
 
 <style lang="scss" scoped>
 .drag-container {
+  width: 100%;
   display: block;
 
-  .drag-item {
+  .drag-item-container {
     // padding: 10px;
     // margin: 10px;
     // background: rgba(black, 0.4);

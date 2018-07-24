@@ -9,7 +9,7 @@
         </label>
         <div class="accslide">
           <div class="content">
-            <h1> {{ $t('Worksheet List') }} </h1>
+            <!-- <h1> {{ $t('Worksheet List') }} </h1> -->
             <list-view
               :items="worksheetList"
               :item-class="'text-ellipsis'"
@@ -31,7 +31,7 @@
         </label>
         <div class="accslide">
           <div class="content">
-            <h1> {{ $t('Pipeline Design Tool') }} </h1>
+            <!-- <h1> {{ $t('Pipeline Design Tool') }} </h1> -->
             <slot name="pipeline-item"></slot>
           </div>
         </div>

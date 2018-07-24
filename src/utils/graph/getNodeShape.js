@@ -5,6 +5,30 @@ function checkLinkValidate (source, target) {
   return source.id !== target.id
 }
 
+function drawTooltip (selection, d, inOut, xPosition) {
+  const tooltip = selection
+    .append('g')
+    .classed('tooltip', true)
+    .attr('transform', `translate(${xPosition + 7},
+      ${inOut === 'input' ? -30 : 50})`) // base rect height
+
+  tooltip
+    .append('rect')
+    .attr('width', 100)
+    .attr('height', 30)
+    .attr('rx', 10)
+    .attr('ry', 10)
+
+  tooltip
+    .append('text')
+    .text(d.node_type)
+    .attr('transform', 'translate(50,15)') // base rect height
+}
+
+function removeTooltip (selection) {
+  selection.select('.tooltip').remove()
+}
+
 // Output drag handler
 function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
   return d3Drag.drag()
@@ -50,15 +74,17 @@ function getNodeShape (context, selections, isCanConnect) {
       const increaseInputValue = (Math.floor(200 / (input * 2))) * 2
       const startPositionInput = Math.floor(200 / (input * 2))
       for (let circleIn = 0; circleIn < input; circleIn += 1) {
-        d3Selection.select(this).append('circle')
-          .classed('data-input', true)
+        const inputCircle = d3Selection.select(this).append('circle')
+
+        inputCircle.classed('data-input', true)
           .attr('id', `input-${circleIn}`)
           .attr('cx', startPositionInput + (increaseInputValue * circleIn))
           .attr('cy', 0)
           .attr('r', 10)
           .on('mouseover', function (d) {
+            d3Selection.select(this).classed('hover', true)
+            drawTooltip(d3Selection.select(this.parentNode), d, 'input', startPositionInput + (increaseInputValue * circleIn))
             if (context.state.connecting) {
-              d3Selection.select(this).classed('hover', true)
               context.state.capturedTarget = {
                 ...d,
                 linkInput: {
@@ -71,8 +97,9 @@ function getNodeShape (context, selections, isCanConnect) {
             }
           })
           .on('mouseout', function (d) {
-            context.state.capturedTarget = null
             d3Selection.select(this).classed('hover', false)
+            removeTooltip(d3Selection.select(this.parentNode))
+            context.state.capturedTarget = null
           })
       }
     } else if (type === 'output') {
@@ -80,16 +107,19 @@ function getNodeShape (context, selections, isCanConnect) {
       const increaseOutputValue = (Math.floor(200 / (output * 2))) * 2
       const startPositionOutput = Math.floor(200 / (output * 2))
       for (let circleOut = 0; circleOut < output; circleOut += 1) {
-        d3Selection.select(this).append('circle')
-          .classed('data-output', true)
+        const ouputCircle = d3Selection.select(this).append('circle')
+
+        ouputCircle.classed('data-output', true)
           .attr('id', `output-${circleOut}`)
           .attr('cx', startPositionOutput + (increaseOutputValue * circleOut))
           .attr('cy', 50)
           .attr('r', 10)
           .on('mouseover', function (d) {
+            drawTooltip(d3Selection.select(this.parentNode), d, 'output', startPositionOutput + (increaseOutputValue * circleOut))
             d3Selection.select(this).classed('hover', true)
           })
           .on('mouseout', function (d) {
+            removeTooltip(d3Selection.select(this.parentNode))
             d3Selection.select(this).classed('hover', false)
           })
           .call(circleOutputDraghandler({
