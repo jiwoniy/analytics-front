@@ -25,7 +25,6 @@ export default {
         y: event.y || 100
       }
       const data = event.dataTransfer.getData('data')
-      // TODO check json data
       if (data) {
         eventController.SEND_DATA_TRANSFER({
           data: {

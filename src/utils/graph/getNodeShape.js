@@ -36,12 +36,14 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
       return { x: d.x, y: d.y }
     })
     .on('drag', function (d) {
-      context.dragLine.classed('hidden', false)
-      context.state.connecting = true
-      const x = d3Selection.event.x + linkOutput.cx
-      const y = d3Selection.event.y + linkOutput.cy
-      context.dragLine.attr('d',
-        `M${d.x + linkOutput.cx},${d.y + linkOutput.cy}L${x},${y}`)
+      if (context.isEditable()) {
+        context.dragLine.classed('hidden', false)
+        context.state.connecting = true
+        const x = d3Selection.event.x + linkOutput.cx
+        const y = d3Selection.event.y + linkOutput.cy
+        context.dragLine.attr('d',
+          `M${d.x + linkOutput.cx},${d.y + linkOutput.cy}L${x},${y}`)
+      }
     })
     .on('end', function (d) {
       context.dragLine.classed('hidden', true)

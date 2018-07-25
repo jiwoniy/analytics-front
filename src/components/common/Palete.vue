@@ -135,6 +135,7 @@ export default {
       }
     },
     init () {
+      this.editable = false
       this.removeSvgGraph()
       this.setSvgContainer()
     }

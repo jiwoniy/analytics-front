@@ -134,8 +134,12 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     thisGraph.state.editable = status
   }
 
+  this.isEditable = function isEditable () {
+    return thisGraph.state.editable
+  }
+
   this.addNode = function addNode (node) {
-    if (thisGraph.state.editable) {
+    if (thisGraph.isEditable()) {
       thisGraph.nodes.add(saveNodeTransformNode(node))
       thisGraph.drawNodes()
     }
@@ -165,6 +169,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     addNode: this.addNode,
     save: this.save,
     setEditable: this.setEditable,
+    isEditable: this.isEditable,
     setWidth: this.setWidth,
     setZoomInit: this.initZoomState,
     getWidth,
@@ -203,12 +208,16 @@ GraphCreator.prototype.state = {
   selectedText: null
 }
 
+// editable
+// nodeDraghandler,
 GraphCreator.prototype.dragLink = function dragLink (d) {
-  const x = d3Selection.mouse(this.svgG.node())[0]
-  const y = d3Selection.mouse(this.svgG.node())[1]
+  if (this.isEditable()) {
+    const x = d3Selection.mouse(this.svgG.node())[0]
+    const y = d3Selection.mouse(this.svgG.node())[1]
 
-  this.dragLine.attr('d',
-    `M${d.x},${d.y}L${x},${y}`)
+    this.dragLine.attr('d',
+      `M${d.x},${d.y}L${x},${y}`)
+  }
 }
 
 GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
@@ -254,12 +263,12 @@ function nodeDraghandler (context) {
       return { x: d.x, y: d.y }
     })
     .on('start', function (d) {
-      if (context.state.editable) {
+      if (context.isEditable()) {
         d.status.moving = true
       }
     })
     .on('drag', function (d) {
-      if (context.state.editable) {
+      if (context.isEditable()) {
         if (!d.status.selected) {
           // move node
           d3Selection.select(this)
@@ -297,12 +306,12 @@ GraphCreator.prototype.drawGraph = function drawGraph () {
   thisGraph.drawNodes()
 }
 
-GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
-  if (this.state.justDragged && target.input > 0 && source.id !== target.id) {
-    return true
-  }
-  return false
-}
+// GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
+//   if (this.state.justDragged && target.input > 0 && source.id !== target.id) {
+//     return true
+//   }
+//   return false
+// }
 
 GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
@@ -418,12 +427,14 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
 }
 
 GraphCreator.prototype.removeNode = function removeNode (node) {
-  const relatedEdges = this.findRelatedEdges(node)
-  if (relatedEdges.length) {
-    relatedEdges.forEach(edge => this.edges.remove(edge))
+  if (this.isEditable()) {
+    const relatedEdges = this.findRelatedEdges(node)
+    if (relatedEdges.length) {
+      relatedEdges.forEach(edge => this.edges.remove(edge))
+    }
+    this.nodes.remove(node)
+    this.drawGraph()
   }
-  this.nodes.remove(node)
-  this.drawGraph()
 }
 
 GraphCreator.prototype.findRelatedEdges = function findRelatedEdges (node) {

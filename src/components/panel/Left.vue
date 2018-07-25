@@ -7,8 +7,8 @@
       <div class="left-panel__contents">
         <h-accordion
           :worksheet-list="worksheetList"
-          :selected-worksheet="selectedWorksheet">
-
+          :selected-worksheet="selectedWorksheet"
+        >
           <div
             class="pipeline-item"
             slot="pipeline-item"
@@ -19,7 +19,6 @@
               :is-dragable="true">
             </tree-items>
           </div>
-
         </h-accordion>
       </div>
     </transition>

@@ -121,7 +121,10 @@ export default {
           dataType: type
         }
       } else {
-        this.currentNodeItem = null
+        this.currentNodeItem = {
+          item: this.selectedWorksheet,
+          dataType: 'worksheet'
+        }
       }
     })
   }

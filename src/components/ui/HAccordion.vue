@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import ListView from '@/components/ui/ListView'
 
@@ -86,6 +86,11 @@ export default {
       default: () => {}
     }
   },
+  computed: {
+    ...mapGetters({
+      selectedProject: 'myProject/getSelectedProject'
+    })
+  },
   methods: {
     ...mapActions({
       setSelectedWorksheet: 'myProject/setSelectedWorksheet'
@@ -97,13 +102,12 @@ export default {
         this.selectMenu = 'tools'
       }
     }
+  },
+  watch: {
+    selectedProject (newVal) {
+      this.selectMenu = 'worksheet'
+    }
   }
-  // watch: {
-  //   selectMenu (newVal) {
-  //     console.log('---selectMenu---')
-  //     console.log(newVal)
-  //   }
-  // }
 }
 </script>
 

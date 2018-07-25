@@ -1,3 +1,4 @@
+// meta to graph node
 function transformNode (node, isEdges = false) {
   if (isEdges) {
     return {
@@ -27,6 +28,7 @@ function transformNode (node, isEdges = false) {
   }
 }
 
+// graph node to save node
 function saveNodeTransformNode (node, isEdges = false) {
   if (isEdges) {
     return {
@@ -45,9 +47,6 @@ function saveNodeTransformNode (node, isEdges = false) {
       y: node.position.y
     }
   }
-
-  // console.log('-------')
-  // console.log(node)
 
   return {
     id: node.id,

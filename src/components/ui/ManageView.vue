@@ -36,6 +36,12 @@ export default {
       }
       return null
     }
+  },
+  watch: {
+    itemInfo (newValue) {
+      console.log('--manage view--')
+      console.log(newValue)
+    }
   }
 }
 </script>
