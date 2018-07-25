@@ -10,5 +10,10 @@ export default {
   },
   SET_SELECTED_WORKSHEETS: (state, worksheet) => {
     state.selectedWorksheet = worksheet
+  },
+  SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
+    if (pipeline && worksheetId) {
+      state.myPipeline[worksheetId] = pipeline
+    }
   }
 }

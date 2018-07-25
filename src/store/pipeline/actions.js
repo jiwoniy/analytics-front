@@ -1,8 +1,11 @@
+import api from '@/api'
+import { normalizeArray } from '@/utils/normalize'
+
 export default {
-  savePipeline: ({ commit, state }, pipeline) => {
-    if (pipeline) {
-      // TODO type check
-      commit('SAVE_PIPELINE', pipeline)
+  getPipelineNodes: async ({ dispatch, commit, state }) => {
+    const { success: pipelineNodes } = await api.meta.getPipelineNodes()
+    if (pipelineNodes) {
+      commit('SET_PIPELINES_NODES', normalizeArray(pipelineNodes))
     }
   }
 }

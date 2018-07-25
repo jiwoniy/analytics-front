@@ -111,15 +111,17 @@ export default {
     overflow-y: auto;
 
     .add-project {
+      width: calc(100% - 0.8rem);
       cursor: pointer;
       display: flex;
       flex-direction: row;
       align-items: center;
-      font-size: 1.6rem;
-      margin: 0.5rem 0.4rem;
+      font-size: 1.4rem;
+      padding: 0.5rem 0.4rem;
       img {
         padding-right: 0.2rem;
-        width: 30px;
+        width: 25px;
+        height: 25px;
       }
     }
   }

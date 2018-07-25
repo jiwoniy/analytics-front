@@ -3,7 +3,8 @@ import { normalizeArray } from '@/utils/normalize'
 
 export default {
   getProjects: async ({ dispatch, commit, state }) => {
-    const { success: projects } = await api.projects.getMyProjects()
+    const { success } = await api.projects.getMyProjects()
+    const { projects } = success
     if (projects && projects.length) {
       commit('SET_PROJECTS', normalizeArray(projects))
       dispatch('setSelectedProject', projects[0].id)
@@ -29,6 +30,12 @@ export default {
     if (worksheetId) {
       const worksheet = state.worksheets[worksheetId]
       commit('SET_SELECTED_WORKSHEETS', worksheet)
+    }
+  },
+  savePipeline: ({ commit, state }, payload) => {
+    if (payload) {
+      // TODO type check
+      commit('SAVE_PIPELINE', payload)
     }
   }
 }

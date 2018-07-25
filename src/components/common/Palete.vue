@@ -15,6 +15,7 @@ import uuidv4 from 'uuid/v4'
 import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
+import _isEmpty from 'lodash.isempty'
 
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
@@ -40,20 +41,15 @@ export default {
       rightPanelWidth: null
     }
   },
-  props: {
-    openRightPanel: {
-      type: Function,
-      default: () => {}
-    }
-  },
   computed: {
     ...mapGetters({
-      pipeline: 'pipeline/getPipeline'
+      pipeline: 'myProject/getCurrentWorksheetPipeline',
+      selectedWorksheet: 'myProject/getSelectedWorksheet'
     })
   },
   methods: {
     ...mapActions({
-      savePipeline: 'pipeline/savePipeline'
+      savePipeline: 'myProject/savePipeline'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -93,10 +89,11 @@ export default {
         validate(true),
         validate()
       ], true)
+
       this.svgGraph = new GraphCreator(svgContainer, {
         options: {
           ...options,
-          saveFile: this.pipeline,
+          saveFile: _isEmpty(this.pipeline) ? null : this.pipeline,
           connectValidation: composeValidate
         },
         callback })
@@ -126,17 +123,19 @@ export default {
     },
     nodeSelect (nodeItem) {
       if (nodeItem && nodeItem.status.selected) {
-        this.openRightPanel({
-          // open: true,
-          item: nodeItem
+        eventController.RIGHT_PANEL({
+          item: nodeItem,
+          type: 'pipeline-tools'
         })
       } else {
-        this.openRightPanel({
-          item: null
+        eventController.RIGHT_PANEL({
+          item: null,
+          type: null
         })
       }
     },
     init () {
+      this.removeSvgGraph()
       this.setSvgContainer()
     }
   },
@@ -157,7 +156,9 @@ export default {
 
     eventController.addListner('SAVE', () => {
       const saveFile = this.svgGraph.save()
-      this.savePipeline(saveFile)
+      const worksheetId = this.selectedWorksheet.id
+      // worksheets - pipeline 1 on 1
+      this.savePipeline({ pipeline: saveFile, worksheetId })
     })
 
     eventController.addListner('EDIT', () => {
@@ -166,7 +167,7 @@ export default {
     })
 
     eventController.addListner('REFRESH', () => {
-      this.svgGraph.setInit()
+      this.svgGraph.setZoomInit()
       // this.removeSvgGraph()
     })
 
@@ -179,6 +180,11 @@ export default {
       this.leftPanelWidth = document.getElementById('leftPanel').clientWidth
       this.rightPanelWidth = document.getElementById('rightPanel').clientWidth
     })
+  },
+  watch: {
+    selectedWorksheet (newValue) {
+      this.init()
+    }
   }
 }
 </script>

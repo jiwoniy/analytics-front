@@ -5,7 +5,8 @@
       <li>
         <input id="worksheet" type="radio" name="rad" checked="checked"  value="worksheet" v-model="selectMenu"/>
         <label for="worksheet">
-          <div> {{ $t('Worksheet List') }} </div>
+          <div v-if="selectedWorksheet && selectedWorksheet.name"> {{ selectedWorksheet.name }} </div>
+          <div v-if="!(selectedWorksheet && selectedWorksheet.name)"> {{ $t('Add worksheet') }} </div>
         </label>
         <div class="accslide">
           <div class="content">
@@ -201,18 +202,18 @@ export default {
 
 .add-worksheet {
   cursor: pointer;
-  // position: absolute;
-  // bottom: 40px;
+  width: calc(100% - 0.8rem);
   vertical-align: bottom;
   display: flex;
   float: bottom;
   flex-direction: row;
   align-items: center;
-  font-size: 1.6rem;
-  margin: 0.5rem 0.4rem;
+  font-size: 1.4rem;
+  padding: 0.5rem 0.4rem;
   img {
     padding-right: 0.2rem;
-    width: 30px;
+    width: 25px;
+    height: 25px;
   }
 }
 

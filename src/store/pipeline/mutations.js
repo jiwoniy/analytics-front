@@ -1,7 +1,7 @@
 export default {
-  SAVE_PIPELINE: (state, pipeline) => {
-    if (pipeline) {
-      state.pipeline = pipeline
+  SET_PIPELINES_NODES: (state, pipelineNodes) => {
+    if (pipelineNodes) {
+      state.pipelineNodes = pipelineNodes
     }
   }
 }

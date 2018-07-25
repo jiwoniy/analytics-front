@@ -2,7 +2,12 @@
   <transition>
     <div class="div--project__page">
       <main-panel></main-panel>
-      <modal v-if="showModal" @close="showModal = false" :size="modalSize" :position="modalPosition">
+      <modal
+        v-if="showModal"
+        @close="showModal = false"
+        :size="modalSize"
+        :position="modalPosition"
+      >
         <h3 slot="header">custom header</h3>
       </modal>
     </div>
@@ -14,7 +19,7 @@ import eventController from '@/utils/EventController'
 import MainPanel from '@/components/panel/Main'
 
 export default {
-  name: 'project',
+  name: 'Project',
   components: {
     MainPanel
   },

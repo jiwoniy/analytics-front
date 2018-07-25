@@ -28,7 +28,8 @@
         </SplitArea>
 
         <SplitArea :size="split_size.right" :minSize="20">
-          <right-panel :current-item="currentNodeItem">
+          <right-panel
+            :current-item="currentNodeItem">
           </right-panel>
         </SplitArea>
       </Split>
@@ -47,7 +48,7 @@ import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
 import FootPanel from '@/components/panel/Foot'
-import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
+// import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
 
 export default {
   name: 'Work-Panel',
@@ -59,7 +60,7 @@ export default {
   },
   data () {
     return {
-      pipelineNodes: pipelineNodesSchema,
+      // pipelineNodes: pipelineNodesSchema,
       isLeftMinimize: false,
       isRightMinimize: false,
       currentNodeItem: null,
@@ -72,6 +73,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      pipelineNodes: 'pipeline/getPipelineNodesList',
       worksheetList: 'myProject/getWorksheetList',
       selectedWorksheet: 'myProject/getSelectedWorksheet'
     })
@@ -116,7 +118,7 @@ export default {
       if (item) {
         this.currentNodeItem = {
           item,
-          type
+          dataType: type
         }
       } else {
         this.currentNodeItem = null

@@ -2,5 +2,6 @@ export default {
   projects: {},
   selectedProject: {},
   worksheets: {},
-  selectedWorksheet: {}
+  selectedWorksheet: {},
+  myPipeline: {}
 }

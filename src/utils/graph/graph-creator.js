@@ -166,7 +166,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     save: this.save,
     setEditable: this.setEditable,
     setWidth: this.setWidth,
-    setInit: this.initZoomState,
+    setZoomInit: this.initZoomState,
     getWidth,
     setHeight: this.setHeight,
     getHeight

@@ -19,10 +19,6 @@ export default {
     ManageView
   },
   props: {
-    type: {
-      type: String,
-      default: () => 'worksheet' // worksheet, node
-    },
     currentItem: {
       type: Object,
       default: () => null
@@ -30,6 +26,9 @@ export default {
   },
   computed: {
     filterCurrentItem () {
+      // const { dataType, item } = this.currentItem
+      // worksheet
+      // pipeline-tool
       // TODO only throw editable info
       return this.currentItem
     }
