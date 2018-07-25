@@ -28,6 +28,7 @@
     "d3-transition": "^1.1.1",
     "d3-zoom": "^1.7.1",
     "lodash.isempty": "^4.4.0",
+    "lodash.partial": "^4.2.1",
     "uuid": "^3.3.2",
     "vue": "^2.5.2",
     "vue-i18n": "^8.0.0",

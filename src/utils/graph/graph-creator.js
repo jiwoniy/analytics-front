@@ -84,13 +84,13 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   }
 
   // listen for key events
-  d3Selection.select(window)
-    .on('keydown', function () {
-      thisGraph.svgKeyDown()
-    })
-    .on('keyup', function () {
-      thisGraph.svgKeyUp()
-    })
+  // d3Selection.select(window)
+  //   .on('keydown', function () {
+  //     thisGraph.svgKeyDown()
+  //   })
+  //   .on('keyup', function () {
+  //     thisGraph.svgKeyUp()
+  //   })
 
   const dragSvg = d3Zoom.zoom()
     .on('zoom', function () {

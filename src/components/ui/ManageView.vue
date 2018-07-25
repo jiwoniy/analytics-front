@@ -13,7 +13,8 @@
       :key="key"
     >
       <label>
-        {{ key }} : {{ itemInfo[key] }}
+        {{ key }}
+        <wrapper-input v-model="itemInfo[key]" @wrapperEvent="(value) => wrapperEvent(key, value)"></wrapper-input>
       </label>
     </div>
 
@@ -21,8 +22,13 @@
 </template>
 
 <script>
+import WrapperInput from '@/components/ui/Wrapper/Input'
+
 export default {
   name: 'Manage-View',
+  components: {
+    WrapperInput
+  },
   props: {
     itemInfo: {
       type: Object,
@@ -37,10 +43,10 @@ export default {
       return null
     }
   },
-  watch: {
-    itemInfo (newValue) {
-      console.log('--manage view--')
-      console.log(newValue)
+  methods: {
+    wrapperEvent (key, value) {
+      // TODO find solution
+      // this.itemInfo[key] = value
     }
   }
 }
