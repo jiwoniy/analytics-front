@@ -12,11 +12,8 @@ export default function configureMediator (store, router) {
           type: 'worksheet'
         })
         break
-      case 'user/SET_TOKEN':
-        // const { success, error } = await store.dispatch('auth/postWidgetToken', state.user.token)
-        // console.log(success)
-        // console.log(error)
-        // TODO success get user info
+      case 'myProject/UPDATE_SELECTED_WORKSHEETS':
+        store.dispatch('myProject/updateWorksheetsByMediator', payload)
         break
       default:
         break

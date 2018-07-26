@@ -2,19 +2,19 @@
   <div class="manage-node">
     <div class="item-title">
       <label>
-        {{ itemInfo && itemInfo.name }}
+        {{ currentItemType }}
       </label>
     </div>
 
     <div
       class="item-node"
-      v-if="itemItemsKey"
-      v-for="key in itemItemsKey"
-      :key="key"
+      v-if="currentItemType === 'worksheet'"
+      v-for="item in filterWorksheetItem"
+      :key="item.key"
     >
       <label>
-        {{ key }}
-        <wrapper-input v-model="itemInfo[key]" @wrapperEvent="(value) => wrapperEvent(key, value)"></wrapper-input>
+        {{ item.key }}
+        <wrapper-input v-model="item.value" @wrapperEvent="(value) => wrapperEvent(item.key, value)"></wrapper-input>
       </label>
     </div>
 
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 import WrapperInput from '@/components/ui/Wrapper/Input'
 
 export default {
@@ -30,23 +32,31 @@ export default {
     WrapperInput
   },
   props: {
-    itemInfo: {
-      type: Object,
-      default: () => {}
+    currentItemType: {
+      type: String,
+      default: () => 'worksheet'
     }
   },
   computed: {
-    itemItemsKey () {
-      if (this.itemInfo) {
-        return Object.keys(this.itemInfo)
-      }
-      return null
+    ...mapGetters({
+      selectedWorksheet: 'myProject/getSelectedWorksheet'
+    }),
+    filterWorksheetItem () {
+      return Object.keys(this.selectedWorksheet)
+        .map(key => ({ key, value: this.selectedWorksheet[key] }))
+        .filter(item => item.key !== 'id')
     }
   },
   methods: {
+    ...mapActions({
+      updateSelectedWorksheet: 'myProject/updateSelectedWorksheet'
+    }),
     wrapperEvent (key, value) {
-      // TODO find solution
-      // this.itemInfo[key] = value
+      this.updateSelectedWorksheet({
+        worksheetId: this.selectedWorksheet.id,
+        key,
+        value
+      })
     }
   }
 }

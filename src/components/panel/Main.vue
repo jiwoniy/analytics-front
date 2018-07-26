@@ -28,8 +28,12 @@
         </SplitArea>
 
         <SplitArea :size="split_size.right" :minSize="20">
-          <right-panel
-            :current-item="currentNodeItem">
+          <right-panel>
+             <manage-view
+              slot="worksheet-manage"
+              :current-item-type="currentItemType"
+            >
+            </manage-view>
           </right-panel>
         </SplitArea>
       </Split>
@@ -48,6 +52,7 @@ import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
 import FootPanel from '@/components/panel/Foot'
+import ManageView from '@/components/ui/ManageView'
 // import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
 
 export default {
@@ -56,14 +61,15 @@ export default {
     LeftPanel,
     RightPanel,
     WorkPanel,
-    FootPanel
+    FootPanel,
+    ManageView
   },
   data () {
     return {
       // pipelineNodes: pipelineNodesSchema,
       isLeftMinimize: false,
       isRightMinimize: false,
-      currentNodeItem: null,
+      currentItemType: null,
       split_size: {
         left: 20,
         center: 55,
@@ -115,16 +121,19 @@ export default {
   mounted () {
     eventController.addListner('RIGHT_PANEL', (payload) => {
       const { item, type } = payload
+      console.log(type)
       if (item) {
-        this.currentNodeItem = {
-          item,
-          dataType: type
-        }
+        this.currentItemType = type
+        // this.currentItemType = {
+        //   item,
+        //   dataType: type
+        // }
       } else {
-        this.currentNodeItem = {
-          item: this.selectedWorksheet,
-          dataType: 'worksheet'
-        }
+        // this.currentItemType = {
+        //   item: this.selectedWorksheet,
+        //   dataType: 'worksheet'
+        // }
+        this.currentItemType = 'worksheet'
       }
     })
   }

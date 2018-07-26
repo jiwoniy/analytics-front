@@ -1,3 +1,6 @@
+import _isEmpty from 'lodash.isempty'
+import _isEqual from 'lodash.isequal'
+
 import api from '@/api'
 import { normalizeArray } from '@/utils/normalize'
 
@@ -26,10 +29,24 @@ export default {
       }
     }
   },
+  updateWorksheetsByMediator: ({ commit, state }, payload) => {
+    const { worksheetId } = payload
+    if (worksheetId) {
+      commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
+    }
+  },
   setSelectedWorksheet: ({ commit, state }, worksheetId) => {
     if (worksheetId) {
       const worksheet = state.worksheets[worksheetId]
       commit('SET_SELECTED_WORKSHEETS', worksheet)
+    }
+  },
+  updateSelectedWorksheet: ({ commit, state }, payload) => {
+    const { worksheetId, key, value: updateValue } = payload
+    if (!_isEmpty(updateValue)) {
+      if (!_isEqual(updateValue, state.selectedWorksheet[key])) {
+        commit('UPDATE_SELECTED_WORKSHEETS', { worksheetId, key, value: updateValue })
+      }
     }
   },
   savePipeline: ({ commit, state }, payload) => {

@@ -3,36 +3,33 @@
     id="rightPanel"
     class="right-panel__page">
     <transition name="fade">
-      <manage-view
-        :item-info="filterCurrentItem && filterCurrentItem.item">
-      </manage-view>
+      <slot name="worksheet-manage"></slot>
+      <slot name="node-manage"></slot>
     </transition>
   </section>
 </template>
 
 <script>
-import ManageView from '@/components/ui/ManageView'
-
 export default {
-  name: 'Right-Panel',
-  components: {
-    ManageView
-  },
-  props: {
-    currentItem: {
-      type: Object,
-      default: () => null
-    }
-  },
-  computed: {
-    filterCurrentItem () {
-      // const { dataType, item } = this.currentItem
-      // worksheet
-      // pipeline-tool
-      // TODO only throw editable info
-      return this.currentItem
-    }
-  }
+  name: 'Right-Panel'
+  // components: {
+  //   ManageView
+  // },
+  // props: {
+  //   currentItem: {
+  //     type: Object,
+  //     default: () => null
+  //   }
+  // },
+  // computed: {
+  //   filterCurrentItem () {
+  //     // const { dataType, item } = this.currentItem
+  //     // worksheet
+  //     // pipeline-tool
+  //     // TODO only throw editable info
+  //     return this.currentItem
+  //   }
+  // }
 }
 </script>
 
