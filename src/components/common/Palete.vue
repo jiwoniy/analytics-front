@@ -1,13 +1,13 @@
 <template>
   <transition>
     <div id="svgContainer" class="palete" v-resize:debounce.250="onResize">
-      <img class="lock" v-if="editable" src="@/assets/img/lock-open-solid.svg" />
-      <img class="lock" v-if="!editable" src="@/assets/img/lock-solid.svg" />
+      <img class="lock" v-if="isGraphEditable" src="@/assets/img/lock-open-solid.svg" />
+      <img class="lock" v-if="!isGraphEditable" src="@/assets/img/lock-solid.svg" />
       <svg>
         <def-svg></def-svg>
       </svg>
       <div class="float-footer">
-        <p> {{ lastSavedTime }} </p>
+        <p> {{ lastSavedTime }} - {{ isGraphUpdated }} </p>
       </div>
     </div>
   </transition>
@@ -40,7 +40,8 @@ export default {
       svgContainer: null,
       svgContainerGroup: null,
       svgGraph: null,
-      editable: false,
+      isGraphEditable: false,
+      isGraphUpdated: false,
       leftPanelWidth: null,
       rightPanelWidth: null
     }
@@ -78,7 +79,8 @@ export default {
     },
     setGraph (svgContainer, options) {
       const callback = {
-        node_select: this.nodeSelect
+        node_select: this.nodeSelect,
+        watch_update: this.watchGraphUpdate
       }
 
       // TODO method chaning
@@ -146,8 +148,11 @@ export default {
         eventController.RIGHT_PANEL()
       }
     },
+    watchGraphUpdate (isGraphUpdate) {
+      this.isGraphUpdated = isGraphUpdate
+    },
     init () {
-      this.editable = false
+      this.isGraphEditable = false
       this.removeSvgGraph()
       this.setSvgContainer()
       this.setCurrentWorkPipeline({ worksheetId: this.selectedWorksheet.id, isLoad: true })
@@ -174,12 +179,13 @@ export default {
         const worksheetId = this.selectedWorksheet.id
         // worksheets - pipeline 1 on 1
         this.savePipeline({ pipeline: saveFile, worksheetId })
+        this.svgGraph.setUpdated(false)
       }
     })
 
     eventController.addListner('EDIT', () => {
-      this.editable = !this.editable
-      this.svgGraph.setEditable(this.editable)
+      this.isGraphEditable = !this.isGraphEditable
+      this.svgGraph.setEditable(this.isGraphEditable)
     })
 
     eventController.addListner('REFRESH', () => {

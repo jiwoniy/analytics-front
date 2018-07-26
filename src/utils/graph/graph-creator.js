@@ -56,6 +56,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
           thisGraph.nodes.setSelectedNode(value)
           thisGraph.callback.node_select(value)
         }
+      } else if (key === 'isUpdated') {
+        if (thisGraph.callback && thisGraph.callback.watch_update) {
+          thisGraph.callback.watch_update(value)
+        }
       }
       return true
     }
@@ -79,8 +83,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     const file = JSON.parse(options.saveFile)
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
     this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
-
-    this.drawGraph()
+    this.drawGraph({ link: true, node: true })
   }
 
   // listen for key events
@@ -138,10 +141,18 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     return thisGraph.state.editable
   }
 
+  this.getIsUpdated = function getIsUpdated () {
+    return thisGraph.stateProxy.isUpdated
+  }
+
+  this.setUpdated = function setUpdated () {
+    thisGraph.stateProxy.isUpdated = false
+  }
+
   this.addNode = function addNode (node) {
     if (thisGraph.isEditable()) {
       thisGraph.nodes.add(saveNodeTransformNode(node))
-      thisGraph.drawNodes()
+      thisGraph.drawGraph({ node: true })
     }
   }
 
@@ -155,6 +166,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdges())
       saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
 
+      thisGraph.stateProxy.isUpdated = false
       return JSON.stringify(saveFile)
     }
     return null
@@ -170,6 +182,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     save: this.save,
     setEditable: this.setEditable,
     isEditable: this.isEditable,
+    isUpdated: this.getIsUpdated,
+    setUpdated: this.setUpdated,
     setWidth: this.setWidth,
     setZoomInit: this.initZoomState,
     getWidth,
@@ -194,6 +208,7 @@ GraphCreator.prototype.constants = {
 
 GraphCreator.prototype.state = {
   editable: false,
+  isUpdated: false,
   selectedNode: null,
   contextNode: null,
   selectedEdge: null,
@@ -274,7 +289,7 @@ function nodeDraghandler (context) {
           d.x = d3Selection.event.x
           d.y = d3Selection.event.y
 
-          context.drawLinks(d)
+          context.drawGraph({ link: true, nodeParam: d })
         }
       }
     })
@@ -297,11 +312,23 @@ function nodeDraghandler (context) {
     // })
 }
 
-// call to propagate changes to graph
-GraphCreator.prototype.drawGraph = function drawGraph () {
+// called by addNode, removeNode, drageNode, add & remove link
+GraphCreator.prototype.drawGraph = function drawGraph ({ link = false, node = false, nodeParam }) {
   const thisGraph = this
-  thisGraph.drawLinks()
-  thisGraph.drawNodes()
+  if (link && node) {
+    thisGraph.drawLinks()
+    thisGraph.drawNodes()
+  } else if (link) {
+    if (nodeParam) {
+      thisGraph.drawLinks(nodeParam)
+    } else {
+      thisGraph.drawLinks()
+    }
+  } else if (node) {
+    thisGraph.drawNodes()
+  }
+
+  thisGraph.stateProxy.isUpdated = true
 }
 
 // GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
@@ -400,7 +427,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       })
       .on('dblclick', function (d) {
         thisGraph.edges.remove(d)
-        thisGraph.drawLinks()
+        thisGraph.drawGraph({ link: true })
       })
 
     exists.exit().remove()
@@ -431,7 +458,7 @@ GraphCreator.prototype.removeNode = function removeNode (node) {
       relatedEdges.forEach(edge => this.edges.remove(edge))
     }
     this.nodes.remove(node)
-    this.drawGraph()
+    this.drawGraph({ link: true, node: true })
   }
 }
 
@@ -445,14 +472,14 @@ GraphCreator.prototype.zoomed = function zoomed () {
   this.svgG.attr('transform', d3Selection.event.transform)
 }
 
-GraphCreator.prototype.svgMouseDown = function svgMouseDown () {
-  console.log('--mouse down--')
-  //   this.state.graphMouseDown = true
-  // const t = d3Zoom.zoomIdentity.translate(0, 0).scale(1)
-  // console.log(d3Selection(this).transform)
-  // console.log(t)
-  // this.svgG.call(() => d3Selection.transform, t)
-}
+// GraphCreator.prototype.svgMouseDown = function svgMouseDown () {
+// console.log('--mouse down--')
+//   this.state.graphMouseDown = true
+// const t = d3Zoom.zoomIdentity.translate(0, 0).scale(1)
+// console.log(d3Selection(this).transform)
+// console.log(t)
+// this.svgG.call(() => d3Selection.transform, t)
+// }
 
 // GraphCreator.prototype.svgMouseUp = function svgMouseUp () {
 //   if (this.state.justScaleTransGraph) {
