@@ -49,10 +49,17 @@ export default {
       }
     }
   },
-  savePipeline: ({ commit, state }, payload) => {
-    if (payload) {
+  savePipeline: ({ dispatch, commit, state }, payload) => {
+    if (payload.worksheetId && payload.pipeline) {
       // TODO type check
       commit('SAVE_PIPELINE', payload)
+      dispatch('setCurrentWorkPipeline', payload)
+    }
+  },
+  setCurrentWorkPipeline: ({ commit, state }, payload) => {
+    if (payload && payload.worksheetId) {
+      // TODO type check
+      commit('UPDATE_CURRENT_WORK_PIPELINE', payload)
     }
   }
 }

@@ -120,19 +120,10 @@ export default {
   },
   mounted () {
     eventController.addListner('RIGHT_PANEL', (payload) => {
-      const { item, type } = payload
-      console.log(type)
-      if (item) {
+      if (payload) {
+        const { type } = payload
         this.currentItemType = type
-        // this.currentItemType = {
-        //   item,
-        //   dataType: type
-        // }
       } else {
-        // this.currentItemType = {
-        //   item: this.selectedWorksheet,
-        //   dataType: 'worksheet'
-        // }
         this.currentItemType = 'worksheet'
       }
     })

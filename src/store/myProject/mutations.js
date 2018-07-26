@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
   SET_PROJECTS: (state, projects) => {
     state.projects = projects
@@ -11,7 +13,7 @@ export default {
   UPDATE_WORKSHEETS: (state, payload) => {
     const { worksheetId, selectedWorksheet } = payload
     if (worksheetId && selectedWorksheet) {
-      state.worksheets[worksheetId] = selectedWorksheet
+      state.worksheets = Object.assign({}, state.worksheets, { [worksheetId]: selectedWorksheet })
     }
   },
   SET_SELECTED_WORKSHEETS: (state, worksheet) => {
@@ -19,12 +21,20 @@ export default {
   },
   UPDATE_SELECTED_WORKSHEETS: (state, { key, value }) => {
     if (state.selectedWorksheet) {
-      state.selectedWorksheet[key] = value
+      state.selectedWorksheet = Object.assign({}, { [key]: value })
     }
   },
   SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
     if (pipeline && worksheetId) {
-      state.myPipeline[worksheetId] = pipeline
+      state.myPipeline = Object.assign({}, state.myPipeline, { [worksheetId]: pipeline })
+    }
+  },
+  UPDATE_CURRENT_WORK_PIPELINE: (state, { worksheetId, isLoad = false }) => {
+    if (worksheetId) {
+      state.currentWorkPipelineInfo = {
+        worksheetId,
+        saveTime: isLoad ? null : moment().valueOf()
+      }
     }
   }
 }

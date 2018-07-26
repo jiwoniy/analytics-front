@@ -12,24 +12,6 @@
 <script>
 export default {
   name: 'Right-Panel'
-  // components: {
-  //   ManageView
-  // },
-  // props: {
-  //   currentItem: {
-  //     type: Object,
-  //     default: () => null
-  //   }
-  // },
-  // computed: {
-  //   filterCurrentItem () {
-  //     // const { dataType, item } = this.currentItem
-  //     // worksheet
-  //     // pipeline-tool
-  //     // TODO only throw editable info
-  //     return this.currentItem
-  //   }
-  // }
 }
 </script>
 

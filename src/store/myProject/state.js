@@ -3,5 +3,6 @@ export default {
   selectedProject: {},
   worksheets: {},
   selectedWorksheet: {},
+  currentWorkPipelineInfo: {},
   myPipeline: {}
 }

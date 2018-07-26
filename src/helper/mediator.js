@@ -7,10 +7,7 @@ export default function configureMediator (store, router) {
   store.subscribe(async ({ type, payload }, state) => {
     switch (type) {
       case 'myProject/SET_SELECTED_WORKSHEETS':
-        eventController.RIGHT_PANEL({
-          item: payload,
-          type: 'worksheet'
-        })
+        eventController.RIGHT_PANEL()
         break
       case 'myProject/UPDATE_SELECTED_WORKSHEETS':
         store.dispatch('myProject/updateWorksheetsByMediator', payload)

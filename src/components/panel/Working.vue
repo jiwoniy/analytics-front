@@ -4,8 +4,8 @@
       <div id="tool-box" class="tool-box">
         <button @click="save"> save </button>
         <button @click="edit"> edit </button>
-        <button @click="refresh"> refresh </button>
-        <button @click="load"> load </button>
+        <button @click="refresh"> recover </button>
+        <button @click="load"> Reload </button>
         <button @click="showModal"> modal </button>
       </div>
       <drop-comp>

@@ -5,6 +5,7 @@ export default {
   getWorksheets: state => state.worksheets || {},
   getWorksheetList: state => Object.keys(state.worksheets).map(key => state.worksheets[key]) || [],
   getSelectedWorksheet: state => state.selectedWorksheet || {},
+  getCurrentWorksheetPipelineInfo: state => state.currentWorkPipelineInfo || {},
   getCurrentWorksheetPipeline: state => {
     const { selectedWorksheet, myPipeline } = state
     let worksheetId = selectedWorksheet && selectedWorksheet.id

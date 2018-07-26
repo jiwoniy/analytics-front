@@ -6,6 +6,9 @@
       <svg>
         <def-svg></def-svg>
       </svg>
+      <div class="float-footer">
+        <p> {{ lastSavedTime }} </p>
+      </div>
     </div>
   </transition>
 </template>
@@ -16,6 +19,7 @@ import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
 import _isEmpty from 'lodash.isempty'
+import moment from 'moment'
 
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
@@ -44,12 +48,20 @@ export default {
   computed: {
     ...mapGetters({
       pipeline: 'myProject/getCurrentWorksheetPipeline',
+      currentWorkPipelineInfo: 'myProject/getCurrentWorksheetPipelineInfo',
       selectedWorksheet: 'myProject/getSelectedWorksheet'
-    })
+    }),
+    lastSavedTime () {
+      if (this.currentWorkPipelineInfo.saveTime) {
+        return moment(this.currentWorkPipelineInfo.saveTime).format('YYYY-MM-DD HH:mm')
+      }
+      return null
+    }
   },
   methods: {
     ...mapActions({
-      savePipeline: 'myProject/savePipeline'
+      savePipeline: 'myProject/savePipeline',
+      setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -59,6 +71,7 @@ export default {
       }
 
       if (this.svgGraph) {
+        this.svgGraph.setZoomInit()
         this.svgGraph.setWidth(elem.offsetWidth)
         this.svgGraph.setHeight(elem.offsetHeight)
       }
@@ -97,6 +110,8 @@ export default {
           connectValidation: composeValidate
         },
         callback })
+
+      this.svgGraph.setZoomInit()
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -128,16 +143,14 @@ export default {
           type: 'pipeline-tools'
         })
       } else {
-        eventController.RIGHT_PANEL({
-          item: null,
-          type: null
-        })
+        eventController.RIGHT_PANEL()
       }
     },
     init () {
       this.editable = false
       this.removeSvgGraph()
       this.setSvgContainer()
+      this.setCurrentWorkPipeline({ worksheetId: this.selectedWorksheet.id, isLoad: true })
     }
   },
   mounted () {
@@ -157,9 +170,11 @@ export default {
 
     eventController.addListner('SAVE', () => {
       const saveFile = this.svgGraph.save()
-      const worksheetId = this.selectedWorksheet.id
-      // worksheets - pipeline 1 on 1
-      this.savePipeline({ pipeline: saveFile, worksheetId })
+      if (saveFile) {
+        const worksheetId = this.selectedWorksheet.id
+        // worksheets - pipeline 1 on 1
+        this.savePipeline({ pipeline: saveFile, worksheetId })
+      }
     })
 
     eventController.addListner('EDIT', () => {
@@ -169,11 +184,10 @@ export default {
 
     eventController.addListner('REFRESH', () => {
       this.svgGraph.setZoomInit()
-      // this.removeSvgGraph()
     })
 
     eventController.addListner('LOAD', () => {
-      this.setSvgContainer()
+      this.init()
     })
 
     this.$nextTick(() => {
@@ -209,6 +223,15 @@ export default {
     width: 50px;
     height: 50px;
     font-size: 18px;
+  }
+
+  .float-footer {
+    position: absolute;
+    right: 0px;
+    bottom: var(--app-foot-panel-height);
+    p {
+      margin: 0.4rem;
+    }
   }
 }
 </style>

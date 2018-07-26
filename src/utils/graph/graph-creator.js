@@ -60,6 +60,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       return true
     }
   }
+
   this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
   this.svg = svg
@@ -79,8 +80,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
     this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
 
-    this.drawNodes()
-    this.drawLinks()
+    this.drawGraph()
   }
 
   // listen for key events
@@ -151,7 +151,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       nodes: []
     }
 
-    if (thisGraph.edges.getEdges().length || thisGraph.nodes.getNodes()) {
+    if (thisGraph.edges.getEdges().length || thisGraph.nodes.getNodes().length) {
       saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdges())
       saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
 
@@ -208,8 +208,6 @@ GraphCreator.prototype.state = {
   selectedText: null
 }
 
-// editable
-// nodeDraghandler,
 GraphCreator.prototype.dragLink = function dragLink (d) {
   if (this.isEditable()) {
     const x = d3Selection.mouse(this.svgG.node())[0]
@@ -246,15 +244,15 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
 }
 
 // remove edges associated with a node
-GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
-  const thisGraph = this
-  const toSplice = thisGraph.edges.filter(function (l) {
-    return (l.source === node || l.target === node)
-  })
-  toSplice.map(function (l) {
-    // thisGraph.edges.splice(thisGraph.edges.indexOf(l), 1)
-  })
-}
+// GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
+//   const thisGraph = this
+//   const toSplice = thisGraph.edges.filter(function (l) {
+//     return (l.source === node || l.target === node)
+//   })
+//   toSplice.map(function (l) {
+//     // thisGraph.edges.splice(thisGraph.edges.indexOf(l), 1)
+//   })
+// }
 
 // Important Node drag handler
 function nodeDraghandler (context) {
