@@ -12,6 +12,9 @@ export default function configureMediator (store, router) {
       case 'myProject/UPDATE_SELECTED_WORKSHEETS':
         store.dispatch('myProject/updateWorksheetsByMediator', payload)
         break
+      case 'myProject/UPDATE_CURRENT_WORK_PIPELINE_NODE':
+        store.dispatch('myProject/updateCurrentWorkNodeByMediator', payload)
+        break
       default:
         break
     }

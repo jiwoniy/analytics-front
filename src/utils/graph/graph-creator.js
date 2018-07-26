@@ -3,6 +3,7 @@ import * as d3Drag from 'd3-drag'
 import * as d3Zoom from 'd3-zoom'
 // import * as d3Force from 'd3-force'
 import * as d3Shape from 'd3-shape'
+import _cloneDeep from 'lodash.clonedeep'
 
 // import onChange from '@/helper/onChange'
 import { getEdgeId } from '@/utils/normalize'
@@ -54,7 +55,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       if (key === 'selectedNode') {
         if (thisGraph.callback && thisGraph.callback.node_select) {
           thisGraph.nodes.setSelectedNode(value)
-          thisGraph.callback.node_select(value)
+          thisGraph.callback.node_select(_cloneDeep(value))
         }
       } else if (key === 'isUpdated') {
         if (thisGraph.callback && thisGraph.callback.watch_update) {
@@ -80,7 +81,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.nodesGroup = this.svgG.append('g').classed('node-group', true)
 
   if (options.saveFile) {
-    const file = JSON.parse(options.saveFile)
+    // const file = JSON.parse(options.saveFile)
+    const file = options.saveFile
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
     this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
     this.drawGraph({ link: true, node: true })
@@ -167,7 +169,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
-      return JSON.stringify(saveFile)
+      // return JSON.stringify(saveFile)
+      return saveFile
     }
     return null
   }

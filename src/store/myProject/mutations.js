@@ -1,12 +1,14 @@
 import moment from 'moment'
 
 export default {
+  // project
   SET_PROJECTS: (state, projects) => {
     state.projects = projects
   },
   SET_SELECTED_PROJECT: (state, project) => {
     state.selectedProject = project
   },
+  // worksheet
   SET_WORKSHEETS: (state, worksheets) => {
     state.worksheets = worksheets
   },
@@ -21,11 +23,12 @@ export default {
   },
   UPDATE_SELECTED_WORKSHEETS: (state, { key, value }) => {
     if (state.selectedWorksheet) {
-      state.selectedWorksheet = Object.assign({}, { [key]: value })
+      state.selectedWorksheet = Object.assign({}, state.selectedWorksheet, { [key]: value })
     }
   },
+  // pipeline
   SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
-    if (pipeline && worksheetId) {
+    if (worksheetId) {
       state.myPipeline = Object.assign({}, state.myPipeline, { [worksheetId]: pipeline })
     }
   },
@@ -35,6 +38,14 @@ export default {
         worksheetId,
         saveTime: isLoad ? null : moment().valueOf()
       }
+    }
+  },
+  SET_CURRENT_WORK_PIPELINE_NODE: (state, payload) => {
+    state.currentWorkPipelineNode = payload
+  },
+  UPDATE_CURRENT_WORK_PIPELINE_NODE: (state, { nodeId, key, value }) => {
+    if (nodeId) {
+      state.currentWorkPipelineNode = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
     }
   }
 }

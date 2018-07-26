@@ -30,7 +30,7 @@
         <SplitArea :size="split_size.right" :minSize="20">
           <right-panel>
              <manage-view
-              slot="worksheet-manage"
+              slot="data-manage"
               :current-item-type="currentItemType"
             >
             </manage-view>

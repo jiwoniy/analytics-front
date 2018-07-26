@@ -7,7 +7,7 @@
         <def-svg></def-svg>
       </svg>
       <div class="float-footer">
-        <p> {{ lastSavedTime }} - {{ isGraphUpdated }} </p>
+        <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
       </div>
     </div>
   </transition>
@@ -25,6 +25,7 @@ import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 import compose from '@/utils/compose'
+import { setting } from '@/config'
 
 export default {
   name: 'Svg-palete',
@@ -34,16 +35,26 @@ export default {
   directives: {
     resize
   },
+  i18n: {
+    messages: {
+      'en': {
+        'Last Update Time': 'Last Update Time'
+      },
+      'ko': {
+        'Last Update Time': '최종 수정시간'
+      }
+    }
+  },
   data () {
     return {
-      leftPanel: null,
       svgContainer: null,
       svgContainerGroup: null,
       svgGraph: null,
       isGraphEditable: false,
       isGraphUpdated: false,
       leftPanelWidth: null,
-      rightPanelWidth: null
+      rightPanelWidth: null,
+      saveTimer: null
     }
   },
   computed: {
@@ -62,7 +73,8 @@ export default {
   methods: {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
-      setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline'
+      setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline',
+      setCurrentWorkPipelineNode: 'myProject/setCurrentWorkPipelineNode'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -105,6 +117,10 @@ export default {
         validate()
       ], true)
 
+      if (!this.pipeline) {
+        this.savePipeline({ pipeline: null, worksheetId: this.selectedWorksheet.id })
+      }
+
       this.svgGraph = new GraphCreator(svgContainer, {
         options: {
           ...options,
@@ -114,6 +130,21 @@ export default {
         callback })
 
       this.svgGraph.setZoomInit()
+    },
+    saveGraph () {
+      if (this.svgGraph) {
+        const saveFile = this.svgGraph.save()
+        if (saveFile) {
+          const worksheetId = this.selectedWorksheet.id
+          // worksheets - pipeline 1 on 1
+          this.savePipeline({ pipeline: saveFile, worksheetId })
+          this.svgGraph.setUpdated(false)
+        }
+      }
+
+      if (this.saveTimer) {
+        clearTimeout(this.saveTimer)
+      }
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -144,12 +175,21 @@ export default {
           item: nodeItem,
           type: 'pipeline-tools'
         })
+        this.setCurrentWorkPipelineNode(nodeItem)
       } else {
         eventController.RIGHT_PANEL()
+        this.setCurrentWorkPipelineNode(null)
       }
     },
     watchGraphUpdate (isGraphUpdate) {
       this.isGraphUpdated = isGraphUpdate
+      if (this.isGraphUpdated) {
+        if (this.saveTimer) {
+          clearTimeout(this.saveTimer)
+          this.saveTimer = null
+        }
+        this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
+      }
     },
     init () {
       this.isGraphEditable = false
@@ -174,13 +214,7 @@ export default {
     })
 
     eventController.addListner('SAVE', () => {
-      const saveFile = this.svgGraph.save()
-      if (saveFile) {
-        const worksheetId = this.selectedWorksheet.id
-        // worksheets - pipeline 1 on 1
-        this.savePipeline({ pipeline: saveFile, worksheetId })
-        this.svgGraph.setUpdated(false)
-      }
+      this.saveGraph()
     })
 
     eventController.addListner('EDIT', () => {

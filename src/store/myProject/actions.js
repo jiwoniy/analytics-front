@@ -1,10 +1,12 @@
 import _isEmpty from 'lodash.isempty'
 import _isEqual from 'lodash.isequal'
 
+import store from '@/store'
 import api from '@/api'
 import { normalizeArray } from '@/utils/normalize'
 
 export default {
+  // project
   getProjects: async ({ dispatch, commit, state }) => {
     const { success } = await api.projects.getMyProjects()
     const { projects } = success
@@ -20,6 +22,7 @@ export default {
       dispatch('setWorksheets', project)
     }
   },
+  // worksheet
   setWorksheets: ({ dispatch, commit, state }, project) => {
     if (project) {
       const { worksheets } = project
@@ -49,8 +52,9 @@ export default {
       }
     }
   },
+  // pipeline
   savePipeline: ({ dispatch, commit, state }, payload) => {
-    if (payload.worksheetId && payload.pipeline) {
+    if (payload.worksheetId) {
       // TODO type check
       commit('SAVE_PIPELINE', payload)
       dispatch('setCurrentWorkPipeline', payload)
@@ -60,6 +64,26 @@ export default {
     if (payload && payload.worksheetId) {
       // TODO type check
       commit('UPDATE_CURRENT_WORK_PIPELINE', payload)
+    }
+  },
+  setCurrentWorkPipelineNode: ({ commit, state }, payload) => {
+    commit('SET_CURRENT_WORK_PIPELINE_NODE', payload)
+  },
+  updateCurrentWorkPipelineNode: ({ commit, state }, payload) => {
+    const { nodeId, key, value: updateValue } = payload
+    if (!_isEmpty(updateValue)) {
+      if (!_isEqual(updateValue, state.currentWorkPipelineNode[key])) {
+        commit('UPDATE_CURRENT_WORK_PIPELINE_NODE', { nodeId, key, value: updateValue })
+      }
+    }
+  },
+  updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {
+    const worksheetId = store.getters['myProject/getSelectedWorksheet'].id
+    if (worksheetId) {
+      // TODO
+      console.log(state.myPipeline[worksheetId])
+      console.log(payload)
+    //   commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
     }
   }
 }

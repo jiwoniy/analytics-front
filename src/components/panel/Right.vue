@@ -3,8 +3,8 @@
     id="rightPanel"
     class="right-panel__page">
     <transition name="fade">
-      <slot name="worksheet-manage"></slot>
-      <slot name="node-manage"></slot>
+      <slot name="data-manage"></slot>
+      <!-- <slot name="node-manage"></slot> -->
     </transition>
   </section>
 </template>
