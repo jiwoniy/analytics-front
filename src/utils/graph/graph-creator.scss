@@ -60,7 +60,10 @@ path.link.selected  {
 }
 
 .node-wrap.node-selected  {
-  fill: blue;
+  rect {
+    stroke-width: 5px;
+    stroke: red;
+  }
 }
 
 .tooltip {

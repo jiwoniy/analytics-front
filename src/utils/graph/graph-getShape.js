@@ -35,14 +35,24 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
     .subject(function (d) {
       return { x: d.x, y: d.y }
     })
+    // .on('start', function (d) {
+    // d3Selection.select(this)
+    //   .attr('x', d.x = d3Selection.event.x)
+    //   .attr('y', d.y = d3Selection.event.y)
+    // })
     .on('drag', function (d) {
       if (context.isEditable()) {
         context.dragLine.classed('hidden', false)
         context.state.connecting = true
-        const x = d3Selection.event.x + linkOutput.cx
-        const y = d3Selection.event.y + linkOutput.cy
+
+        const originX = d.x + linkOutput.cx
+        const originY = d.y + linkOutput.cy
+
+        const ToX = d3Selection.event.x + linkOutput.cx
+        const ToY = d3Selection.event.y + linkOutput.cy
+
         context.dragLine.attr('d',
-          `M${d.x + linkOutput.cx},${d.y + linkOutput.cy}L${x},${y}`)
+          `M${originX},${originY}L${ToX},${ToY}`)
       }
     })
     .on('end', function (d) {

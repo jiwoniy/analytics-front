@@ -15,7 +15,7 @@ import {
   saveNodesTransformToNodes,
   saveEdgesTransformToEdges
 } from './helper'
-import getNodeShape from './getNodeShape'
+import getNodeShape from './graph-getShape'
 import GraphNodes from './graph-nodes'
 import GraphEddes from './graph-edges'
 // import contextMenu from './context-menu'
@@ -55,6 +55,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       if (key === 'selectedNode') {
         if (thisGraph.callback && thisGraph.callback.node_select) {
           thisGraph.nodes.setSelectedNode(value)
+          thisGraph.drawGraph({ node: true })
           thisGraph.callback.node_select(_cloneDeep(value))
         }
       } else if (key === 'isUpdated') {
@@ -351,7 +352,8 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     return d.id
   })
 
-  // exists.classed(thisGraph.constants.selectedClass, d => d.status.selected)
+  exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
+
   const nodeDrag = nodeDraghandler(thisGraph)
   // .node-wrap
   const newGs = exists
@@ -368,9 +370,9 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
     })
-    .on('dblclick', function (d) {
-      thisGraph.removeNode(d)
-    })
+    // .on('dblclick', function (d) {
+    //   thisGraph.removeNode(d)
+    // })
     .call(nodeDrag)
     .call(d => getNodeShape(thisGraph, d, thisGraph.options.connectValidation))
 
@@ -439,31 +441,26 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   draw()
 }
 
-// node를 선택한 다음 벌어지는 동작
 GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
-  const consts = this.constants
-
   if (data) {
-    this.stateProxy.selectedNode = data
-    d3Selection.select(context)
-      .classed(consts.nodeSelectedClass, true)
+    const isSelected = data.status.selected
+    this.stateProxy.selectedNode = isSelected ? null : data
   } else {
-    this.nodesGroup.selectAll('.node-selected')
-      .classed(consts.nodeSelectedClass, false)
     this.stateProxy.selectedNode = null
   }
 }
 
-GraphCreator.prototype.removeNode = function removeNode (node) {
-  if (this.isEditable()) {
-    const relatedEdges = this.findRelatedEdges(node)
-    if (relatedEdges.length) {
-      relatedEdges.forEach(edge => this.edges.remove(edge))
-    }
-    this.nodes.remove(node)
-    this.drawGraph({ link: true, node: true })
-  }
-}
+// TODO
+// GraphCreator.prototype.removeNode = function removeNode (node) {
+//   if (this.isEditable()) {
+//     const relatedEdges = this.findRelatedEdges(node)
+//     if (relatedEdges.length) {
+//       relatedEdges.forEach(edge => this.edges.remove(edge))
+//     }
+//     this.nodes.remove(node)
+//     this.drawGraph({ link: true, node: true })
+//   }
+// }
 
 GraphCreator.prototype.findRelatedEdges = function findRelatedEdges (node) {
   return this.edges.findEdges(node)

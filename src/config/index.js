@@ -1,5 +1,5 @@
 import setting from './setting'
 
-export default {
+export {
   setting
 }
