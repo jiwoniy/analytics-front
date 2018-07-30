@@ -3,12 +3,14 @@
     <div class="div--project__page">
       <main-panel></main-panel>
       <modal
-        v-if="showModal"
-        @close="showModal = false"
-        :size="modalSize"
-        :position="modalPosition"
+        v-show="showModal"
+        @close="modalClose"
+        :size="modal.modalSize"
+        :position="modal.modalPosition"
+        :pass-params="modal.passModalParams"
+        :is-need-accept="modal.isNeedAccept"
       >
-        <h3 slot="header">custom header</h3>
+        <h3 slot="header"> custom header </h3>
       </modal>
     </div>
   </transition>
@@ -25,21 +27,42 @@ export default {
   },
   data () {
     return {
-      showModal: false,
-      modalSize: 'small',
-      modalPosition: 'center'
+      modal: {
+        modalSize: 'small',
+        modalPosition: 'center',
+        passModalParams: null,
+        isNeedAccept: false,
+        callback: null
+      },
+      showModal: false
+    }
+  },
+  methods: {
+    modalClose (accept) {
+      if (this.modal.isNeedAccept) {
+        if (this.modal.callback) {
+          this.modal.callback(accept)
+        }
+        this.showModal = false
+      } else {
+        this.showModal = false
+      }
     }
   },
   mounted () {
     eventController.addListner('SHOW_MODAL', (payload) => {
-      const { position, size } = payload
+      const { position, size, params, isNeedAccept, callback } = payload
       this.showModal = true
+      this.modal.passModalParams = params || null
+      this.modal.isNeedAccept = isNeedAccept || false
+      this.modal.callback = callback || null
+
       if (position) {
-        this.modalPosition = position
+        this.modal.modalPosition = position
       }
 
       if (size) {
-        this.modalSize = size
+        this.modal.modalSize = size
       }
     })
   }

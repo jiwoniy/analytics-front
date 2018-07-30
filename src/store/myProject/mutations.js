@@ -5,25 +5,34 @@ export default {
   SET_PROJECTS: (state, projects) => {
     state.projects = projects
   },
-  SET_SELECTED_PROJECT: (state, project) => {
-    state.selectedProject = project
+  SET_SELECTED_PROJECT: (state, projectId) => {
+    state.selectedProjectId = projectId
   },
   // worksheet
   SET_WORKSHEETS: (state, worksheets) => {
     state.worksheets = worksheets
   },
   UPDATE_WORKSHEETS: (state, payload) => {
-    const { worksheetId, selectedWorksheet } = payload
-    if (worksheetId && selectedWorksheet) {
-      state.worksheets = Object.assign({}, state.worksheets, { [worksheetId]: selectedWorksheet })
+    const { worksheetId, updateWorksheet } = payload
+    if (worksheetId) {
+      if (updateWorksheet) {
+        // update
+        state.worksheets = Object.assign({}, state.worksheets, { [worksheetId]: updateWorksheet })
+      } else {
+        // delete
+        delete state.worksheets[worksheetId]
+        state.worksheets = Object.assign({}, state.worksheets)
+      }
     }
   },
-  SET_SELECTED_WORKSHEETS: (state, worksheet) => {
-    state.selectedWorksheet = worksheet
+  SET_SELECTED_WORKSHEETS: (state, worksheetId) => {
+    state.selectedWorksheetId = worksheetId
   },
-  UPDATE_SELECTED_WORKSHEETS: (state, { key, value }) => {
-    if (state.selectedWorksheet) {
-      state.selectedWorksheet = Object.assign({}, state.selectedWorksheet, { [key]: value })
+  DELETE_SELECTED_WORKSHEETS: (state, { worksheetId }) => {
+    if (worksheetId) {
+      if (state.selectedWorksheetId === worksheetId) {
+        state.selectedWorksheetId = null
+      }
     }
   },
   // pipeline

@@ -13,7 +13,7 @@
             <!-- <h1> {{ $t('Worksheet List') }} </h1> -->
             <list-view
               :items="worksheetList"
-              :item-class="'text-ellipsis'"
+              :item-class="'text-ellipsis__default'"
               :item-style="{
                 'font-size': '1.4rem',
                 'margin': '0.5rem'
@@ -93,12 +93,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      setSelectedWorksheet: 'myProject/setSelectedWorksheet'
+      setSelectedWorksheetId: 'myProject/setSelectedWorksheetId'
     }),
     worksheetClick (event) {
       if (event.target) {
         const worksheetId = event.target.id || event.target.parentElement.id
-        this.setSelectedWorksheet(worksheetId)
+        this.setSelectedWorksheetId(worksheetId)
         this.selectMenu = 'tools'
       }
     }

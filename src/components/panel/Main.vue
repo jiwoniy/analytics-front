@@ -29,7 +29,7 @@
 
         <SplitArea :size="split_size.right" :minSize="20">
           <right-panel>
-             <manage-view
+            <manage-view
               slot="data-manage"
               :current-item-type="currentItemType"
             >
@@ -72,7 +72,7 @@ export default {
       currentItemType: null,
       split_size: {
         left: 20,
-        center: 55,
+        center: 60,
         right: 20
       }
     }

@@ -1,11 +1,13 @@
 <template>
   <section
     id="rightPanel"
-    class="right-panel__page">
+    class="right-panel__page"
+  >
+
     <transition name="fade">
       <slot name="data-manage"></slot>
-      <!-- <slot name="node-manage"></slot> -->
     </transition>
+
   </section>
 </template>
 
@@ -20,10 +22,6 @@ export default {
   display: block;
   position: relative;
   margin: 0 10px;
-  width: calc(100% - 20px);
-  height: 100%;
-  top: var(--app-top_panel-height);
-  right: 0;
   background-color: #ffffff;
 }
 

@@ -1,6 +1,7 @@
 #app {
   font-family: 'Roboto', sans-serif !important;
 
+  --app-button-color: #1E90FF;
   --app-left-panel-color: #1E90FF;
   // --app-left-panel-width: 300px;
   --app-left-panel-folder-button: 35px;
@@ -24,8 +25,18 @@
   // content: 'viewport-units-buggyfill; --widget-height: 100vh';
 }
 
-.text-ellipsis {
+.text-ellipsis__default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.button__default {
+  background-color: var(--app-button-color);
+  border: none;
+  color: white;
+  padding: 0.9rem 1.8rem;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
 }

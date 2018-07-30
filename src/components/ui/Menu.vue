@@ -13,7 +13,7 @@
             'font-size': '1.6rem',
             'margin': '0.5rem 0.4rem'
           }"
-          :item-class="'text-ellipsis'"
+          :item-class="'text-ellipsis__default'"
           :selected-item-id="selectedProject.id"
           :item-click="selectProject">
         </list-view>
@@ -64,12 +64,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      setSelectedProject: 'myProject/setSelectedProject'
+      setSelectedProjectId: 'myProject/setSelectedProjectId'
     }),
     selectProject (event) {
       if (event.target) {
         const projectId = event.target.id || event.target.parentElement.id
-        this.setSelectedProject(projectId)
+        this.setSelectedProjectId(projectId)
         this.isOpen = !this.isOpen
       }
     },

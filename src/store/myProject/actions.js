@@ -9,16 +9,16 @@ export default {
   // project
   getProjects: async ({ dispatch, commit, state }) => {
     const { success } = await api.projects.getMyProjects()
-    const { projects } = success
-    if (projects && projects.length) {
+    if (success && success.projects && success.projects.length) {
+      const { projects } = success
       commit('SET_PROJECTS', normalizeArray(projects))
-      dispatch('setSelectedProject', projects[0].id)
+      dispatch('setSelectedProjectId', projects[0].id)
     }
   },
-  setSelectedProject: ({ dispatch, commit, state }, projectId) => {
+  setSelectedProjectId: ({ dispatch, commit, state }, projectId) => {
     if (projectId) {
       const project = state.projects[projectId]
-      commit('SET_SELECTED_PROJECT', project)
+      commit('SET_SELECTED_PROJECT', projectId)
       dispatch('setWorksheets', project)
     }
   },
@@ -26,30 +26,38 @@ export default {
   setWorksheets: ({ dispatch, commit, state }, project) => {
     if (project) {
       const { worksheets } = project
-      if (worksheets.length) {
+      if (worksheets && worksheets.length) {
         commit('SET_WORKSHEETS', normalizeArray(worksheets))
-        dispatch('setSelectedWorksheet', worksheets[0].id)
+        dispatch('setSelectedWorksheetId', worksheets[0].id)
       }
     }
   },
-  updateWorksheetsByMediator: ({ commit, state }, payload) => {
+  updateWorksheets: ({ commit, state }, payload) => {
+    const { worksheetId, key, value: updateValue, type = 'update' } = payload
+    if (worksheetId && type === 'update' && !_isEmpty(updateValue)) {
+      if (!_isEqual(updateValue, state.worksheets[state.selectedWorksheetId][key])) {
+        const updateWorksheet = Object.assign({}, {
+          ...state.worksheets[state.selectedWorksheetId],
+          [key]: updateValue })
+        updateWorksheet[key] = updateValue
+        commit('UPDATE_WORKSHEETS', { worksheetId, updateWorksheet })
+      }
+    } else if (worksheetId && type === 'delete') {
+      commit('UPDATE_WORKSHEETS', { worksheetId })
+    }
+  },
+  setSelectedWorksheetId: ({ commit, state }, worksheetId) => {
+    if (worksheetId) {
+      commit('SET_SELECTED_WORKSHEETS', worksheetId)
+    }
+  },
+  // findWorkSheets: ({ commit, state }) => {
+  //   console.log(state.worksheets)
+  // },
+  deleteSelectedWorksheet: ({ commit, state }, payload) => {
     const { worksheetId } = payload
     if (worksheetId) {
-      commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
-    }
-  },
-  setSelectedWorksheet: ({ commit, state }, worksheetId) => {
-    if (worksheetId) {
-      const worksheet = state.worksheets[worksheetId]
-      commit('SET_SELECTED_WORKSHEETS', worksheet)
-    }
-  },
-  updateSelectedWorksheet: ({ commit, state }, payload) => {
-    const { worksheetId, key, value: updateValue } = payload
-    if (!_isEmpty(updateValue)) {
-      if (!_isEqual(updateValue, state.selectedWorksheet[key])) {
-        commit('UPDATE_SELECTED_WORKSHEETS', { worksheetId, key, value: updateValue })
-      }
+      commit('DELETE_SELECTED_WORKSHEETS', { worksheetId, type: 'delete' })
     }
   },
   // pipeline

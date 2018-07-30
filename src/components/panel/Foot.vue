@@ -1,12 +1,14 @@
 <template>
   <transition>
     <div id="Footer" class="Footer__page">
+
       <div v-if="!isOpen" class="footer--fixed">
         <span @click="openReport" class='report'> {{ $t('Report') }} </span>
       </div>
+
       <div v-show="isOpen" class="report">
         <div id="draggable" class="split" draggable="true"></div>
-        <div id="areaddd" class="area">
+        <div class="area">
           <img class="close" @click="closeRerpot" src="@/assets/img/times-solid.svg" />
           <slot></slot>
         </div>

@@ -1,8 +1,8 @@
 export default {
   projects: {},
-  selectedProject: {},
+  selectedProjectId: null,
   worksheets: {},
-  selectedWorksheet: {},
+  selectedWorksheetId: null,
   myPipeline: {},
   currentWorkPipelineInfo: {},
   currentWorkPipelineNode: null

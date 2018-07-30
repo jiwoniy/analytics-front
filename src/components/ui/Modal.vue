@@ -33,8 +33,11 @@
           <div class="footer">
             <slot name="footer">
               default footer
-              <button class="modal-close-button" @click="clickModal">
-                OK
+              <button class="modal-close-with-accept" @click.stop="clickModal">
+                {{ $t('Ok') }}
+              </button>
+              <button class="modal-close-with-decline" @click.stop="clickModal">
+                {{ $t('No') }}
               </button>
             </slot>
           </div>
@@ -52,11 +55,32 @@ export default {
   props: {
     size: {
       type: String,
-      default: () => 'small'
+      default: () => 'small' // small, medium, large
     },
     position: {
       type: String,
-      default: () => 'center'
+      default: () => 'center' // center, top, bottom
+    },
+    passParams: {
+      type: Object,
+      default: () => {}
+    },
+    isNeedAccept: {
+      type: Boolean,
+      default: () => false
+      // if this value is true, should pass flag to callback
+    }
+  },
+  i18n: {
+    messages: {
+      'en': {
+        'Ok': 'Ok',
+        'No': 'No'
+      },
+      'ko': {
+        'Ok': 'Ok',
+        'No': 'No'
+      }
     }
   },
   data () {
@@ -67,8 +91,16 @@ export default {
   methods: {
     clickModal (event) {
       const id = event.target.className || ''
-      if (id.indexOf('modal-wrapper') > -1 || id === 'modal-close-button') {
-        this.$emit('close')
+      if (this.isNeedAccept) {
+        if (id.indexOf('modal-close-with-accept') > -1) {
+          this.$emit('close', true)
+        } else if (id.indexOf('modal-close-with-decline') > -1) {
+          this.$emit('close', false)
+        }
+      } else {
+        if (id.indexOf('modal-wrapper') > -1 || id.indexOf('modal-close-with-accept') > -1 || id === 'modal-close-with-decline') {
+          this.$emit('close')
+        }
       }
     }
   }

@@ -6,7 +6,7 @@
       <svg>
         <def-svg></def-svg>
       </svg>
-      <div class="float-footer">
+      <div class="palete-footer">
         <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
       </div>
     </div>
@@ -173,7 +173,7 @@ export default {
       if (nodeItem && nodeItem.status.selected) {
         eventController.RIGHT_PANEL({
           item: nodeItem,
-          type: 'pipeline-tools'
+          type: 'pipeline-node'
         })
         this.setCurrentWorkPipelineNode(nodeItem)
       } else {
@@ -265,7 +265,7 @@ export default {
     font-size: 18px;
   }
 
-  .float-footer {
+  .palete-footer {
     position: absolute;
     right: 0px;
     bottom: var(--app-foot-panel-height);
