@@ -22,12 +22,18 @@ export default {
   // about pipeline
   getCurrentWorksheetPipelineInfo: state => state.currentWorkPipelineInfo || {},
   getCurrentWorksheetPipeline: state => {
-    const { selectedWorksheet, myPipeline } = state
-    let worksheetId = selectedWorksheet && selectedWorksheet.id
+    const { selectedWorksheetId } = state
+    let worksheetId = selectedWorksheetId
     if (worksheetId) {
-      return myPipeline[worksheetId]
+      return state.myPipeline[worksheetId]
     }
     return null
   },
-  getCurrentWorkNode: state => state.currentWorkPipelineNode
+  getCurrentWorkNodeId: state => state.currentWorkPipelineNodeId,
+  getCurrentWorkNode: state => {
+    if (state.currentWorkPipelineNodeId) {
+      return state.myPipeline[state.selectedWorksheetId].nodes[state.currentWorkPipelineNodeId]
+    }
+    return {}
+  }
 }

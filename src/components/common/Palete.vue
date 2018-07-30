@@ -25,7 +25,7 @@ import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 import compose from '@/utils/compose'
-import { setting } from '@/config'
+// import { setting } from '@/config'
 
 export default {
   name: 'Svg-palete',
@@ -61,7 +61,7 @@ export default {
     ...mapGetters({
       pipeline: 'myProject/getCurrentWorksheetPipeline',
       currentWorkPipelineInfo: 'myProject/getCurrentWorksheetPipelineInfo',
-      selectedWorksheet: 'myProject/getSelectedWorksheet'
+      selectedWorksheetId: 'myProject/getSelectedWorksheetId'
     }),
     lastSavedTime () {
       if (this.currentWorkPipelineInfo.saveTime) {
@@ -74,7 +74,7 @@ export default {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
       setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline',
-      setCurrentWorkPipelineNode: 'myProject/setCurrentWorkPipelineNode'
+      setCurrentWorkPipelineNodeId: 'myProject/setCurrentWorkPipelineNodeId'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -118,7 +118,7 @@ export default {
       ], true)
 
       if (!this.pipeline) {
-        this.savePipeline({ pipeline: null, worksheetId: this.selectedWorksheet.id })
+        this.savePipeline({ pipeline: null, worksheetId: this.selectedWorksheetId })
       }
 
       this.svgGraph = new GraphCreator(svgContainer, {
@@ -135,7 +135,7 @@ export default {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          const worksheetId = this.selectedWorksheet.id
+          const worksheetId = this.selectedWorksheetId
           // worksheets - pipeline 1 on 1
           this.savePipeline({ pipeline: saveFile, worksheetId })
           this.svgGraph.setUpdated(false)
@@ -175,27 +175,28 @@ export default {
           item: nodeItem,
           type: 'pipeline-node'
         })
-        this.setCurrentWorkPipelineNode(nodeItem)
+        this.setCurrentWorkPipelineNodeId(nodeItem.id)
       } else {
         eventController.RIGHT_PANEL()
-        this.setCurrentWorkPipelineNode(null)
+        this.setCurrentWorkPipelineNodeId(null)
       }
     },
     watchGraphUpdate (isGraphUpdate) {
       this.isGraphUpdated = isGraphUpdate
       if (this.isGraphUpdated) {
-        if (this.saveTimer) {
-          clearTimeout(this.saveTimer)
-          this.saveTimer = null
-        }
-        this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
+        this.saveGraph()
+        // if (this.saveTimer) {
+        //   clearTimeout(this.saveTimer)
+        //   this.saveTimer = null
+        // }
+        // this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
       }
     },
     init () {
       this.isGraphEditable = false
       this.removeSvgGraph()
       this.setSvgContainer()
-      this.setCurrentWorkPipeline({ worksheetId: this.selectedWorksheet.id, isLoad: true })
+      this.setCurrentWorkPipeline({ worksheetId: this.selectedWorksheetId, isInit: true })
     }
   },
   mounted () {
@@ -237,9 +238,13 @@ export default {
     })
   },
   watch: {
-    selectedWorksheet (newValue) {
+    selectedWorksheetId (newValue) {
       this.init()
     }
+    // pipeline (newValue) {
+    //   console.log('-------pipe line---')
+    //   console.log(newValue)
+    // }
   }
 }
 </script>

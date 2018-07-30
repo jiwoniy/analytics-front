@@ -19,7 +19,9 @@
       </label>
 
       <div class="right-footer" @click="remove">
-        <button class="button__default"> {{ $t('Delete') }} </button>
+        <wrapper-button
+          :button-text="$t('Delete')">
+        </wrapper-button>
       </div>
     </div>
 
@@ -36,7 +38,9 @@
       </label>
 
       <div class="right-footer" @click="remove">
-        <button class="button__default"> {{ $t('Delete') }} </button>
+        <wrapper-button
+          :button-text="$t('Delete')">
+        </wrapper-button>
       </div>
     </div>
 
@@ -47,11 +51,13 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import eventController from '@/utils/EventController'
+import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 
 export default {
   name: 'Manage-View',
   components: {
+    WrapperButton,
     WrapperInput
   },
   i18n: {
@@ -73,7 +79,10 @@ export default {
   computed: {
     ...mapGetters({
       selectedWorksheet: 'myProject/getSelectedWorksheet',
-      currentWorkNode: 'myProject/getCurrentWorkNode'
+      selectedWorksheetId: 'myProject/getSelectedWorksheetId',
+      currentWorkNode: 'myProject/getCurrentWorkNode',
+      currentWorkNodeId: 'myProject/getCurrentWorkNodeId'
+      // currentWorksheetPipeline: 'myProject/getCurrentWorksheetPipeline'
     }),
     filterWorksheetItem () {
       return Object.keys(this.selectedWorksheet)
@@ -84,7 +93,7 @@ export default {
       if (this.currentWorkNode) {
         return Object.keys(this.currentWorkNode)
           .map(key => ({ key, value: this.currentWorkNode[key] }))
-          .filter(item => item.key !== 'status' && item.key !== 'id')
+          .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'position')
           // TODO utils filter 만들기...lodash 찾아보기
       }
       return null
@@ -94,7 +103,8 @@ export default {
     ...mapActions({
       updateWorksheets: 'myProject/updateWorksheets',
       deleteSelectedWorksheet: 'myProject/deleteSelectedWorksheet',
-      updateCurrentWorkPipelineNode: 'myProject/updateCurrentWorkPipelineNode'
+      // updateCurrentWorkPipelineNode: 'myProject/updateCurrentWorkPipelineNode',
+      deleteCurrentWorkPipelineNodeId: 'myProject/deleteCurrentWorkPipelineNodeId'
     }),
     remove () {
       eventController.SHOW_MODAL({
@@ -104,9 +114,16 @@ export default {
         params: {},
         callback: (isAccept) => {
           if (isAccept) {
-            this.deleteSelectedWorksheet({
-              worksheetId: this.selectedWorksheet.id
-            })
+            if (this.currentItemType === 'worksheet') {
+              this.deleteSelectedWorksheet({
+                worksheetId: this.selectedWorksheet.id
+              })
+            } else if (this.currentItemType === 'pipeline-node') {
+              this.deleteCurrentWorkPipelineNodeId({
+                currentWorkNodeId: this.currentWorkNodeId,
+                worksheetId: this.selectedWorksheetId
+              })
+            }
           }
         }
       })
@@ -119,11 +136,11 @@ export default {
           value
         })
       } else if (this.currentItemType === 'pipeline-node') {
-        this.updateCurrentWorkPipelineNode({
-          nodeId: this.currentWorkNode.id,
-          key,
-          value
-        })
+        // this.updateCurrentWorkPipelineNode({
+        //   nodeId: this.currentWorkNode.id,
+        //   key,
+        //   value
+        // })
       }
     }
   }

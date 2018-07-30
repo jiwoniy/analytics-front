@@ -5,5 +5,5 @@ export default {
   selectedWorksheetId: null,
   myPipeline: {},
   currentWorkPipelineInfo: {},
-  currentWorkPipelineNode: null
+  currentWorkPipelineNodeId: null
 }

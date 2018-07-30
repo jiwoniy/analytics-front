@@ -78,7 +78,9 @@ function edgesTransformForSave (edges) {
 }
 
 function saveNodesTransformToNodes (nodes) {
-  return nodes.map(node => saveNodeTransformNode(node))
+  return Object.keys(nodes)
+    .map(key => nodes[key])
+    .map(node => saveNodeTransformNode(node))
 }
 
 function saveEdgesTransformToEdges (edges) {

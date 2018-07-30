@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { normalizeArray } from '@/utils/normalize'
 
 export default {
   // project
@@ -38,23 +39,46 @@ export default {
   // pipeline
   SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
     if (worksheetId) {
-      state.myPipeline = Object.assign({}, state.myPipeline, { [worksheetId]: pipeline })
-    }
-  },
-  UPDATE_CURRENT_WORK_PIPELINE: (state, { worksheetId, isLoad = false }) => {
-    if (worksheetId) {
-      state.currentWorkPipelineInfo = {
-        worksheetId,
-        saveTime: isLoad ? null : moment().valueOf()
+      if (pipeline) {
+        state.myPipeline = Object.assign({},
+          state.myPipeline,
+          { [worksheetId]: {
+            edges: pipeline.edges || [],
+            nodes: normalizeArray(pipeline.nodes)
+          } })
+      } else {
+        state.myPipeline = Object.assign({},
+          state.myPipeline,
+          { [worksheetId]: null })
       }
     }
   },
-  SET_CURRENT_WORK_PIPELINE_NODE: (state, payload) => {
-    state.currentWorkPipelineNode = payload
+  UPDATE_CURRENT_WORK_PIPELINE: (state, { worksheetId, isInit = false }) => {
+    if (worksheetId) {
+      state.currentWorkPipelineInfo = {
+        worksheetId,
+        saveTime: isInit ? null : moment().valueOf()
+      }
+    }
+  },
+  SET_CURRENT_WORK_PIPELINE_NODE_ID: (state, payload) => {
+    state.currentWorkPipelineNodeId = payload
   },
   UPDATE_CURRENT_WORK_PIPELINE_NODE: (state, { nodeId, key, value }) => {
     if (nodeId) {
-      state.currentWorkPipelineNode = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
+      state.currentWorkPipelineNodeId = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
+    }
+  },
+  DELETE_CURRENT_WORK_PIPELINE_NODE: (state, { currentWorkNodeId, worksheetId }) => {
+    if (currentWorkNodeId) {
+      if (state.myPipeline[worksheetId].nodes) {
+        const newObject = Object.assign({}, state.myPipeline[worksheetId])
+        delete state.myPipeline[worksheetId].nodes[currentWorkNodeId]
+
+        state.myPipeline = Object.assign({},
+          state.myPipeline,
+          { [worksheetId]: newObject })
+      }
     }
   }
 }

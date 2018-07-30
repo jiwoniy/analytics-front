@@ -9,8 +9,7 @@
           'bottom': position === 'bottom'
         }"
       >
-        <!-- <slot></slot> -->
-        <!-- <h3 slot="header">custom header</h3> -->
+
         <div class="modal-container"
           :class="{
             'small': size === 'small',
@@ -20,25 +19,26 @@
         >
           <div class="header">
             <slot name="header">
-              default header
             </slot>
           </div>
 
           <div class="body">
             <slot name="body">
-              default body
             </slot>
           </div>
 
           <div class="footer">
             <slot name="footer">
-              default footer
-              <button class="modal-close-with-accept" @click.stop="clickModal">
-                {{ $t('Ok') }}
-              </button>
-              <button class="modal-close-with-decline" @click.stop="clickModal">
-                {{ $t('No') }}
-              </button>
+              <wrapper-button
+                class="modal-close-with-accept"
+                :button-text="$t('Ok')"
+              >
+              </wrapper-button>
+              <wrapper-button
+                class="modal-close-with-decline"
+                :button-text="$t('No')"
+              >
+              </wrapper-button>
             </slot>
           </div>
 
@@ -50,8 +50,13 @@
 </template>
 
 <script>
+import WrapperButton from '@/components/ui/Wrapper/Button'
+
 export default {
   name: 'Modal',
+  components: {
+    WrapperButton
+  },
   props: {
     size: {
       type: String,

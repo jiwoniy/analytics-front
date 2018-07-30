@@ -4,8 +4,12 @@ function GraphEdges (edges) {
   this.edges = edges || {}
 }
 
-GraphEdges.prototype.getEdges = function getEdges () {
+GraphEdges.prototype.getEdgeList = function getEdgeList () {
   return Object.keys(this.edges).map(key => this.edges[key])
+}
+
+GraphEdges.prototype.getEdges = function getEdges () {
+  return this.edgets
 }
 
 GraphEdges.prototype.isDuplicate = function isDuplicate (newEdge) {

@@ -28,11 +28,11 @@ export default {
       const { worksheets } = project
       if (worksheets && worksheets.length) {
         commit('SET_WORKSHEETS', normalizeArray(worksheets))
-        dispatch('setSelectedWorksheetId', worksheets[0].id)
+        dispatch('findWorkSheets')
       }
     }
   },
-  updateWorksheets: ({ commit, state }, payload) => {
+  updateWorksheets: ({ dispatch, commit, state }, payload) => {
     const { worksheetId, key, value: updateValue, type = 'update' } = payload
     if (worksheetId && type === 'update' && !_isEmpty(updateValue)) {
       if (!_isEqual(updateValue, state.worksheets[state.selectedWorksheetId][key])) {
@@ -44,6 +44,7 @@ export default {
       }
     } else if (worksheetId && type === 'delete') {
       commit('UPDATE_WORKSHEETS', { worksheetId })
+      dispatch('findWorkSheets')
     }
   },
   setSelectedWorksheetId: ({ commit, state }, worksheetId) => {
@@ -51,9 +52,12 @@ export default {
       commit('SET_SELECTED_WORKSHEETS', worksheetId)
     }
   },
-  // findWorkSheets: ({ commit, state }) => {
-  //   console.log(state.worksheets)
-  // },
+  findWorkSheets: ({ dispatch, commit, state }) => {
+    const result = Object.keys(state.worksheets)
+    if (result && result.length) {
+      dispatch('setSelectedWorksheetId', result[0])
+    }
+  },
   deleteSelectedWorksheet: ({ commit, state }, payload) => {
     const { worksheetId } = payload
     if (worksheetId) {
@@ -63,19 +67,17 @@ export default {
   // pipeline
   savePipeline: ({ dispatch, commit, state }, payload) => {
     if (payload.worksheetId) {
-      // TODO type check
       commit('SAVE_PIPELINE', payload)
       dispatch('setCurrentWorkPipeline', payload)
     }
   },
   setCurrentWorkPipeline: ({ commit, state }, payload) => {
     if (payload && payload.worksheetId) {
-      // TODO type check
       commit('UPDATE_CURRENT_WORK_PIPELINE', payload)
     }
   },
-  setCurrentWorkPipelineNode: ({ commit, state }, payload) => {
-    commit('SET_CURRENT_WORK_PIPELINE_NODE', payload)
+  setCurrentWorkPipelineNodeId: ({ commit, state }, nodeId) => {
+    commit('SET_CURRENT_WORK_PIPELINE_NODE_ID', nodeId)
   },
   updateCurrentWorkPipelineNode: ({ commit, state }, payload) => {
     const { nodeId, key, value: updateValue } = payload
@@ -83,6 +85,13 @@ export default {
       if (!_isEqual(updateValue, state.currentWorkPipelineNode[key])) {
         commit('UPDATE_CURRENT_WORK_PIPELINE_NODE', { nodeId, key, value: updateValue })
       }
+    }
+  },
+  deleteCurrentWorkPipelineNodeId: ({ dispatch, commit, state }, payload) => {
+    const { currentWorkNodeId, worksheetId } = payload
+    if (currentWorkNodeId) {
+      commit('DELETE_CURRENT_WORK_PIPELINE_NODE', { currentWorkNodeId, worksheetId })
+      dispatch('setCurrentWorkPipelineNodeId', null)
     }
   },
   updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {

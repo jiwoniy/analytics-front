@@ -4,8 +4,12 @@ function GraphNodes (nodes) {
   this.nodes = nodes || {}
 }
 
-GraphNodes.prototype.getNodes = function getNodes () {
+GraphNodes.prototype.getNodeList = function getNodeList () {
   return Object.keys(this.nodes).map(key => this.nodes[key])
+}
+
+GraphNodes.prototype.getNodes = function getNodes () {
+  return this.nodes
 }
 
 // GraphNodes.prototype.getSelectNodeId = function getSelectNodeId () {

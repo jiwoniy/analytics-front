@@ -83,6 +83,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   if (options.saveFile) {
     // const file = JSON.parse(options.saveFile)
+
     const file = options.saveFile
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
     this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
@@ -159,15 +160,30 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     }
   }
 
+  this.removeNode = function removeNode () {
+    console.log('--remove node')
+  }
+
+  // GraphCreator.prototype.removeNode = function removeNode (node) {
+  //   if (this.isEditable()) {
+  //     const relatedEdges = this.findRelatedEdges(node)
+  //     if (relatedEdges.length) {
+  //       relatedEdges.forEach(edge => this.edges.remove(edge))
+  //     }
+  //     this.nodes.remove(node)
+  //     this.drawGraph({ link: true, node: true })
+  //   }
+  // }
+
   this.save = function save (node) {
     const saveFile = {
       edges: [],
       nodes: []
     }
 
-    if (thisGraph.edges.getEdges().length || thisGraph.nodes.getNodes().length) {
-      saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdges())
-      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
+    if (thisGraph.edges.getEdgeList().length || thisGraph.nodes.getNodeList().length) {
+      saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdgeList())
+      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodeList())
 
       thisGraph.stateProxy.isUpdated = false
       // return JSON.stringify(saveFile)
@@ -346,7 +362,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
 
-  const datas = thisGraph.nodes.getNodes()
+  const datas = thisGraph.nodes.getNodeList()
 
   const exists = this.nodesGroup.selectAll('g').data(datas, function (d) {
     return d.id
@@ -389,7 +405,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   function draw () {
     const lineGenerator = d3Shape.linkHorizontal()
 
-    const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.edges.getEdges(), function (d) {
+    const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.edges.getEdgeList(), function (d) {
       return getEdgeId(d)
     })
 

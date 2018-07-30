@@ -10,7 +10,7 @@
         :pass-params="modal.passModalParams"
         :is-need-accept="modal.isNeedAccept"
       >
-        <h3 slot="header"> custom header </h3>
+        <h3 slot="body"> 삭제 하시겠습니까? </h3>
       </modal>
     </div>
   </transition>
