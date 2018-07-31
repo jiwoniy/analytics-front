@@ -28,8 +28,8 @@
     <!-- node -->
     <div
       class="item-node"
-      v-if="currentItemType === 'pipeline-node' && filterCurrentWorkNode"
-      v-for="item in filterCurrentWorkNode"
+      v-if="currentItemType === 'pipeline-node' && filterActivatePipelineNode"
+      v-for="item in filterActivatePipelineNode"
       :key="item.key"
     >
       <label>
@@ -80,8 +80,8 @@ export default {
     ...mapGetters({
       activateWorksheet: 'myProject/getActivateWorksheet',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
-      currentWorkNode: 'myProject/getCurrentWorkNode',
-      currentWorkNodeId: 'myProject/getCurrentWorkNodeId'
+      activatePipelineNode: 'myProject/getActivatePipelineNode',
+      activatePipelineNodeId: 'myProject/getActivatePipelineNodeId'
       // currentWorksheetPipeline: 'myProject/getCurrentWorksheetPipeline'
     }),
     filterWorksheetItem () {
@@ -89,10 +89,12 @@ export default {
         .map(key => ({ key, value: this.activateWorksheet[key] }))
         .filter(item => item.key !== 'id')
     },
-    filterCurrentWorkNode () {
-      if (this.currentWorkNode) {
-        return Object.keys(this.currentWorkNode)
-          .map(key => ({ key, value: this.currentWorkNode[key] }))
+    filterActivatePipelineNode () {
+      console.log('-filterActivatePipelineNode-')
+      console.log(this.activatePipelineNode)
+      if (this.activatePipelineNode) {
+        return Object.keys(this.activatePipelineNode)
+          .map(key => ({ key, value: this.activatePipelineNode[key] }))
           .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'position')
           // TODO utils filter 만들기...lodash 찾아보기
       }
@@ -103,7 +105,6 @@ export default {
     ...mapActions({
       updateWorksheets: 'myProject/updateWorksheets',
       deleteSelectedWorksheet: 'myProject/deleteSelectedWorksheet',
-      // updateCurrentWorkPipelineNode: 'myProject/updateCurrentWorkPipelineNode',
       deleteCurrentWorkPipelineNode: 'myProject/deleteCurrentWorkPipelineNode'
     }),
     remove () {
@@ -120,7 +121,7 @@ export default {
               })
             } else if (this.currentItemType === 'pipeline-node') {
               this.deleteCurrentWorkPipelineNode({
-                currentWorkNodeId: this.currentWorkNodeId,
+                currentWorkNodeId: this.activatePipelineNodeId,
                 worksheetId: this.activateWorksheetId
               })
             }
@@ -131,6 +132,7 @@ export default {
     wrapperEvent (key, value) {
       if (this.currentItemType === 'worksheet') {
         this.updateWorksheets({
+          updateType: 'update',
           worksheetId: this.activateWorksheetId,
           key,
           value

@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      pipeline: 'myProject/getCurrentWorksheetPipeline',
+      activatePipeline: 'myProject/getActivatePipeline',
       currentWorkPipelineInfo: 'myProject/getCurrentWorksheetPipelineInfo',
       activateWorksheetId: 'myProject/getActivateWorksheetId'
     }),
@@ -73,8 +73,7 @@ export default {
   methods: {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
-      setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline',
-      setCurrentWorkPipelineNode: 'myProject/setCurrentWorkPipelineNode'
+      setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -117,14 +116,10 @@ export default {
         validate()
       ], true)
 
-      if (!this.pipeline) {
-        this.savePipeline({ pipeline: null, worksheetId: this.activateWorksheetId })
-      }
-
       this.svgGraph = new GraphCreator(svgContainer, {
         options: {
           ...options,
-          saveFile: _isEmpty(this.pipeline) ? null : this.pipeline,
+          saveFile: _isEmpty(this.activatePipeline) ? null : this.activatePipeline,
           connectValidation: composeValidate
         },
         callback })
@@ -133,7 +128,7 @@ export default {
     },
     refreshGraph () {
       if (this.svgGraph) {
-        this.svgGraph.redraw(this.pipeline)
+        this.svgGraph.redraw(this.activatePipeline)
       }
     },
     saveGraph () {
@@ -143,7 +138,7 @@ export default {
           const worksheetId = this.activateWorksheetId
           // worksheets - pipeline 1 on 1
           this.savePipeline({ pipeline: saveFile, worksheetId })
-          this.svgGraph.setUpdated(false)
+          // this.svgGraph.setUpdated(false)
         }
       }
 
@@ -180,10 +175,10 @@ export default {
           item: nodeItem,
           type: 'pipeline-node'
         })
-        this.setCurrentWorkPipelineNode(nodeItem)
+        this.setActivatePipelineNodeId(nodeItem.id)
       } else {
         eventController.RIGHT_PANEL()
-        this.setCurrentWorkPipelineNode(null)
+        this.setActivatePipelineNodeId(null)
       }
     },
     watchGraphUpdate (isGraphUpdate) {
@@ -201,7 +196,6 @@ export default {
       this.isGraphEditable = false
       this.removeSvgGraph()
       this.setSvgContainer()
-      this.setCurrentWorkPipeline({ worksheetId: this.activateWorksheetId, isInit: true })
     }
   },
   mounted () {
@@ -246,7 +240,7 @@ export default {
     activateWorksheetId (newValue) {
       this.init()
     },
-    pipeline (newValue) {
+    activatePipeline (newValue) {
       this.refreshGraph()
     }
   }

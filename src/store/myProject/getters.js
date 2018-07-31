@@ -24,8 +24,15 @@ export default {
   },
 
   // about pipeline
+  getActivatePipeline: state => state.pipeline || {},
+  getActivatePipelineNodeId: state => state.activatePipelineNodeId || null,
+  getActivatePipelineNode: state => {
+    if (state.activatePipelineNodeId) {
+      return state.pipeline.nodes[state.activatePipelineNodeId]
+    }
+    return {}
+  },
   getCurrentWorksheetPipelineInfo: state => state.currentWorkPipelineInfo || {},
-  getCurrentWorksheetPipeline: state => state.currentWorkPipeline || {},
   getCurrentWorkNode: state => state.currentWorkPipelineNode,
   getCurrentWorkNodeId: state => (state.currentWorkPipelineNode && state.currentWorkPipelineNode.id) || null
 }

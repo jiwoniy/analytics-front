@@ -7,7 +7,7 @@ export default {
       state.projects = projects
     }
   },
-  SET_ACTIVATE_PROJECT: (state, projectId) => {
+  SET_ACTIVATE_PROJECT_ID: (state, projectId) => {
     if (projectId) {
       state.activateProjectId = projectId
     }
@@ -19,10 +19,12 @@ export default {
       state.worksheets = worksheets
     }
   },
-  UPDATE_WORKSHEETS: (state, payload) => {
-    const { worksheetId, updateWorksheet } = payload
+  SET_ACTIVATE_WORKSHEETS: (state, worksheetId) => {
+    state.activateWorksheetId = worksheetId
+  },
+  UPDATE_WORKSHEETS: (state, { updateType, worksheetId, updateWorksheet }) => {
     if (worksheetId) {
-      if (updateWorksheet) {
+      if (updateType === 'update' && updateWorksheet) {
         // update
         state.worksheets = Object.assign({}, state.worksheets, { [worksheetId]: updateWorksheet })
       } else {
@@ -32,10 +34,7 @@ export default {
       }
     }
   },
-  SET_ACTIVATE_WORKSHEETS: (state, worksheetId) => {
-    state.activateWorksheetId = worksheetId
-  },
-  DELETE_SELECTED_WORKSHEETS: (state, { worksheetId }) => {
+  DELETE_ACTIVATE_WORKSHEETS: (state, { worksheetId }) => {
     if (worksheetId) {
       if (state.activateWorksheetId === worksheetId) {
         state.activateWorksheetId = null
@@ -44,23 +43,17 @@ export default {
   },
 
   // pipeline
-  SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
-    if (worksheetId) {
-      if (pipeline) {
-        state.myPipeline = Object.assign({},
-          state.myPipeline,
-          { [worksheetId]: {
-            edges: pipeline.edges || [],
-            nodes: pipeline.edges || {}
-          } })
-        state.currentWorkPipeline = pipeline
-      } else {
-        state.myPipeline = Object.assign({},
-          state.myPipeline,
-          { [worksheetId]: null })
-        state.currentWorkPipeline = pipeline
-      }
+  SET_PIPELINE: (state, { pipeline }) => {
+    if (pipeline) {
+      state.pipeline = pipeline
     }
+  },
+  SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
+    state.pipeline = Object.assign({},
+      ...state.pipeline,
+      { edges: pipeline.edges || [],
+        nodes: pipeline.nodes || {}
+      })
   },
   UPDATE_CURRENT_WORK_PIPELINE: (state, { type, currentWorkNodeId }) => {
     if (type === 'node_delete') {
@@ -77,8 +70,8 @@ export default {
       }
     }
   },
-  SET_CURRENT_WORK_PIPELINE_NODE: (state, node) => {
-    state.currentWorkPipelineNode = node
+  SET_ACTIVATE_PIPELINE_NODE_ID: (state, nodeId) => {
+    state.activatePipelineNodeId = nodeId
   },
   UPDATE_CURRENT_WORK_PIPELINE_NODE: (state, { nodeId, key, value }) => {
     if (nodeId) {

@@ -2,27 +2,11 @@
   "projects": [
     {
       "name": "My Project 1",
-      "id": "asdf-123-asdf",
-      "worksheets": [
-        {
-          "name": "My Worksheet 1-1",
-          "id": "qwer-123-qwer"
-        },
-        {
-          "name": "My Worksheet 1-2",
-          "id": "qwer-456-qwer"
-        }
-      ]
+      "id": "asdf-123-asdf"
     },
     {
       "name": "My Project 2",
-      "id": "asdf-456-asdf",
-      "worksheets": [
-        {
-          "name": "My Worksheet 2-1",
-          "id": "qwer-789-qwer"
-        }
-      ]
+      "id": "asdf-456-asdf"
     }
   ]
 }

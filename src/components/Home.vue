@@ -23,7 +23,7 @@ export default {
     ...mapActions({
       setLocale: 'common/setLocale',
       getProjects: 'myProject/getProjects',
-      getPipelineMeta: 'pipeline/getPipelineMeta'
+      getPipelineMeta: 'pipelineMeta/getPipelineMeta'
     })
   },
   created () {

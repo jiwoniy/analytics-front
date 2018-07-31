@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      pipelineMeta: 'pipeline/getPipelineMetaList',
+      pipelineMeta: 'pipelineMeta/getPipelineMetaList',
       worksheetList: 'myProject/getWorksheetList',
       activateWorksheet: 'myProject/getActivateWorksheet'
     })

@@ -7,7 +7,7 @@ import { normalizeArray } from '@/utils/normalize'
 
 export default {
   // project
-  getProjects: async ({ dispatch, commit, state }) => {
+  getProjects: async ({ dispatch, commit }) => {
     const { success } = await api.projects.getMyProjects()
     if (success && success.projects && success.projects.length) {
       const { projects } = success
@@ -15,42 +15,50 @@ export default {
       dispatch('setActivateProjectId', projects[0].id)
     }
   },
-  setActivateProjectId: ({ dispatch, commit, state }, projectId) => {
+  setActivateProjectId: async ({ dispatch, commit }, projectId) => {
     if (projectId) {
-      const project = state.projects[projectId]
-      commit('SET_ACTIVATE_PROJECT', projectId)
-      dispatch('setWorksheets', project)
+      commit('SET_ACTIVATE_PROJECT_ID', projectId)
+      // TODO api call. To get worksheets
+      const { success } = await api.projects.getWorksheets(projectId)
+      if (success && success.length) {
+        dispatch('setWorksheets', success)
+      }
     }
   },
 
   // worksheet
-  setWorksheets: ({ dispatch, commit, state }, project) => {
-    if (project) {
-      const { worksheets } = project
+  setWorksheets: ({ dispatch, commit }, worksheets) => {
+    if (worksheets) {
       if (worksheets && worksheets.length) {
         commit('SET_WORKSHEETS', normalizeArray(worksheets))
         dispatch('findWorkSheets')
       }
     }
   },
-  updateWorksheets: ({ dispatch, commit, state }, payload) => {
-    const { worksheetId, key, value: updateValue, type = 'update' } = payload
-    if (worksheetId && type === 'update' && !_isEmpty(updateValue)) {
-      if (!_isEqual(updateValue, state.worksheets[state.selectedWorksheetId][key])) {
-        const updateWorksheet = Object.assign({}, {
-          ...state.worksheets[state.selectedWorksheetId],
-          [key]: updateValue })
-        updateWorksheet[key] = updateValue
-        commit('UPDATE_WORKSHEETS', { worksheetId, updateWorksheet })
-      }
-    } else if (worksheetId && type === 'delete') {
-      commit('UPDATE_WORKSHEETS', { worksheetId })
-      dispatch('findWorkSheets')
-    }
-  },
-  setActivateWorksheetId: ({ commit, state }, worksheetId) => {
+  setActivateWorksheetId: async ({ dispatch, commit }, worksheetId) => {
     if (worksheetId) {
       commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
+      // TODO api call. To get pipeline
+      const { success } = await api.projects.getPipeline(worksheetId)
+      if (!_isEmpty(success)) {
+        dispatch('setPipeline', success)
+      }
+    }
+  },
+  updateWorksheets: ({ dispatch, commit, state }, payload) => {
+    const { updateType = 'update', worksheetId, key, value: updateValue } = payload
+
+    if (worksheetId && updateType === 'update' && !_isEmpty(updateValue)) {
+      if (!_isEqual(updateValue, state.worksheets[worksheetId][key])) {
+        const updateWorksheet = Object.assign({}, {
+          ...state.worksheets[worksheetId],
+          [key]: updateValue })
+        updateWorksheet[key] = updateValue
+        commit('UPDATE_WORKSHEETS', { worksheetId, updateType, updateWorksheet })
+      }
+    } else if (worksheetId && updateType === 'delete') {
+      commit('UPDATE_WORKSHEETS', { worksheetId, updateType })
+      dispatch('findWorkSheets')
     }
   },
   findWorkSheets: ({ dispatch, commit, state }) => {
@@ -59,34 +67,37 @@ export default {
       dispatch('setActivateWorksheetId', result[0])
     }
   },
-  deleteSelectedWorksheet: ({ commit, state }, payload) => {
-    const { worksheetId } = payload
+  deleteSelectedWorksheet: ({ commit, state }, { worksheetId }) => {
     if (worksheetId) {
-      commit('DELETE_SELECTED_WORKSHEETS', { worksheetId, type: 'delete' })
+      commit('DELETE_ACTIVATE_WORKSHEETS', { worksheetId })
     }
   },
 
   // pipeline
-  savePipeline: ({ dispatch, commit, state }, payload) => {
-    const { pipeline, worksheetId } = payload
-    if (worksheetId) {
+  setPipeline: ({ commit, state }, { pipeline }) => {
+    if (pipeline) {
+      commit('SET_PIPELINE', { pipeline })
+    }
+  },
+  savePipeline: ({ dispatch, commit }, { pipeline, worksheetId }) => {
+    if (!_isEmpty(pipeline) && worksheetId) {
       commit('SAVE_PIPELINE', { pipeline, worksheetId })
-      dispatch('setCurrentWorkPipeline', { worksheetId })
+      // dispatch('setCurrentWorkPipeline', { worksheetId })
     }
   },
-  setCurrentWorkPipeline: ({ commit, state }, payload) => {
-    const { worksheetId, isInit } = payload
-    if (worksheetId) {
-      commit('UPDATE_CURRENT_WORK_PIPELINE_INFO', { worksheetId, isInit })
-    }
-  },
+  // setCurrentWorkPipeline: ({ commit, state }, payload) => {
+  //   const { worksheetId, isInit } = payload
+  //   if (worksheetId) {
+  //     commit('UPDATE_CURRENT_WORK_PIPELINE_INFO', { worksheetId, isInit })
+  //   }
+  // },
   updateCurrentWorkPipeline: ({ commit, state }, { currentWorkNodeId }) => {
     if (currentWorkNodeId) {
       commit('UPDATE_CURRENT_WORK_PIPELINE', { currentWorkNodeId, type: 'node_delete' })
     }
   },
-  setCurrentWorkPipelineNode: ({ commit, state }, node) => {
-    commit('SET_CURRENT_WORK_PIPELINE_NODE', node)
+  setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
+    commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
   updateCurrentWorkPipelineNode: ({ commit, state }, payload) => {
     const { nodeId, key, value: updateValue } = payload
