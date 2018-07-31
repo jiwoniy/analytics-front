@@ -1,13 +1,20 @@
 export default {
   projects: {},
-  selectedProjectId: null,
+  // id(string), name(string), worksheets(array)
+  activateProjectId: null,
+  // string
+
   worksheets: {},
-  selectedWorksheetId: null,
-  myPipeline: {},
-  currentWorkPipeline: {
-    nodes: {},
-    edges: []
-  },
-  currentWorkPipelineInfo: {},
-  currentWorkPipelineNode: null
+  // id(string), name(string)
+  activateWorksheetId: null,
+
+  selectePipelineId: null,
+
+  pipeline: {},
+  // currentWorkPipeline: {
+  //   nodes: {},
+  //   edges: []
+  // },
+  // currentWorkPipelineInfo: {},
+  activatePipelineNode: null
 }

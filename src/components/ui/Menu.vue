@@ -14,7 +14,7 @@
             'margin': '0.5rem 0.4rem'
           }"
           :item-class="'text-ellipsis__default'"
-          :selected-item-id="selectedProject.id"
+          :selected-item-id="activateProjectId"
           :item-click="selectProject">
         </list-view>
 
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import ListView from '@/components/ui/ListView'
 
@@ -57,19 +57,24 @@ export default {
       type: Array,
       default: () => []
     },
-    selectedProject: {
+    activateProject: {
       type: Object,
       default: () => {}
     }
   },
+  computed: {
+    ...mapGetters({
+      activateProjectId: 'myProject/getActivateProjectId'
+    })
+  },
   methods: {
     ...mapActions({
-      setSelectedProjectId: 'myProject/setSelectedProjectId'
+      setActivateProjectId: 'myProject/setActivateProjectId'
     }),
     selectProject (event) {
       if (event.target) {
         const projectId = event.target.id || event.target.parentElement.id
-        this.setSelectedProjectId(projectId)
+        this.setActivateProjectId(projectId)
         this.isOpen = !this.isOpen
       }
     },

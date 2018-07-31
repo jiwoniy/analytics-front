@@ -1,4 +1,4 @@
 export default {
-  getPipelineNodesList: state => Object.keys(state.pipelineNodes).map(key => state.pipelineNodes[key]) || [],
-  getPipelineNodes: state => state.pipelineNodes
+  getPipelineMetaList: state => Object.keys(state.pipelineMeta).map(key => state.pipelineMeta[key]) || [],
+  getPipelineMeta: state => state.pipelineMeta
 }

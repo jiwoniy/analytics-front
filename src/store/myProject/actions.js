@@ -12,16 +12,17 @@ export default {
     if (success && success.projects && success.projects.length) {
       const { projects } = success
       commit('SET_PROJECTS', normalizeArray(projects))
-      dispatch('setSelectedProjectId', projects[0].id)
+      dispatch('setActivateProjectId', projects[0].id)
     }
   },
-  setSelectedProjectId: ({ dispatch, commit, state }, projectId) => {
+  setActivateProjectId: ({ dispatch, commit, state }, projectId) => {
     if (projectId) {
       const project = state.projects[projectId]
-      commit('SET_SELECTED_PROJECT', projectId)
+      commit('SET_ACTIVATE_PROJECT', projectId)
       dispatch('setWorksheets', project)
     }
   },
+
   // worksheet
   setWorksheets: ({ dispatch, commit, state }, project) => {
     if (project) {
@@ -47,15 +48,15 @@ export default {
       dispatch('findWorkSheets')
     }
   },
-  setSelectedWorksheetId: ({ commit, state }, worksheetId) => {
+  setActivateWorksheetId: ({ commit, state }, worksheetId) => {
     if (worksheetId) {
-      commit('SET_SELECTED_WORKSHEETS', worksheetId)
+      commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
     }
   },
   findWorkSheets: ({ dispatch, commit, state }) => {
     const result = Object.keys(state.worksheets)
     if (result && result.length) {
-      dispatch('setSelectedWorksheetId', result[0])
+      dispatch('setActivateWorksheetId', result[0])
     }
   },
   deleteSelectedWorksheet: ({ commit, state }, payload) => {
@@ -64,6 +65,7 @@ export default {
       commit('DELETE_SELECTED_WORKSHEETS', { worksheetId, type: 'delete' })
     }
   },
+
   // pipeline
   savePipeline: ({ dispatch, commit, state }, payload) => {
     const { pipeline, worksheetId } = payload

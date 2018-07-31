@@ -8,8 +8,8 @@
             <left-panel
               id="leftPanel"
               :worksheet-list="worksheetList"
-              :selected-worksheet="selectedWorksheet"
-              :pipeline-nodes="pipelineNodes">
+              :activate-worksheet="activateWorksheet"
+              :pipeline-nodes="pipelineMeta">
             </left-panel>
           </div>
         </SplitArea>
@@ -53,7 +53,6 @@ import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
 import FootPanel from '@/components/panel/Foot'
 import ManageView from '@/components/ui/ManageView'
-// import pipelineNodesSchema from '@/api/mockup/pipeline-nodes.json'
 
 export default {
   name: 'Work-Panel',
@@ -66,7 +65,6 @@ export default {
   },
   data () {
     return {
-      // pipelineNodes: pipelineNodesSchema,
       isLeftMinimize: false,
       isRightMinimize: false,
       currentItemType: null,
@@ -79,9 +77,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      pipelineNodes: 'pipeline/getPipelineNodesList',
+      pipelineMeta: 'pipeline/getPipelineMetaList',
       worksheetList: 'myProject/getWorksheetList',
-      selectedWorksheet: 'myProject/getSelectedWorksheet'
+      activateWorksheet: 'myProject/getActivateWorksheet'
     })
   },
   methods: {

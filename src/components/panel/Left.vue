@@ -7,7 +7,7 @@
       <div class="left-panel__contents">
         <h-accordion
           :worksheet-list="worksheetList"
-          :selected-worksheet="selectedWorksheet"
+          :activate-worksheet="activateWorksheet"
         >
           <div
             class="pipeline-item"
@@ -44,7 +44,7 @@ export default {
       type: Array,
       default: () => []
     },
-    selectedWorksheet: {
+    activateWorksheet: {
       type: Object,
       default: () => {}
     }

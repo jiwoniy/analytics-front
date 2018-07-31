@@ -23,12 +23,12 @@ export default {
     ...mapActions({
       setLocale: 'common/setLocale',
       getProjects: 'myProject/getProjects',
-      getPipelineNodes: 'pipeline/getPipelineNodes'
+      getPipelineMeta: 'pipeline/getPipelineMeta'
     })
   },
   created () {
     this.getProjects()
-    this.getPipelineNodes()
+    this.getPipelineMeta()
   },
   mounted () {
     this.setLocale()

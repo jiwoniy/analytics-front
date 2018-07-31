@@ -5,8 +5,8 @@
       <li>
         <input id="worksheet" type="radio" name="rad" checked="checked"  value="worksheet" v-model="selectMenu"/>
         <label for="worksheet">
-          <div v-if="selectedWorksheet && selectedWorksheet.name"> {{ selectedWorksheet.name }} </div>
-          <div v-if="!(selectedWorksheet && selectedWorksheet.name)"> {{ $t('Add worksheet') }} </div>
+          <div v-if="activateWorksheet && activateWorksheet.name"> {{ activateWorksheet.name }} </div>
+          <div v-if="!(activateWorksheet && activateWorksheet.name)"> {{ $t('Add worksheet') }} </div>
         </label>
         <div class="accslide">
           <div class="content">
@@ -18,7 +18,7 @@
                 'font-size': '1.4rem',
                 'margin': '0.5rem'
               }"
-              :selected-item-id="selectedWorksheet.id"
+              :selected-item-id="activateWorksheet.id"
               :item-click="worksheetClick">
             </list-view>
           </div>
@@ -81,30 +81,30 @@ export default {
       type: Array,
       default: () => []
     },
-    selectedWorksheet: {
+    activateWorksheet: {
       type: Object,
       default: () => {}
     }
   },
   computed: {
     ...mapGetters({
-      selectedProject: 'myProject/getSelectedProject'
+      activateProject: 'myProject/getActivateProject'
     })
   },
   methods: {
     ...mapActions({
-      setSelectedWorksheetId: 'myProject/setSelectedWorksheetId'
+      setActivateWorksheetId: 'myProject/setActivateWorksheetId'
     }),
     worksheetClick (event) {
       if (event.target) {
         const worksheetId = event.target.id || event.target.parentElement.id
-        this.setSelectedWorksheetId(worksheetId)
+        this.setActivateWorksheetId(worksheetId)
         this.selectMenu = 'tools'
       }
     }
   },
   watch: {
-    selectedProject (newVal) {
+    activateProject (newVal) {
       this.selectMenu = 'worksheet'
     }
   }

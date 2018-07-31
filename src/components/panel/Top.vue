@@ -3,8 +3,7 @@
     <div class="top-panel__page">
       <menu-list
         class="menu-icon"
-        :project-list="projectList"
-        :selected-project="selectedProject">
+        :project-list="projectList">
       </menu-list>
     </div>
   </transition>
@@ -22,8 +21,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      projectList: 'myProject/getProjectList',
-      selectedProject: 'myProject/getSelectedProject'
+      projectList: 'myProject/getProjectList'
     })
   }
 }

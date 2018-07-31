@@ -3,14 +3,21 @@ import moment from 'moment'
 export default {
   // project
   SET_PROJECTS: (state, projects) => {
-    state.projects = projects
+    if (projects) {
+      state.projects = projects
+    }
   },
-  SET_SELECTED_PROJECT: (state, projectId) => {
-    state.selectedProjectId = projectId
+  SET_ACTIVATE_PROJECT: (state, projectId) => {
+    if (projectId) {
+      state.activateProjectId = projectId
+    }
   },
+
   // worksheet
   SET_WORKSHEETS: (state, worksheets) => {
-    state.worksheets = worksheets
+    if (worksheets) {
+      state.worksheets = worksheets
+    }
   },
   UPDATE_WORKSHEETS: (state, payload) => {
     const { worksheetId, updateWorksheet } = payload
@@ -25,16 +32,17 @@ export default {
       }
     }
   },
-  SET_SELECTED_WORKSHEETS: (state, worksheetId) => {
-    state.selectedWorksheetId = worksheetId
+  SET_ACTIVATE_WORKSHEETS: (state, worksheetId) => {
+    state.activateWorksheetId = worksheetId
   },
   DELETE_SELECTED_WORKSHEETS: (state, { worksheetId }) => {
     if (worksheetId) {
-      if (state.selectedWorksheetId === worksheetId) {
-        state.selectedWorksheetId = null
+      if (state.activateWorksheetId === worksheetId) {
+        state.activateWorksheetId = null
       }
     }
   },
+
   // pipeline
   SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
     if (worksheetId) {

@@ -1,7 +1,7 @@
 export default {
-  SET_PIPELINES_NODES: (state, pipelineNodes) => {
-    if (pipelineNodes) {
-      state.pipelineNodes = pipelineNodes
+  SET_PIPELINES_META: (state, pipelineMeta) => {
+    if (pipelineMeta) {
+      state.pipelineMeta = pipelineMeta
     }
   }
 }

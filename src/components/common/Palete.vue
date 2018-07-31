@@ -61,7 +61,7 @@ export default {
     ...mapGetters({
       pipeline: 'myProject/getCurrentWorksheetPipeline',
       currentWorkPipelineInfo: 'myProject/getCurrentWorksheetPipelineInfo',
-      selectedWorksheetId: 'myProject/getSelectedWorksheetId'
+      activateWorksheetId: 'myProject/getActivateWorksheetId'
     }),
     lastSavedTime () {
       if (this.currentWorkPipelineInfo.saveTime) {
@@ -118,7 +118,7 @@ export default {
       ], true)
 
       if (!this.pipeline) {
-        this.savePipeline({ pipeline: null, worksheetId: this.selectedWorksheetId })
+        this.savePipeline({ pipeline: null, worksheetId: this.activateWorksheetId })
       }
 
       this.svgGraph = new GraphCreator(svgContainer, {
@@ -140,7 +140,7 @@ export default {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          const worksheetId = this.selectedWorksheetId
+          const worksheetId = this.activateWorksheetId
           // worksheets - pipeline 1 on 1
           this.savePipeline({ pipeline: saveFile, worksheetId })
           this.svgGraph.setUpdated(false)
@@ -201,7 +201,7 @@ export default {
       this.isGraphEditable = false
       this.removeSvgGraph()
       this.setSvgContainer()
-      this.setCurrentWorkPipeline({ worksheetId: this.selectedWorksheetId, isInit: true })
+      this.setCurrentWorkPipeline({ worksheetId: this.activateWorksheetId, isInit: true })
     }
   },
   mounted () {
@@ -243,7 +243,7 @@ export default {
     })
   },
   watch: {
-    selectedWorksheetId (newValue) {
+    activateWorksheetId (newValue) {
       this.init()
     },
     pipeline (newValue) {

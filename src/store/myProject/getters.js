@@ -2,10 +2,11 @@ export default {
   // about project
   getProjects: state => state.projects || {},
   getProjectList: state => Object.keys(state.projects).map(key => state.projects[key]) || [],
-  getSelectedProjectId: state => state.selectedProjectId,
-  getSelectedProject: state => {
-    if (state.selectedProjectId) {
-      return state.projects[state.selectedProjectId]
+
+  getActivateProjectId: state => state.activateProjectId,
+  getActivateProject: state => {
+    if (state.activateProjectId) {
+      return state.projects[state.activateProjectId]
     }
     return {}
   },
@@ -13,10 +14,11 @@ export default {
   // about worksheet
   getWorksheets: state => state.worksheets || {},
   getWorksheetList: state => Object.keys(state.worksheets).map(key => state.worksheets[key]) || [],
-  getSelectedWorksheetId: state => state.selectedWorksheetId,
-  getSelectedWorksheet: state => {
-    if (state.selectedWorksheetId) {
-      return state.worksheets[state.selectedWorksheetId]
+
+  getActivateWorksheetId: state => state.activateWorksheetId,
+  getActivateWorksheet: state => {
+    if (state.activateWorksheetId) {
+      return state.worksheets[state.activateWorksheetId]
     }
     return {}
   },

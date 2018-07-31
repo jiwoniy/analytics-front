@@ -11,7 +11,7 @@ function returnPromise (param) {
 
 // const baseUrl = '/xxxxx'
 export default {
-  getPipelineNodes () {
+  getPipelineMeta () {
     // const params = {}
     return apiHandler(returnPromise(pipelineNodesSchema))
     // return apiHandler(Axios.post(baseUrl, params))

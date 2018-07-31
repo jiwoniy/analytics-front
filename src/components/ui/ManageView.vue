@@ -78,15 +78,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      selectedWorksheet: 'myProject/getSelectedWorksheet',
-      selectedWorksheetId: 'myProject/getSelectedWorksheetId',
+      activateWorksheet: 'myProject/getActivateWorksheet',
+      activateWorksheetId: 'myProject/getActivateWorksheetId',
       currentWorkNode: 'myProject/getCurrentWorkNode',
       currentWorkNodeId: 'myProject/getCurrentWorkNodeId'
       // currentWorksheetPipeline: 'myProject/getCurrentWorksheetPipeline'
     }),
     filterWorksheetItem () {
-      return Object.keys(this.selectedWorksheet)
-        .map(key => ({ key, value: this.selectedWorksheet[key] }))
+      return Object.keys(this.activateWorksheet)
+        .map(key => ({ key, value: this.activateWorksheet[key] }))
         .filter(item => item.key !== 'id')
     },
     filterCurrentWorkNode () {
@@ -116,12 +116,12 @@ export default {
           if (isAccept) {
             if (this.currentItemType === 'worksheet') {
               this.deleteSelectedWorksheet({
-                worksheetId: this.selectedWorksheet.id
+                worksheetId: this.activateWorksheetId
               })
             } else if (this.currentItemType === 'pipeline-node') {
               this.deleteCurrentWorkPipelineNode({
                 currentWorkNodeId: this.currentWorkNodeId,
-                worksheetId: this.selectedWorksheetId
+                worksheetId: this.activateWorksheetId
               })
             }
           }
@@ -131,7 +131,7 @@ export default {
     wrapperEvent (key, value) {
       if (this.currentItemType === 'worksheet') {
         this.updateWorksheets({
-          worksheetId: this.selectedWorksheet.id,
+          worksheetId: this.activateWorksheetId,
           key,
           value
         })
