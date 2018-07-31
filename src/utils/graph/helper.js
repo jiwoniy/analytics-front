@@ -1,3 +1,5 @@
+import { normalizeArray } from '@/utils/normalize'
+
 // meta to graph node
 function transformNode (node, isEdges = false) {
   if (isEdges) {
@@ -64,7 +66,9 @@ function saveNodeTransformNode (node, isEdges = false) {
 }
 
 function nodesTransformForSave (nodes) {
-  return nodes.map(node => transformNode(node))
+  const arr = Object.keys(nodes).map(key => transformNode(nodes[key]))
+  // return Object.keys(nodes).map(key => transformNode(nodes[key]))
+  return normalizeArray(arr)
 }
 
 function edgesTransformForSave (edges) {

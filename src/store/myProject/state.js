@@ -4,6 +4,10 @@ export default {
   worksheets: {},
   selectedWorksheetId: null,
   myPipeline: {},
+  currentWorkPipeline: {
+    nodes: {},
+    edges: []
+  },
   currentWorkPipelineInfo: {},
-  currentWorkPipelineNodeId: null
+  currentWorkPipelineNode: null
 }

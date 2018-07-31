@@ -164,6 +164,12 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     console.log('--remove node')
   }
 
+  this.redraw = function redraw (pipeline) {
+    thisGraph.nodes = new GraphNodes(saveNodesTransformToNodes(pipeline.nodes))
+    thisGraph.edges = new GraphEddes(saveEdgesTransformToEdges(pipeline.edges))
+    thisGraph.drawGraph({ node: true, link: true })
+  }
+
   // GraphCreator.prototype.removeNode = function removeNode (node) {
   //   if (this.isEditable()) {
   //     const relatedEdges = this.findRelatedEdges(node)
@@ -183,7 +189,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
     if (thisGraph.edges.getEdgeList().length || thisGraph.nodes.getNodeList().length) {
       saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdgeList())
-      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodeList())
+      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
       // return JSON.stringify(saveFile)
@@ -208,7 +214,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     setZoomInit: this.initZoomState,
     getWidth,
     setHeight: this.setHeight,
-    getHeight
+    getHeight,
+    redraw: this.redraw
   }
 }
 
@@ -348,7 +355,7 @@ GraphCreator.prototype.drawGraph = function drawGraph ({ link = false, node = fa
     thisGraph.drawNodes()
   }
 
-  thisGraph.stateProxy.isUpdated = true
+  // thisGraph.stateProxy.isUpdated = true
 }
 
 // GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
@@ -396,7 +403,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     thisGraph.appendText(d3Selection.select(this), d.name)
   })
 
-  this.nodesGroup.exit().remove()
+  exists.exit().remove()
 }
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {

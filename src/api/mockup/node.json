@@ -1,0 +1,231 @@
+[
+  {
+    "group_title": "Properties UI Test"
+    , "nodes": [
+      {
+        "type_id": "0af804ec-1b3b-41cd-80a6-51a49a32f34b"
+        , "title": "Dummy Node"
+        , "description": "Properties Panel UI 테스트를 위한 더미 노드 입니다. 해당 노드는 분석툴에서 지원가능한 모든 속성을 가지고있습니다."
+        , "properties": [
+          {
+            "type": "string"
+            , "title": "문자열"
+            , "default": "기본값. placeholder 속성으로 지원할지 여부 결정 필요"
+            , "parameter_key": "p_string"
+          }
+          , {
+            "type": "numeric"
+            , "title": "정수(음수 불가)"
+            , "scope": "int"
+            , "negative": false
+            , "default": 3
+            , "parameter_key": "p_integer_positive_only"
+          }
+          , {
+            "type": "numeric"
+            , "title": "정수(음수 가능)"
+            , "scope": "int"
+            , "negative": true
+            , "default": -3
+            , "parameter_key": "p_integer_allow_negative"
+          }
+          , {
+            "type": "numeric"
+            , "title": "실수(음수 불가)"
+            , "scope": "float"
+            , "negative": false
+            , "default": 0.5
+            , "parameter_key": "p_float_positive_only"
+          }
+          , {
+            "type": "numeric"
+            , "title": "실수(음수 가능)"
+            , "scope": "float"
+            , "negative": true
+            , "default": -0.5
+            , "parameter_key": "p_float_allow_negative"
+          }
+          , {
+            "type": "multiple numeric"
+            , "title": "여러개의 정수(음수 불가)"
+            , "scope": "int"
+            , "negative": false
+            , "default": 3
+            , "parameter_key": "p_multiple_integer_positive_only"
+          }
+          , {
+            "type": "multiple numeric"
+            , "title": "여러개의 정수(음수 가능)"
+            , "scope": "int"
+            , "negative": true
+            , "default": -3
+            , "parameter_key": "p_multiple_integer_allow_negative"
+          }
+          , {
+            "type": "multiple numeric"
+            , "title": "여러개의 실수(음수 불가)"
+            , "scope": "float"
+            , "negative": false
+            , "default": 0.5
+            , "parameter_key": "p_multiple_float_positive_only"
+          }
+          , {
+            "type": "multiple numeric"
+            , "title": "여러개의 실수(음수 가능)"
+            , "scope": "float"
+            , "negative": true
+            , "default": -0.5
+            , "parameter_key": "p_multiple_float_allow_negative"
+          }
+          
+          , {
+            "type": "boolean"
+            , "title": "TRUE/FALSE, YES/NO, ON/OFF"
+            , "default": true
+            , "parameter_key": "p_boolean"
+          }
+          , {
+            "type": "choice"
+            , "title": "선택"
+            , "items": [
+              { "text": "Option#1", "value": "1"}
+              ,{ "text": "Option#2", "value": "2"}
+              ,{ "text": "Option#3", "value": "3"}
+            ]
+            , "parameter_key": "p_choice"
+          }
+          , {
+            "type": "list selector"
+            , "title": "목록 선택 (팝업 UI 제공)"
+            , "list_ref": "/some/rest/api/uri"
+            , "parameter_key": "p_select"
+          }
+          , {
+            "type": "column selector"
+            , "title" : "단일 컬럼 선택 (팝업 UI 제공. 입력 데이터프레임의 컬럼 목록 노출)"
+            , "target_input_port": 0
+            , "parameter_key": "p_column"
+          }
+          , {
+            "type": "mutliple column selector"
+            , "title" : "다중 컬럼 선택 (팝업 UI 제공. 입력 데이터프레임의 컬럼 목록 노출)"
+            , "target_input_port": 1
+            , "parameter_key": "p_columns"
+          }
+          , {
+            "type": "code snippet"
+            , "title": "code snippet - Python"
+            , "language": "Python"
+            , "default": "def transformation(dataframe):\n    return dataframe"
+            , "parameter_key": "p_python_code"
+          }
+          , {
+            "type": "code snippet"
+            , "title": "code snippet - SQL"
+            , "language": "SQL"
+            , "default": "SELECT * FROM DF"
+            , "parameter_key": "p_sql_code"
+          }
+          , {
+            "type": "sequence"
+            , "title": "Sequence : 아직 고민중인 항목입니다."
+          }
+        ]
+      }
+    ]
+  }
+  
+  , {
+    "group_title": "Input"
+    , "nodes": [
+      {
+        "type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd"
+        , "title": "Read Datasource"
+        , "description": ""
+        , "properties": [
+          {
+            "type": "list_selector"
+            , "title": "Data Source"
+            , "list_ref": "/datasource"
+            , "parameter_key": "datasource_id"
+          }
+        ]
+      }
+    ]
+  }
+  , {
+    "group_title": "Transformation"
+    , "nodes": [
+      {
+        "type_id": "4c65175b-5b75-4278-84f1-98a6c9edd7c9"
+        , "title": "Python Transformation"
+        , "description": ""
+        , "properties": [
+          {
+            "type": "code_snippet"
+            , "title": "Code"
+            , "language": "Python"
+            , "default": "def transformation(dataframe):\n    return dataframe"
+            , "parameter_key": "code"
+          }
+        ]
+      }
+      , {
+        "type_id": "bc048087-d2b4-4014-8b0e-eff48e5edaf3"
+        , "title": "SQL Transformation"
+        , "description": ""
+        , "properties": [
+          {
+            "type": "string"
+            , "title": "Dataframe ID"
+            , "default": "DF"
+            , "parameter_key": "dataframe_id"
+          }
+          , {
+            "type": "code_snippet"
+            , "title": "Query"
+            , "language": "SQL"
+            , "default": ""
+            , "parameter_key": "query"
+          }
+        ]
+      }
+      , {
+        "type_id": "e2be94c8-df04-4361-afa4-722c485b0333"
+        , "title": "Row Filter"
+        , "description": ""
+        , "properties": [
+          {
+            "type": "code_snipet"
+            , "title": "Condition"
+            , "language": "SQL"
+            , "default": ""
+            , "parameter_key": "condition"
+          }
+        ]
+      }
+      , {
+        "type_id": "f34f7e5d-c2a2-4987-9c19-a5c6a5cce235"
+        , "title": "Column Filter"
+        , "description": ""
+        , "properties": {
+          "type": "multiple_column_selector"
+          , "title": "Selected Columns"
+          , "parameter_key": "selected_columns"
+        }
+      }
+    ]
+  }
+  , {
+    "group_title": "Machine Learning"
+    , "nodes": [
+      
+    ]
+  }
+  , {
+    "group_title": "Output"
+    , "nodes": [
+      
+    ]
+  }
+]

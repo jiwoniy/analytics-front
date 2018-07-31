@@ -9,6 +9,7 @@ export default {
     }
     return {}
   },
+
   // about worksheet
   getWorksheets: state => state.worksheets || {},
   getWorksheetList: state => Object.keys(state.worksheets).map(key => state.worksheets[key]) || [],
@@ -19,21 +20,10 @@ export default {
     }
     return {}
   },
+
   // about pipeline
   getCurrentWorksheetPipelineInfo: state => state.currentWorkPipelineInfo || {},
-  getCurrentWorksheetPipeline: state => {
-    const { selectedWorksheetId } = state
-    let worksheetId = selectedWorksheetId
-    if (worksheetId) {
-      return state.myPipeline[worksheetId]
-    }
-    return null
-  },
-  getCurrentWorkNodeId: state => state.currentWorkPipelineNodeId,
-  getCurrentWorkNode: state => {
-    if (state.currentWorkPipelineNodeId) {
-      return state.myPipeline[state.selectedWorksheetId].nodes[state.currentWorkPipelineNodeId]
-    }
-    return {}
-  }
+  getCurrentWorksheetPipeline: state => state.currentWorkPipeline || {},
+  getCurrentWorkNode: state => state.currentWorkPipelineNode,
+  getCurrentWorkNodeId: state => (state.currentWorkPipelineNode && state.currentWorkPipelineNode.id) || null
 }

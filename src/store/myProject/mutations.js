@@ -1,5 +1,4 @@
 import moment from 'moment'
-import { normalizeArray } from '@/utils/normalize'
 
 export default {
   // project
@@ -44,16 +43,25 @@ export default {
           state.myPipeline,
           { [worksheetId]: {
             edges: pipeline.edges || [],
-            nodes: normalizeArray(pipeline.nodes)
+            nodes: pipeline.edges || {}
           } })
+        state.currentWorkPipeline = pipeline
       } else {
         state.myPipeline = Object.assign({},
           state.myPipeline,
           { [worksheetId]: null })
+        state.currentWorkPipeline = pipeline
       }
     }
   },
-  UPDATE_CURRENT_WORK_PIPELINE: (state, { worksheetId, isInit = false }) => {
+  UPDATE_CURRENT_WORK_PIPELINE: (state, { type, currentWorkNodeId }) => {
+    if (type === 'node_delete') {
+      const currentNodes = state.currentWorkPipeline.nodes
+      delete currentNodes[currentWorkNodeId]
+      state.currentWorkPipeline = Object.assign({}, state.currentWorkPipeline, { nodes: currentNodes })
+    }
+  },
+  UPDATE_CURRENT_WORK_PIPELINE_INFO: (state, { worksheetId, isInit = false }) => {
     if (worksheetId) {
       state.currentWorkPipelineInfo = {
         worksheetId,
@@ -61,24 +69,24 @@ export default {
       }
     }
   },
-  SET_CURRENT_WORK_PIPELINE_NODE_ID: (state, payload) => {
-    state.currentWorkPipelineNodeId = payload
+  SET_CURRENT_WORK_PIPELINE_NODE: (state, node) => {
+    state.currentWorkPipelineNode = node
   },
   UPDATE_CURRENT_WORK_PIPELINE_NODE: (state, { nodeId, key, value }) => {
     if (nodeId) {
-      state.currentWorkPipelineNodeId = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
+      state.currentWorkPipelineNode = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
     }
   },
   DELETE_CURRENT_WORK_PIPELINE_NODE: (state, { currentWorkNodeId, worksheetId }) => {
-    if (currentWorkNodeId) {
-      if (state.myPipeline[worksheetId].nodes) {
-        const newObject = Object.assign({}, state.myPipeline[worksheetId])
-        delete state.myPipeline[worksheetId].nodes[currentWorkNodeId]
+  //   if (currentWorkNodeId) {
+  //     if (state.myPipeline[worksheetId].nodes) {
+  //       const newObject = Object.assign({}, state.myPipeline[worksheetId])
+  //       delete state.myPipeline[worksheetId].nodes[currentWorkNodeId]
 
-        state.myPipeline = Object.assign({},
-          state.myPipeline,
-          { [worksheetId]: newObject })
-      }
-    }
+  //       state.myPipeline = Object.assign({},
+  //         state.myPipeline,
+  //         { [worksheetId]: newObject })
+  //     }
+  //   }
   }
 }

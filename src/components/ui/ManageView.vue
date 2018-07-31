@@ -104,7 +104,7 @@ export default {
       updateWorksheets: 'myProject/updateWorksheets',
       deleteSelectedWorksheet: 'myProject/deleteSelectedWorksheet',
       // updateCurrentWorkPipelineNode: 'myProject/updateCurrentWorkPipelineNode',
-      deleteCurrentWorkPipelineNodeId: 'myProject/deleteCurrentWorkPipelineNodeId'
+      deleteCurrentWorkPipelineNode: 'myProject/deleteCurrentWorkPipelineNode'
     }),
     remove () {
       eventController.SHOW_MODAL({
@@ -119,7 +119,7 @@ export default {
                 worksheetId: this.selectedWorksheet.id
               })
             } else if (this.currentItemType === 'pipeline-node') {
-              this.deleteCurrentWorkPipelineNodeId({
+              this.deleteCurrentWorkPipelineNode({
                 currentWorkNodeId: this.currentWorkNodeId,
                 worksheetId: this.selectedWorksheetId
               })

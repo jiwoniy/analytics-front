@@ -66,18 +66,25 @@ export default {
   },
   // pipeline
   savePipeline: ({ dispatch, commit, state }, payload) => {
-    if (payload.worksheetId) {
-      commit('SAVE_PIPELINE', payload)
-      dispatch('setCurrentWorkPipeline', payload)
+    const { pipeline, worksheetId } = payload
+    if (worksheetId) {
+      commit('SAVE_PIPELINE', { pipeline, worksheetId })
+      dispatch('setCurrentWorkPipeline', { worksheetId })
     }
   },
   setCurrentWorkPipeline: ({ commit, state }, payload) => {
-    if (payload && payload.worksheetId) {
-      commit('UPDATE_CURRENT_WORK_PIPELINE', payload)
+    const { worksheetId, isInit } = payload
+    if (worksheetId) {
+      commit('UPDATE_CURRENT_WORK_PIPELINE_INFO', { worksheetId, isInit })
     }
   },
-  setCurrentWorkPipelineNodeId: ({ commit, state }, nodeId) => {
-    commit('SET_CURRENT_WORK_PIPELINE_NODE_ID', nodeId)
+  updateCurrentWorkPipeline: ({ commit, state }, { currentWorkNodeId }) => {
+    if (currentWorkNodeId) {
+      commit('UPDATE_CURRENT_WORK_PIPELINE', { currentWorkNodeId, type: 'node_delete' })
+    }
+  },
+  setCurrentWorkPipelineNode: ({ commit, state }, node) => {
+    commit('SET_CURRENT_WORK_PIPELINE_NODE', node)
   },
   updateCurrentWorkPipelineNode: ({ commit, state }, payload) => {
     const { nodeId, key, value: updateValue } = payload
@@ -87,11 +94,12 @@ export default {
       }
     }
   },
-  deleteCurrentWorkPipelineNodeId: ({ dispatch, commit, state }, payload) => {
-    const { currentWorkNodeId, worksheetId } = payload
+  deleteCurrentWorkPipelineNode: ({ dispatch, commit, state }, payload) => {
+    const { currentWorkNodeId } = payload
     if (currentWorkNodeId) {
-      commit('DELETE_CURRENT_WORK_PIPELINE_NODE', { currentWorkNodeId, worksheetId })
-      dispatch('setCurrentWorkPipelineNodeId', null)
+      // commit('DELETE_CURRENT_WORK_PIPELINE_NODE', { currentWorkNodeId, worksheetId })
+      dispatch('setCurrentWorkPipelineNode', null)
+      dispatch('updateCurrentWorkPipeline', { currentWorkNodeId })
     }
   },
   updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {

@@ -74,7 +74,7 @@ export default {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
       setCurrentWorkPipeline: 'myProject/setCurrentWorkPipeline',
-      setCurrentWorkPipelineNodeId: 'myProject/setCurrentWorkPipelineNodeId'
+      setCurrentWorkPipelineNode: 'myProject/setCurrentWorkPipelineNode'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -131,6 +131,11 @@ export default {
 
       this.svgGraph.setZoomInit()
     },
+    refreshGraph () {
+      if (this.svgGraph) {
+        this.svgGraph.redraw(this.pipeline)
+      }
+    },
     saveGraph () {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
@@ -175,10 +180,10 @@ export default {
           item: nodeItem,
           type: 'pipeline-node'
         })
-        this.setCurrentWorkPipelineNodeId(nodeItem.id)
+        this.setCurrentWorkPipelineNode(nodeItem)
       } else {
         eventController.RIGHT_PANEL()
-        this.setCurrentWorkPipelineNodeId(null)
+        this.setCurrentWorkPipelineNode(null)
       }
     },
     watchGraphUpdate (isGraphUpdate) {
@@ -240,11 +245,10 @@ export default {
   watch: {
     selectedWorksheetId (newValue) {
       this.init()
+    },
+    pipeline (newValue) {
+      this.refreshGraph()
     }
-    // pipeline (newValue) {
-    //   console.log('-------pipe line---')
-    //   console.log(newValue)
-    // }
   }
 }
 </script>
