@@ -1,5 +1,6 @@
 import _isEmpty from 'lodash.isempty'
 import _isEqual from 'lodash.isequal'
+import moment from 'moment'
 
 // import store from '@/store'
 import api from '@/api'
@@ -101,16 +102,28 @@ export default {
   },
   updateActivatePipelineNode: ({ commit, state }, { updateType, updatedProp, updatedValue }) => {
     const activatePipelineNodeId = state.activatePipelineNodeId
+    const pipelineProxyHandler = {
+      set (target, key, value) {
+        commit('UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS', {
+          updateType,
+          updateObject: 'node',
+          updateObjectId: activatePipelineNodeId,
+          updateTime: moment().valueOf() })
+        return true
+      }
+    }
+    const pipelineProxy = new Proxy(state.pipeline, pipelineProxyHandler)
+
     if (updateType === 'delete') {
       if (activatePipelineNodeId) {
-        commit('DELETE_ACTIVATE_PIPELINE_NODE', { activatePipelineNodeId })
+        commit('DELETE_ACTIVATE_PIPELINE_NODE', { pipelineProxy, activatePipelineNodeId })
       }
     } else if (updateType === 'update') {
       if (!_isEmpty(updatedValue)) {
         const { nodes: currentNodes } = state.pipeline
         if (currentNodes && currentNodes[activatePipelineNodeId]) {
           if (!_isEqual(updatedValue, currentNodes[activatePipelineNodeId][updatedProp])) {
-            commit('UPDATE_ACTIVATE_PIPELINE_NODE', { activatePipelineNodeId, updatedProp, updatedValue })
+            commit('UPDATE_ACTIVATE_PIPELINE_NODE', { pipelineProxy, activatePipelineNodeId, updatedProp, updatedValue })
           }
         }
       }

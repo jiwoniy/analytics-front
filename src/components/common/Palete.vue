@@ -59,8 +59,8 @@ export default {
   computed: {
     ...mapGetters({
       activateWorksheetId: 'myProject/getActivateWorksheetId',
-      activatePipeline: 'myProject/getActivatePipeline'
-      // getActivatePipelineNodes: 'myProject/getActivatePipelineNodes'
+      activatePipeline: 'myProject/getActivatePipeline',
+      activatePipelineUpdateStatus: 'myProject/getActivatePipelineUpdateStatus'
     }),
     lastSavedTime () {
       // TODO
@@ -135,9 +135,7 @@ export default {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          // worksheets - pipeline 1 on 1
           this.savePipeline({ pipeline: saveFile })
-          // this.svgGraph.setUpdated(false)
         }
       }
 
@@ -237,6 +235,11 @@ export default {
   watch: {
     activateWorksheetId (newValue) {
       this.init()
+    },
+    activatePipelineUpdateStatus (newValue) {
+      if (newValue && newValue.updateType === 'delete') {
+        this.refreshGraph()
+      }
     }
   }
 }

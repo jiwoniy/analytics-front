@@ -1,4 +1,3 @@
-// import moment from 'moment'
 import _isEmpty from 'lodash.isempty'
 
 export default {
@@ -81,18 +80,29 @@ export default {
   SET_ACTIVATE_PIPELINE_NODE_ID: (state, nodeId) => {
     state.activatePipelineNodeId = nodeId
   },
-  UPDATE_ACTIVATE_PIPELINE_NODE: (state, { activatePipelineNodeId, updatedProp, updatedValue }) => {
+  UPDATE_ACTIVATE_PIPELINE_NODE: (state, { pipelineProxy, activatePipelineNodeId, updatedProp, updatedValue }) => {
     const { nodes: currentNodes } = state.pipeline
     if (currentNodes && currentNodes[activatePipelineNodeId]) {
       currentNodes[activatePipelineNodeId][updatedProp] = updatedValue
-      state.pipeline.nodes = Object.assign({}, state.pipeline.nodes, currentNodes)
+      // state.pipeline.nodes = Object.assign({}, state.pipeline.nodes, currentNodes)
+      pipelineProxy.nodes = Object.assign({}, state.pipeline.nodes, currentNodes)
     }
   },
-  DELETE_ACTIVATE_PIPELINE_NODE: (state, { activatePipelineNodeId }) => {
+  DELETE_ACTIVATE_PIPELINE_NODE: (state, { pipelineProxy, activatePipelineNodeId }) => {
     const { nodes: currentNodes } = state.pipeline
     if (currentNodes && currentNodes[activatePipelineNodeId]) {
       delete currentNodes[activatePipelineNodeId]
-      state.pipeline.nodes = Object.assign({}, currentNodes)
+      // state.pipelineProxy.nodes = Object.assign({}, currentNodes)
+      pipelineProxy.nodes = Object.assign({}, currentNodes)
     }
+  },
+  UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
+    // pipelineUpdateStatus
+    state.pipelineUpdateStatus = Object.assign({}, {
+      updateType,
+      updateObjectId,
+      updateObject,
+      updateTime
+    })
   }
 }

@@ -31,5 +31,6 @@ export default {
       return state.pipeline.nodes
     }
     return {}
-  }
+  },
+  getActivatePipelineUpdateStatus: state => state.pipelineUpdateStatus || {}
 }
