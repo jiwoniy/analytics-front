@@ -27,7 +27,7 @@ export default {
       if (updateType === 'update' && updateWorksheet) {
         // update
         state.worksheets = Object.assign({}, state.worksheets, { [activateWorksheetId]: updateWorksheet })
-      } else {
+      } else if (updateType === 'delete') {
         // delete
         delete state.worksheets[activateWorksheetId]
         state.worksheets = Object.assign({}, state.worksheets)
@@ -40,11 +40,11 @@ export default {
   },
 
   // pipeline
-  SET_PIPELINE: (state, { pipeline }) => {
+  SET_ACTIVATE_PIPELINE: (state, { pipeline }) => {
     if (pipeline) {
       if (_isEmpty(pipeline)) {
         state.pipeline = {
-          edges: pipeline.edges || [],
+          links: pipeline.links || [],
           nodes: pipeline.nodes || {}
         }
       } else {
@@ -55,25 +55,10 @@ export default {
   SAVE_PIPELINE: (state, { pipeline }) => {
     state.pipeline = Object.assign({},
       ...state.pipeline,
-      { edges: pipeline.edges || [],
+      { links: pipeline.links || [],
         nodes: pipeline.nodes || {}
       })
   },
-  // UPDATE_ACTIVATE_PIPELINE: (state, { type, currentWorkNodeId }) => {
-  //   if (type === 'node_delete') {
-  //     const currentNodes = state.currentWorkPipeline.nodes
-  //     delete currentNodes[currentWorkNodeId]
-  //     state.currentWorkPipeline = Object.assign({}, state.currentWorkPipeline, { nodes: currentNodes })
-  //   }
-  // },
-  // UPDATE_ACTIVATE_PIPELINE_INFO: (state, { worksheetId, isInit = false }) => {
-  //   if (worksheetId) {
-  //     state.currentWorkPipelineInfo = {
-  //       worksheetId,
-  //       saveTime: isInit ? null : moment().valueOf()
-  //     }
-  //   }
-  // },
   SET_ACTIVATE_PIPELINE_NODE_ID: (state, nodeId) => {
     state.activatePipelineNodeId = nodeId
   },

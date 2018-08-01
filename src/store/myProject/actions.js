@@ -39,7 +39,7 @@ export default {
       commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
       const { success } = await api.projects.getPipeline(worksheetId)
       if (!_isEmpty(success)) {
-        dispatch('setPipeline', success)
+        dispatch('setActivatePipeline', success)
       }
     }
   },
@@ -72,7 +72,7 @@ export default {
       if (success) {
         console.log(`worksheet: ${worksheetId} delete success`)
       } else if (error) {
-        // TODO 이전 원복?
+        // TODO How to handle
         console.log(`worksheet: ${worksheetId} delete error`)
       }
     } else if (updateType === 'update') {
@@ -80,16 +80,16 @@ export default {
       if (success) {
         console.log(`worksheet: ${worksheetId} update success`)
       } else if (error) {
-        // TODO 이전 원복?
+        // TODO How to handle
         console.log(`worksheet: ${worksheetId} update error`)
       }
     }
   },
 
   // pipeline
-  setPipeline: ({ commit, state }, { pipeline }) => {
+  setActivatePipeline: ({ commit, state }, { pipeline }) => {
     if (pipeline) {
-      commit('SET_PIPELINE', { pipeline })
+      commit('SET_ACTIVATE_PIPELINE', { pipeline })
     }
   },
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
@@ -98,17 +98,6 @@ export default {
       // dispatch('setCurrentWorkPipeline', { worksheetId })
     }
   },
-  // setCurrentWorkPipeline: ({ commit, state }, payload) => {
-  //   const { worksheetId, isInit } = payload
-  //   if (worksheetId) {
-  //     commit('UPDATE_CURRENT_WORK_PIPELINE_INFO', { worksheetId, isInit })
-  //   }
-  // },
-  // updateActivateWorkPipeline: ({ commit, state }, { currentWorkNodeId }) => {
-  //   if (currentWorkNodeId) {
-  //     commit('UPDATE_ACTIVATE_PIPELINE', { currentWorkNodeId, type: 'node_delete' })
-  //   }
-  // },
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },

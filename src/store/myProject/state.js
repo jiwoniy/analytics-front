@@ -1,6 +1,6 @@
 const pipeline = {
   nodes: {},
-  edges: []
+  links: []
 }
 
 export default {

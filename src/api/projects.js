@@ -16,9 +16,10 @@ export default {
     // return apiHandler(Axios.post(baseUrl, params))
     return apiHandler(returnPromise(storageFun.getProjects()))
   },
-  setMyProjects () {
-
-  },
+  // updateProject (projectId, project) {
+  // },
+  // deleteProject (projectId) {
+  // },
   getWorksheets (projectId) {
     return apiHandler(returnPromise(storageFun.getWorksheets(projectId)))
   },
@@ -29,9 +30,9 @@ export default {
     return apiHandler(returnPromise(storageFun.deleteWorksheet(projectId, worksheetId)))
   },
   getPipeline (worksheetId) {
-    return apiHandler(returnPromise({}))
+    return apiHandler(returnPromise(storageFun.getPipelines(worksheetId)))
   },
-  setPipeline () {
-
+  updatePipeline (projectId, worksheetId, pipeline) {
+    return apiHandler(returnPromise(storageFun.updatePipeline(projectId, worksheetId, pipeline)))
   }
 }

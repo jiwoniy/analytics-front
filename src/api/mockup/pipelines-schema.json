@@ -1,0 +1,17 @@
+{
+  "pipelines": 
+    {
+      "qwer-123-qwer": {
+        "nodes": {},
+        "links": []
+      },
+      "qwer-456-qwer": {
+        "nodes": {},
+        "links": []
+      },
+      "qwer-789-qwer": {
+        "nodes": {},
+        "links": []
+      }
+    }
+}

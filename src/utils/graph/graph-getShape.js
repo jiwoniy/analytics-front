@@ -62,14 +62,14 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
           // TODO method chaning
           // isCanConnect({ ...d, linkOutput }, context.state.capturedTarget))[0]
           if (isCanConnect({ ...d, linkOutput }, context.state.capturedTarget)) {
-            const newEdge = {
+            const newLink = {
               source: {
                 ...d,
                 linkOutput
               },
               target: context.state.capturedTarget
             }
-            context.edges.add(newEdge)
+            context.links.add(newLink)
             context.drawLinks()
           }
           context.state.capturedTarget = null

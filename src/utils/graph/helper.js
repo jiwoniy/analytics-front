@@ -1,8 +1,8 @@
 import { normalizeArray } from '@/utils/normalize'
 
 // meta to graph node
-function transformNode (node, isEdges = false) {
-  if (isEdges) {
+function transformNode (node, isLinks = false) {
+  if (isLinks) {
     return {
       id: node.id,
       node_type: node.node_type,
@@ -31,8 +31,8 @@ function transformNode (node, isEdges = false) {
 }
 
 // graph node to save node
-function saveNodeTransformNode (node, isEdges = false) {
-  if (isEdges) {
+function saveNodeTransformNode (node, isLinks = false) {
+  if (isLinks) {
     return {
       id: node.id,
       node_type: node.node_type,
@@ -71,9 +71,9 @@ function nodesTransformForSave (nodes) {
   return normalizeArray(arr)
 }
 
-function edgesTransformForSave (edges) {
-  return edges.map(edge => {
-    const { source, target } = edge
+function linksTransformForSave (links) {
+  return links.map(link => {
+    const { source, target } = link
     return {
       source: transformNode(source, true),
       target: transformNode(target, true)
@@ -87,9 +87,9 @@ function saveNodesTransformToNodes (nodes) {
     .map(node => saveNodeTransformNode(node))
 }
 
-function saveEdgesTransformToEdges (edges) {
-  return edges.map(edge => {
-    const { source, target } = edge
+function saveLinksTransformToLinks (links) {
+  return links.map(link => {
+    const { source, target } = link
     return {
       source: saveNodeTransformNode(source, true),
       target: saveNodeTransformNode(target, true)
@@ -98,9 +98,9 @@ function saveEdgesTransformToEdges (edges) {
 }
 
 export {
-  saveNodeTransformNode,
-  nodesTransformForSave,
-  edgesTransformForSave,
+  saveNodeTransformNode, // save nodes => graph nodes
+  nodesTransformForSave, // graph nodds => save file nodes
+  linksTransformForSave, // graph links => save file links
   saveNodesTransformToNodes,
-  saveEdgesTransformToEdges
+  saveLinksTransformToLinks
 }

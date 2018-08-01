@@ -16,7 +16,7 @@ function getNodeId (data, pIdentity = 'id') {
   return null
 }
 
-function getEdgeId (data, pIdentity = 'id') {
+function getLinkId (data, pIdentity = 'id') {
   if (data) {
     const { source, target } = data
     return `${source[pIdentity]}:${source.linkOutput.id}-${target[pIdentity]}:${target.linkInput.id}`
@@ -27,5 +27,5 @@ function getEdgeId (data, pIdentity = 'id') {
 export {
   normalizeArray,
   getNodeId,
-  getEdgeId
+  getLinkId
 }

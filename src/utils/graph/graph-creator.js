@@ -6,18 +6,18 @@ import * as d3Shape from 'd3-shape'
 import _cloneDeep from 'lodash.clonedeep'
 
 // import onChange from '@/helper/onChange'
-import { getEdgeId } from '@/utils/normalize'
+import { getLinkId } from '@/utils/normalize'
 
 import {
   saveNodeTransformNode,
   nodesTransformForSave,
-  edgesTransformForSave,
+  linksTransformForSave,
   saveNodesTransformToNodes,
-  saveEdgesTransformToEdges
+  saveLinksTransformToLinks
 } from './helper'
 import getNodeShape from './graph-getShape'
 import GraphNodes from './graph-nodes'
-import GraphEddes from './graph-edges'
+import GraphLinks from './graph-links'
 // import contextMenu from './context-menu'
 
 // This source from https://github.com/cjrd/directed-graph-creator
@@ -30,13 +30,13 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.height = options.height || null
 
   this.nodes = new GraphNodes()
-  this.edges = new GraphEddes()
+  this.links = new GraphLinks()
 
   this.state = {
     editable: false,
     selectedNode: null,
     contextNode: null,
-    selectedEdge: null,
+    // selectedEdge: null,
     mouseDownNode: null,
     mouseDownLink: null,
     justDragged: false,
@@ -86,7 +86,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
     const file = options.saveFile
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
-    this.edges = new GraphEddes(saveEdgesTransformToEdges(file.edges))
+    this.links = new GraphLinks(saveLinksTransformToLinks(file.links))
     this.drawGraph({ link: true, node: true })
   }
 
@@ -166,7 +166,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.redraw = function redraw (pipeline) {
     thisGraph.nodes = new GraphNodes(saveNodesTransformToNodes(pipeline.nodes))
-    thisGraph.edges = new GraphEddes(saveEdgesTransformToEdges(pipeline.edges))
+    thisGraph.links = new GraphLinks(saveLinksTransformToLinks(pipeline.links))
     thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
   }
 
@@ -183,12 +183,12 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.save = function save (node) {
     const saveFile = {
-      edges: [],
+      links: [],
       nodes: []
     }
 
-    if (thisGraph.edges.getEdgeList().length || thisGraph.nodes.getNodeList().length) {
-      saveFile.edges = edgesTransformForSave(thisGraph.edges.getEdgeList())
+    if (thisGraph.links.getLinkList().length || thisGraph.nodes.getNodeList().length) {
+      saveFile.links = linksTransformForSave(thisGraph.links.getLinkList())
       saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
@@ -233,22 +233,22 @@ GraphCreator.prototype.constants = {
   nodeRadius: 50
 }
 
-GraphCreator.prototype.state = {
-  editable: false,
-  isUpdated: false,
-  selectedNode: null,
-  contextNode: null,
-  selectedEdge: null,
-  mouseDownNode: null,
-  mouseDownLink: null,
-  justDragged: false,
-  connecting: false,
-  capturedTarget: null,
-  justScaleTransGraph: false,
-  lastKeyDown: -1,
-  shiftNodeDrag: false,
-  selectedText: null
-}
+// GraphCreator.prototype.state = {
+//   editable: false,
+//   isUpdated: false,
+//   selectedNode: null,
+//   contextNode: null,
+//   selectedEdge: null,
+//   mouseDownNode: null,
+//   mouseDownLink: null,
+//   justDragged: false,
+//   connecting: false,
+//   capturedTarget: null,
+//   justScaleTransGraph: false,
+//   lastKeyDown: -1,
+//   shiftNodeDrag: false,
+//   selectedText: null
+// }
 
 GraphCreator.prototype.dragLink = function dragLink (d) {
   if (this.isEditable()) {
@@ -414,8 +414,8 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   function draw () {
     const lineGenerator = d3Shape.linkHorizontal()
 
-    const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.edges.getEdgeList(), function (d) {
-      return getEdgeId(d)
+    const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.links.getLinkList(), function (d) {
+      return getLinkId(d)
     })
 
     // update
@@ -456,7 +456,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
-        thisGraph.edges.remove(d)
+        thisGraph.links.remove(d)
         thisGraph.drawGraph({ link: true })
       })
 
@@ -487,8 +487,8 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
 //   }
 // }
 
-GraphCreator.prototype.findRelatedEdges = function findRelatedEdges (node) {
-  return this.edges.findEdges(node)
+GraphCreator.prototype.findRelatedLinks = function findRelatedLinks (node) {
+  return this.links.findLinks(node)
 }
 
 GraphCreator.prototype.zoomed = function zoomed () {
