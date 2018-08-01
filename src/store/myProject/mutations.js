@@ -48,6 +48,7 @@ export default {
           nodes: pipeline.nodes || {}
         }
       } else {
+        // state.pipeline = Object.assign({}, pipeline)
         state.pipeline = pipeline
       }
     }

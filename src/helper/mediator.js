@@ -13,6 +13,10 @@ export default function configureMediator (store, router) {
         const { updateType, activateWorksheetId: worksheetId } = payload
         store.dispatch('myProject/syncWorksheetsWithServer', { worksheetId, updateType })
         break
+      case 'myProject/SAVE_PIPELINE':
+        const { pipeline } = payload
+        store.dispatch('myProject/syncPipelineWithServer', { pipeline })
+        break
       default:
         break
     }

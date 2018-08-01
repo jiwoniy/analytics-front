@@ -25,7 +25,6 @@ import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 import compose from '@/utils/compose'
-// import { setting } from '@/config'
 
 export default {
   name: 'Svg-palete',
@@ -138,10 +137,6 @@ export default {
           this.savePipeline({ pipeline: saveFile })
         }
       }
-
-      // if (this.saveTimer) {
-      //   clearTimeout(this.saveTimer)
-      // }
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -181,11 +176,6 @@ export default {
     watchGraphUpdate (isGraphUpdate) {
       if (isGraphUpdate) {
         this.saveGraph()
-      // if (this.saveTimer) {
-      //   clearTimeout(this.saveTimer)
-      //   this.saveTimer = null
-      // }
-      // this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
       }
     },
     init () {
@@ -240,6 +230,9 @@ export default {
       if (newValue && newValue.updateType === 'delete') {
         this.refreshGraph()
       }
+    },
+    activatePipeline (newValue) {
+      this.refreshGraph()
     }
   }
 }

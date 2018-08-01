@@ -83,11 +83,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   if (options.saveFile) {
     // const file = JSON.parse(options.saveFile)
-
     const file = options.saveFile
     this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
     this.links = new GraphLinks(saveLinksTransformToLinks(file.links))
-    this.drawGraph({ link: true, node: true })
+    this.drawGraph({ needUpdate: false, link: true, node: true })
   }
 
   // listen for key events

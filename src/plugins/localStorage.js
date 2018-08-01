@@ -41,12 +41,12 @@ function StorageFun () {
       return this.storage.pipelines[worksheetId]
     },
     updatePipeline: (projectId, worksheetId, pipeline) => {
-      const currentPipeline = this.storage.pipelines[worksheetId]
-      console.log(currentPipeline)
-      // const findIndex = currentProjectWorksheet.findIndex(worksheet => worksheet.id === worksheetId)
-      // this.storage.worksheets[projectId][findIndex] = worksheet
-      // localStorage.setItem('worksheets', JSON.stringify(this.storage.worksheets))
-      // return this.storage.worksheets[projectId][findIndex]
+      this.storage.pipelines[worksheetId] = {
+        nodes: pipeline.nodes || {},
+        links: pipeline.links || {}
+      }
+      localStorage.setItem('pipelines', JSON.stringify(this.storage.pipelines))
+      return this.storage.pipelines[worksheetId]
     }
   }
 }

@@ -39,7 +39,7 @@ export default {
       commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
       const { success } = await api.projects.getPipeline(worksheetId)
       if (!_isEmpty(success)) {
-        dispatch('setActivatePipeline', success)
+        dispatch('setActivatePipeline', { pipeline: success })
       }
     }
   },
@@ -95,13 +95,24 @@ export default {
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
     if (!_isEmpty(pipeline)) {
       commit('SAVE_PIPELINE', { pipeline })
-      // dispatch('setCurrentWorkPipeline', { worksheetId })
+    }
+  },
+  syncPipelineWithServer: async ({ state }, { pipeline }) => {
+    const projectId = state.activateProjectId
+    const worksheetId = state.activateWorksheetId
+    const { success, error } = await api.projects.updatePipeline(projectId, worksheetId, pipeline)
+    if (success) {
+      console.log(`pipeline: ${worksheetId} update success`)
+    } else if (error) {
+      // TODO How to handle
+      console.log(`pipeline: ${worksheetId} update error`)
     }
   },
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
   updateActivatePipelineNode: ({ commit, state }, { updateType, updatedProp, updatedValue }) => {
+    // TODO
     const activatePipelineNodeId = state.activatePipelineNodeId
     const pipelineProxyHandler = {
       set (target, key, value) {
@@ -130,13 +141,4 @@ export default {
       }
     }
   }
-  // updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {
-  //   const worksheetId = store.getters['myProject/getSelectedWorksheet'].id
-  //   if (worksheetId) {
-  //     // TODO
-  //     console.log(state.myPipeline[worksheetId])
-  //     console.log(payload)
-  //   //   commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
-  //   }
-  // }
 }
