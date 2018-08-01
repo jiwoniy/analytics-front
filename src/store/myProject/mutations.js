@@ -22,22 +22,19 @@ export default {
   SET_ACTIVATE_WORKSHEETS: (state, worksheetId) => {
     state.activateWorksheetId = worksheetId
   },
-  UPDATE_WORKSHEETS: (state, { updateType, worksheetId, updateWorksheet }) => {
-    if (worksheetId) {
+  UPDATE_WORKSHEETS: (state, { updateType, activateWorksheetId, updateWorksheet }) => {
+    if (activateWorksheetId) {
       if (updateType === 'update' && updateWorksheet) {
         // update
-        state.worksheets = Object.assign({}, state.worksheets, { [worksheetId]: updateWorksheet })
+        state.worksheets = Object.assign({}, state.worksheets, { [activateWorksheetId]: updateWorksheet })
       } else {
         // delete
-        delete state.worksheets[worksheetId]
+        delete state.worksheets[activateWorksheetId]
         state.worksheets = Object.assign({}, state.worksheets)
-      }
-    }
-  },
-  DELETE_ACTIVATE_WORKSHEETS: (state, { worksheetId }) => {
-    if (worksheetId) {
-      if (state.activateWorksheetId === worksheetId) {
-        state.activateWorksheetId = null
+
+        if (state.activateWorksheetId === activateWorksheetId) {
+          state.activateWorksheetId = null
+        }
       }
     }
   },

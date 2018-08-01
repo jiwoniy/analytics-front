@@ -9,15 +9,10 @@ export default function configureMediator (store, router) {
       case 'myProject/SET_ACTIVATE_WORKSHEETS':
         eventController.RIGHT_PANEL()
         break
-      case 'myProject/DELETE_ACTIVATE_WORKSHEETS':
-        store.dispatch('myProject/updateWorksheets', {
-          ...payload,
-          updateType: 'delete'
-        })
+      case 'myProject/UPDATE_WORKSHEETS':
+        const { updateType, activateWorksheetId: worksheetId } = payload
+        store.dispatch('myProject/syncWorksheetsWithServer', { worksheetId, updateType })
         break
-      // case 'myProject/UPDATE_CURRENT_WORK_PIPELINE_NODE':
-      //   store.dispatch('myProject/updateCurrentWorkNodeByMediator', payload)
-      //   break
       default:
         break
     }

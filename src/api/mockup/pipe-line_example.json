@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "node_id": "node-d811e74b-182b-4f00-bb2d-9ff36d62b593"
+      , "type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd"
+      , "node_name": "My Data Load Node"
+      , "parameters": {
+        "parameter_key": "value"
+      }
+      , "ui": {
+        "position": {
+          "x": 123
+          ,"y": 123
+        }
+      }
+    }
+    , {
+      "node_id": "node-3f06d99f-f902-4609-8a31-ccd78f3f0c92"
+      , "type_id": "4c65175b-5b75-4278-84f1-98a6c9edd7c9"
+      , "node_name": "My Python Node"
+      , "parameters": {
+        "parameter_key": "value"  
+      }
+      , "ui": {
+        "position": {
+          "x": 123
+          ,"y": 123
+        }
+      }
+    }
+  ]
+  , "links": [
+    { 
+      "link_id": "link-e0aa450f-16bb-4381-9d11-fbc12b77e20a"
+      , "from": { "node_id": "node-d811e74b-182b-4f00-bb2d-9ff36d62b593", "port_index": 0 }
+      , "to": { "node_id": "node-3f06d99f-f902-4609-8a31-ccd78f3f0c92", "port_index": 0 }
+    }
+  ]
+}

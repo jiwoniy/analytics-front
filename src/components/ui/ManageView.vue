@@ -102,7 +102,7 @@ export default {
   methods: {
     ...mapActions({
       updateWorksheets: 'myProject/updateWorksheets',
-      deleteActivateWorksheet: 'myProject/deleteActivateWorksheet',
+      // deleteActivateWorksheet: 'myProject/deleteActivateWorksheet',
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     remove () {
@@ -114,7 +114,8 @@ export default {
         callback: (isAccept) => {
           if (isAccept) {
             if (this.currentItemType === 'worksheet') {
-              this.deleteActivateWorksheet({
+              this.updateWorksheets({
+                updateType: 'delete',
                 worksheetId: this.activateWorksheetId
               })
             } else if (this.currentItemType === 'pipeline-node') {
@@ -131,8 +132,8 @@ export default {
         this.updateWorksheets({
           updateType: 'update',
           worksheetId: this.activateWorksheetId,
-          key,
-          value
+          updatedProp: key,
+          updatedValue: value
         })
       } else if (this.currentItemType === 'pipeline-node') {
         this.updateActivatePipelineNode({

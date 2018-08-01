@@ -1,8 +1,7 @@
 // import Axios from '@/plugins/axios'
 import apiHandler from '@/helper/apiHandler'
 
-import projetSchema from './mockup/project-schema.json'
-import worksheetSchema from './mockup/worksheets-schema.json'
+import storageFun from '@/plugins/localStorage'
 
 function returnPromise (param) {
   return new Promise((resolve) => {
@@ -11,16 +10,28 @@ function returnPromise (param) {
 }
 
 // const baseUrl = '/xxxxx'
+// TODO set rest api
 export default {
   getMyProjects () {
-    // const params = {}
-    return apiHandler(returnPromise(projetSchema))
     // return apiHandler(Axios.post(baseUrl, params))
+    return apiHandler(returnPromise(storageFun.getProjects()))
+  },
+  setMyProjects () {
+
   },
   getWorksheets (projectId) {
-    return apiHandler(returnPromise(worksheetSchema.worksheets[projectId]))
+    return apiHandler(returnPromise(storageFun.getWorksheets(projectId)))
+  },
+  updateWorksheet (projectId, worksheetId, worksheet) {
+    return apiHandler(returnPromise(storageFun.updateWorksheet(projectId, worksheetId, worksheet)))
+  },
+  deleteWorksheet (projectId, worksheetId) {
+    return apiHandler(returnPromise(storageFun.deleteWorksheet(projectId, worksheetId)))
   },
   getPipeline (worksheetId) {
     return apiHandler(returnPromise({}))
+  },
+  setPipeline () {
+
   }
 }

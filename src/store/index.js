@@ -21,7 +21,6 @@ export default new Vuex.Store({
   },
 
   strict: debug,
-
   // plugins: []
   plugins: debug ? [createLogger(), configureMediator] : [configureMediator]
 })

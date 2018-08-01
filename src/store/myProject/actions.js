@@ -10,16 +10,14 @@ export default {
   // project
   getProjects: async ({ dispatch, commit }) => {
     const { success } = await api.projects.getMyProjects()
-    if (success && success.projects && success.projects.length) {
-      const { projects } = success
-      commit('SET_PROJECTS', normalizeArray(projects))
-      dispatch('setActivateProjectId', projects[0].id)
+    if (success && success.length) {
+      commit('SET_PROJECTS', normalizeArray(success))
+      dispatch('setActivateProjectId', success[0].id)
     }
   },
   setActivateProjectId: async ({ dispatch, commit }, projectId) => {
     if (projectId) {
       commit('SET_ACTIVATE_PROJECT_ID', projectId)
-      // TODO api call. To get worksheets
       const { success } = await api.projects.getWorksheets(projectId)
       if (success && success.length) {
         dispatch('setWorksheets', success)
@@ -32,45 +30,59 @@ export default {
     if (worksheets) {
       if (worksheets && worksheets.length) {
         commit('SET_WORKSHEETS', normalizeArray(worksheets))
-        dispatch('findWorkSheets')
+        dispatch('findActivateWorksheets')
       }
     }
   },
   setActivateWorksheetId: async ({ dispatch, commit }, worksheetId) => {
     if (worksheetId) {
       commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
-      // TODO api call. To get pipeline
       const { success } = await api.projects.getPipeline(worksheetId)
       if (!_isEmpty(success)) {
         dispatch('setPipeline', success)
       }
     }
   },
-  updateWorksheets: ({ dispatch, commit, state }, payload) => {
-    const { updateType = 'update', worksheetId, key, value: updateValue } = payload
-
-    if (worksheetId && updateType === 'update' && !_isEmpty(updateValue)) {
-      if (!_isEqual(updateValue, state.worksheets[worksheetId][key])) {
-        const updateWorksheet = Object.assign({}, {
-          ...state.worksheets[worksheetId],
-          [key]: updateValue })
-        updateWorksheet[key] = updateValue
-        commit('UPDATE_WORKSHEETS', { worksheetId, updateType, updateWorksheet })
-      }
-    } else if (worksheetId && updateType === 'delete') {
-      commit('UPDATE_WORKSHEETS', { worksheetId, updateType })
-      dispatch('findWorkSheets')
-    }
-  },
-  findWorkSheets: ({ dispatch, commit, state }) => {
+  findActivateWorksheets: ({ dispatch, commit, state }) => {
     const result = Object.keys(state.worksheets)
     if (result && result.length) {
       dispatch('setActivateWorksheetId', result[0])
     }
   },
-  deleteActivateWorksheet: ({ commit, state }, { worksheetId }) => {
-    if (worksheetId) {
-      commit('DELETE_ACTIVATE_WORKSHEETS', { worksheetId })
+  updateWorksheets: ({ dispatch, commit, state }, { updateType, updatedProp, updatedValue }) => {
+    // const { updateType = 'update', worksheetId, key, value: updateValue } = payload
+    const activateWorksheetId = state.activateWorksheetId
+    if (activateWorksheetId && updateType === 'update' && !_isEmpty(updatedValue)) {
+      if (!_isEqual(updatedValue, state.worksheets[activateWorksheetId][updatedProp])) {
+        const updateWorksheet = Object.assign({}, {
+          ...state.worksheets[activateWorksheetId],
+          [updatedProp]: updatedValue })
+        updateWorksheet[updatedProp] = updatedValue
+        commit('UPDATE_WORKSHEETS', { activateWorksheetId, updateType, updateWorksheet })
+      }
+    } else if (activateWorksheetId && updateType === 'delete') {
+      commit('UPDATE_WORKSHEETS', { activateWorksheetId, updateType })
+      dispatch('findActivateWorksheets')
+    }
+  },
+  syncWorksheetsWithServer: async ({ dispatch, commit, state }, { worksheetId, updateType }) => {
+    const projectId = state.activateProjectId
+    if (updateType === 'delete') {
+      const { success, error } = await api.projects.deleteWorksheet(projectId, worksheetId)
+      if (success) {
+        console.log(`worksheet: ${worksheetId} delete success`)
+      } else if (error) {
+        // TODO 이전 원복?
+        console.log(`worksheet: ${worksheetId} delete error`)
+      }
+    } else if (updateType === 'update') {
+      const { success, error } = await api.projects.updateWorksheet(projectId, worksheetId, state.worksheets[worksheetId])
+      if (success) {
+        console.log(`worksheet: ${worksheetId} update success`)
+      } else if (error) {
+        // TODO 이전 원복?
+        console.log(`worksheet: ${worksheetId} update error`)
+      }
     }
   },
 
