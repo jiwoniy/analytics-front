@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash.isempty'
 import _isEqual from 'lodash.isequal'
 
-import store from '@/store'
+// import store from '@/store'
 import api from '@/api'
 import { normalizeArray } from '@/utils/normalize'
 
@@ -67,7 +67,7 @@ export default {
       dispatch('setActivateWorksheetId', result[0])
     }
   },
-  deleteSelectedWorksheet: ({ commit, state }, { worksheetId }) => {
+  deleteActivateWorksheet: ({ commit, state }, { worksheetId }) => {
     if (worksheetId) {
       commit('DELETE_ACTIVATE_WORKSHEETS', { worksheetId })
     }
@@ -79,9 +79,9 @@ export default {
       commit('SET_PIPELINE', { pipeline })
     }
   },
-  savePipeline: ({ dispatch, commit }, { pipeline, worksheetId }) => {
-    if (!_isEmpty(pipeline) && worksheetId) {
-      commit('SAVE_PIPELINE', { pipeline, worksheetId })
+  savePipeline: ({ dispatch, commit }, { pipeline }) => {
+    if (!_isEmpty(pipeline)) {
+      commit('SAVE_PIPELINE', { pipeline })
       // dispatch('setCurrentWorkPipeline', { worksheetId })
     }
   },
@@ -91,37 +91,38 @@ export default {
   //     commit('UPDATE_CURRENT_WORK_PIPELINE_INFO', { worksheetId, isInit })
   //   }
   // },
-  updateCurrentWorkPipeline: ({ commit, state }, { currentWorkNodeId }) => {
-    if (currentWorkNodeId) {
-      commit('UPDATE_CURRENT_WORK_PIPELINE', { currentWorkNodeId, type: 'node_delete' })
-    }
-  },
+  // updateActivateWorkPipeline: ({ commit, state }, { currentWorkNodeId }) => {
+  //   if (currentWorkNodeId) {
+  //     commit('UPDATE_ACTIVATE_PIPELINE', { currentWorkNodeId, type: 'node_delete' })
+  //   }
+  // },
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
-  updateCurrentWorkPipelineNode: ({ commit, state }, payload) => {
-    const { nodeId, key, value: updateValue } = payload
-    if (!_isEmpty(updateValue)) {
-      if (!_isEqual(updateValue, state.currentWorkPipelineNode[key])) {
-        commit('UPDATE_CURRENT_WORK_PIPELINE_NODE', { nodeId, key, value: updateValue })
+  updateActivatePipelineNode: ({ commit, state }, { updateType, updatedProp, updatedValue }) => {
+    const activatePipelineNodeId = state.activatePipelineNodeId
+    if (updateType === 'delete') {
+      if (activatePipelineNodeId) {
+        commit('DELETE_ACTIVATE_PIPELINE_NODE', { activatePipelineNodeId })
+      }
+    } else if (updateType === 'update') {
+      if (!_isEmpty(updatedValue)) {
+        const { nodes: currentNodes } = state.pipeline
+        if (currentNodes && currentNodes[activatePipelineNodeId]) {
+          if (!_isEqual(updatedValue, currentNodes[activatePipelineNodeId][updatedProp])) {
+            commit('UPDATE_ACTIVATE_PIPELINE_NODE', { activatePipelineNodeId, updatedProp, updatedValue })
+          }
+        }
       }
     }
-  },
-  deleteCurrentWorkPipelineNode: ({ dispatch, commit, state }, payload) => {
-    const { currentWorkNodeId } = payload
-    if (currentWorkNodeId) {
-      // commit('DELETE_CURRENT_WORK_PIPELINE_NODE', { currentWorkNodeId, worksheetId })
-      dispatch('setCurrentWorkPipelineNode', null)
-      dispatch('updateCurrentWorkPipeline', { currentWorkNodeId })
-    }
-  },
-  updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {
-    const worksheetId = store.getters['myProject/getSelectedWorksheet'].id
-    if (worksheetId) {
-      // TODO
-      console.log(state.myPipeline[worksheetId])
-      console.log(payload)
-    //   commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
-    }
   }
+  // updateCurrentWorkNodeByMediator: ({ commit, state }, payload) => {
+  //   const worksheetId = store.getters['myProject/getSelectedWorksheet'].id
+  //   if (worksheetId) {
+  //     // TODO
+  //     console.log(state.myPipeline[worksheetId])
+  //     console.log(payload)
+  //   //   commit('UPDATE_WORKSHEETS', { worksheetId, selectedWorksheet: state.selectedWorksheet })
+  //   }
+  // }
 }

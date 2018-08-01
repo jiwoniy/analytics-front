@@ -15,9 +15,9 @@ export default function configureMediator (store, router) {
           updateType: 'delete'
         })
         break
-      case 'myProject/UPDATE_CURRENT_WORK_PIPELINE_NODE':
-        store.dispatch('myProject/updateCurrentWorkNodeByMediator', payload)
-        break
+      // case 'myProject/UPDATE_CURRENT_WORK_PIPELINE_NODE':
+      //   store.dispatch('myProject/updateCurrentWorkNodeByMediator', payload)
+      //   break
       default:
         break
     }

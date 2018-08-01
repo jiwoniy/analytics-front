@@ -80,9 +80,8 @@ export default {
     ...mapGetters({
       activateWorksheet: 'myProject/getActivateWorksheet',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
-      activatePipelineNode: 'myProject/getActivatePipelineNode',
+      getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
       activatePipelineNodeId: 'myProject/getActivatePipelineNodeId'
-      // currentWorksheetPipeline: 'myProject/getCurrentWorksheetPipeline'
     }),
     filterWorksheetItem () {
       return Object.keys(this.activateWorksheet)
@@ -90,13 +89,12 @@ export default {
         .filter(item => item.key !== 'id')
     },
     filterActivatePipelineNode () {
-      console.log('-filterActivatePipelineNode-')
-      console.log(this.activatePipelineNode)
-      if (this.activatePipelineNode) {
-        return Object.keys(this.activatePipelineNode)
-          .map(key => ({ key, value: this.activatePipelineNode[key] }))
+      const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
+      if (activateNode) {
+        return Object.keys(activateNode)
+          .map(key => ({ key, value: activateNode[key] }))
           .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'position')
-          // TODO utils filter 만들기...lodash 찾아보기
+      //     // TODO utils filter 만들기...lodash 찾아보기
       }
       return null
     }
@@ -104,8 +102,8 @@ export default {
   methods: {
     ...mapActions({
       updateWorksheets: 'myProject/updateWorksheets',
-      deleteSelectedWorksheet: 'myProject/deleteSelectedWorksheet',
-      deleteCurrentWorkPipelineNode: 'myProject/deleteCurrentWorkPipelineNode'
+      deleteActivateWorksheet: 'myProject/deleteActivateWorksheet',
+      updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     remove () {
       eventController.SHOW_MODAL({
@@ -116,13 +114,12 @@ export default {
         callback: (isAccept) => {
           if (isAccept) {
             if (this.currentItemType === 'worksheet') {
-              this.deleteSelectedWorksheet({
+              this.deleteActivateWorksheet({
                 worksheetId: this.activateWorksheetId
               })
             } else if (this.currentItemType === 'pipeline-node') {
-              this.deleteCurrentWorkPipelineNode({
-                currentWorkNodeId: this.activatePipelineNodeId,
-                worksheetId: this.activateWorksheetId
+              this.updateActivatePipelineNode({
+                updateType: 'delete'
               })
             }
           }
@@ -138,11 +135,11 @@ export default {
           value
         })
       } else if (this.currentItemType === 'pipeline-node') {
-        // this.updateCurrentWorkPipelineNode({
-        //   nodeId: this.currentWorkNode.id,
-        //   key,
-        //   value
-        // })
+        this.updateActivatePipelineNode({
+          updateType: 'update',
+          updatedProp: key,
+          updatedValue: value
+        })
       }
     }
   }

@@ -8,11 +8,10 @@ export default {
   // id(string), name(string)
   activateWorksheetId: null,
 
-  pipeline: {},
-  // currentWorkPipeline: {
-  //   nodes: {},
-  //   edges: []
-  // },
+  pipeline: {
+    nodes: {},
+    edges: []
+  },
   // currentWorkPipelineInfo: {},
   activatePipelineNodeId: null
 }

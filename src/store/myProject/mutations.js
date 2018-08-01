@@ -1,4 +1,5 @@
-import moment from 'moment'
+// import moment from 'moment'
+import _isEmpty from 'lodash.isempty'
 
 export default {
   // project
@@ -45,49 +46,53 @@ export default {
   // pipeline
   SET_PIPELINE: (state, { pipeline }) => {
     if (pipeline) {
-      state.pipeline = pipeline
+      if (_isEmpty(pipeline)) {
+        state.pipeline = {
+          edges: pipeline.edges || [],
+          nodes: pipeline.nodes || {}
+        }
+      } else {
+        state.pipeline = pipeline
+      }
     }
   },
-  SAVE_PIPELINE: (state, { pipeline, worksheetId }) => {
+  SAVE_PIPELINE: (state, { pipeline }) => {
     state.pipeline = Object.assign({},
       ...state.pipeline,
       { edges: pipeline.edges || [],
         nodes: pipeline.nodes || {}
       })
   },
-  UPDATE_CURRENT_WORK_PIPELINE: (state, { type, currentWorkNodeId }) => {
-    if (type === 'node_delete') {
-      const currentNodes = state.currentWorkPipeline.nodes
-      delete currentNodes[currentWorkNodeId]
-      state.currentWorkPipeline = Object.assign({}, state.currentWorkPipeline, { nodes: currentNodes })
-    }
-  },
-  UPDATE_CURRENT_WORK_PIPELINE_INFO: (state, { worksheetId, isInit = false }) => {
-    if (worksheetId) {
-      state.currentWorkPipelineInfo = {
-        worksheetId,
-        saveTime: isInit ? null : moment().valueOf()
-      }
-    }
-  },
+  // UPDATE_ACTIVATE_PIPELINE: (state, { type, currentWorkNodeId }) => {
+  //   if (type === 'node_delete') {
+  //     const currentNodes = state.currentWorkPipeline.nodes
+  //     delete currentNodes[currentWorkNodeId]
+  //     state.currentWorkPipeline = Object.assign({}, state.currentWorkPipeline, { nodes: currentNodes })
+  //   }
+  // },
+  // UPDATE_ACTIVATE_PIPELINE_INFO: (state, { worksheetId, isInit = false }) => {
+  //   if (worksheetId) {
+  //     state.currentWorkPipelineInfo = {
+  //       worksheetId,
+  //       saveTime: isInit ? null : moment().valueOf()
+  //     }
+  //   }
+  // },
   SET_ACTIVATE_PIPELINE_NODE_ID: (state, nodeId) => {
     state.activatePipelineNodeId = nodeId
   },
-  UPDATE_CURRENT_WORK_PIPELINE_NODE: (state, { nodeId, key, value }) => {
-    if (nodeId) {
-      state.currentWorkPipelineNode = Object.assign({}, state.currentWorkPipelineNode, { [key]: value })
+  UPDATE_ACTIVATE_PIPELINE_NODE: (state, { activatePipelineNodeId, updatedProp, updatedValue }) => {
+    const { nodes: currentNodes } = state.pipeline
+    if (currentNodes && currentNodes[activatePipelineNodeId]) {
+      currentNodes[activatePipelineNodeId][updatedProp] = updatedValue
+      state.pipeline.nodes = Object.assign({}, state.pipeline.nodes, currentNodes)
     }
   },
-  DELETE_CURRENT_WORK_PIPELINE_NODE: (state, { currentWorkNodeId, worksheetId }) => {
-  //   if (currentWorkNodeId) {
-  //     if (state.myPipeline[worksheetId].nodes) {
-  //       const newObject = Object.assign({}, state.myPipeline[worksheetId])
-  //       delete state.myPipeline[worksheetId].nodes[currentWorkNodeId]
-
-  //       state.myPipeline = Object.assign({},
-  //         state.myPipeline,
-  //         { [worksheetId]: newObject })
-  //     }
-  //   }
+  DELETE_ACTIVATE_PIPELINE_NODE: (state, { activatePipelineNodeId }) => {
+    const { nodes: currentNodes } = state.pipeline
+    if (currentNodes && currentNodes[activatePipelineNodeId]) {
+      delete currentNodes[activatePipelineNodeId]
+      state.pipeline.nodes = Object.assign({}, currentNodes)
+    }
   }
 }

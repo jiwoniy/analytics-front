@@ -167,9 +167,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.redraw = function redraw (pipeline) {
     thisGraph.nodes = new GraphNodes(saveNodesTransformToNodes(pipeline.nodes))
     thisGraph.edges = new GraphEddes(saveEdgesTransformToEdges(pipeline.edges))
-    console.log('---re draw--')
-    console.log(thisGraph.nodes)
-    console.log(thisGraph.edges)
     thisGraph.drawGraph({ node: true, link: true })
   }
 
@@ -358,7 +355,7 @@ GraphCreator.prototype.drawGraph = function drawGraph ({ link = false, node = fa
     thisGraph.drawNodes()
   }
 
-  // thisGraph.stateProxy.isUpdated = true
+  thisGraph.stateProxy.isUpdated = true
 }
 
 // GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {

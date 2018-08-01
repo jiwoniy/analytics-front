@@ -19,7 +19,7 @@ import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
 import _isEmpty from 'lodash.isempty'
-import moment from 'moment'
+// import moment from 'moment'
 
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
@@ -51,7 +51,6 @@ export default {
       svgContainerGroup: null,
       svgGraph: null,
       isGraphEditable: false,
-      isGraphUpdated: false,
       leftPanelWidth: null,
       rightPanelWidth: null,
       saveTimer: null
@@ -59,14 +58,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activatePipeline: 'myProject/getActivatePipeline',
-      currentWorkPipelineInfo: 'myProject/getCurrentWorksheetPipelineInfo',
-      activateWorksheetId: 'myProject/getActivateWorksheetId'
+      activateWorksheetId: 'myProject/getActivateWorksheetId',
+      activatePipeline: 'myProject/getActivatePipeline'
+      // getActivatePipelineNodes: 'myProject/getActivatePipelineNodes'
     }),
     lastSavedTime () {
-      if (this.currentWorkPipelineInfo.saveTime) {
-        return moment(this.currentWorkPipelineInfo.saveTime).format('YYYY-MM-DD HH:mm')
-      }
+      // TODO
+      // if (this.currentWorkPipelineInfo.saveTime) {
+      //   return moment(this.currentWorkPipelineInfo.saveTime).format('YYYY-MM-DD HH:mm')
+      // }
       return null
     }
   },
@@ -135,16 +135,15 @@ export default {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          const worksheetId = this.activateWorksheetId
           // worksheets - pipeline 1 on 1
-          this.savePipeline({ pipeline: saveFile, worksheetId })
+          this.savePipeline({ pipeline: saveFile })
           // this.svgGraph.setUpdated(false)
         }
       }
 
-      if (this.saveTimer) {
-        clearTimeout(this.saveTimer)
-      }
+      // if (this.saveTimer) {
+      //   clearTimeout(this.saveTimer)
+      // }
     },
     removeSvgGraph () {
       if (this.svgGraph) {
@@ -182,14 +181,13 @@ export default {
       }
     },
     watchGraphUpdate (isGraphUpdate) {
-      this.isGraphUpdated = isGraphUpdate
-      if (this.isGraphUpdated) {
+      if (isGraphUpdate) {
         this.saveGraph()
-        // if (this.saveTimer) {
-        //   clearTimeout(this.saveTimer)
-        //   this.saveTimer = null
-        // }
-        // this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
+      // if (this.saveTimer) {
+      //   clearTimeout(this.saveTimer)
+      //   this.saveTimer = null
+      // }
+      // this.saveTimer = setTimeout(() => this.saveGraph(), setting.saveTimer)
       }
     },
     init () {
@@ -239,9 +237,6 @@ export default {
   watch: {
     activateWorksheetId (newValue) {
       this.init()
-    },
-    activatePipeline (newValue) {
-      this.refreshGraph()
     }
   }
 }
