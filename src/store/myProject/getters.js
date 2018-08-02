@@ -25,6 +25,8 @@ export default {
 
   // about pipeline
   getActivatePipeline: state => state.pipeline || {},
+  getPipelineUpdateStatus: state => state.pipelineUpdateStatus || {},
+
   getActivatePipelineNodeId: state => state.activatePipelineNodeId || null,
   getActivatePipelineNodes: state => {
     if (state.pipeline) {
@@ -32,5 +34,5 @@ export default {
     }
     return {}
   },
-  getActivatePipelineUpdateStatus: state => state.pipelineUpdateStatus || {}
+  getActivatePipelineNodeUpdateStatus: state => state.pipelineNodeUpdateStatus || {}
 }

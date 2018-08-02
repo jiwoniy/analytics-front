@@ -5,6 +5,12 @@
         class="menu-icon"
         :project-list="projectList">
       </menu-list>
+
+      <div class="right-menu">
+        <button @click="clearCache">
+          cache
+        </button>
+      </div>
     </div>
   </transition>
 </template>
@@ -23,6 +29,11 @@ export default {
     ...mapGetters({
       projectList: 'myProject/getProjectList'
     })
+  },
+  methods: {
+    clearCache () {
+      window.localStorage.clear()
+    }
   }
 }
 </script>
@@ -38,6 +49,12 @@ export default {
     position: absolute;
     top: 0px;
     left: 0px;
+  }
+
+  .right-menu {
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
 }
 </style>

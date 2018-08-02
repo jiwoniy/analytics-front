@@ -60,7 +60,8 @@ export default {
     ...mapGetters({
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       activatePipeline: 'myProject/getActivatePipeline',
-      activatePipelineUpdateStatus: 'myProject/getActivatePipelineUpdateStatus'
+      activatePipelineUpdateStatus: 'myProject/getPipelineUpdateStatus',
+      activatePipelineNodeUpdateStatus: 'myProject/getActivatePipelineNodeUpdateStatus'
     }),
     lastSavedTime () {
       // TODO
@@ -74,6 +75,7 @@ export default {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
+      // updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -177,7 +179,7 @@ export default {
       }
     },
     watchGraphUpdate (isGraphUpdate) {
-      console.log(`watchGraphUpdate: ${isGraphUpdate}`)
+      // console.log(`watchGraphUpdate: ${isGraphUpdate}`)
       if (isGraphUpdate) {
         this.saveGraph()
       }
@@ -226,13 +228,15 @@ export default {
       this.init()
     },
     activatePipelineUpdateStatus (newValue) {
-      if (newValue && newValue.updateType === 'delete') {
+      if (newValue && newValue.updateType === 'init') {
+        this.refreshGraph()
+      }
+    },
+    activatePipelineNodeUpdateStatus (newValue) {
+      if (newValue && (newValue.updateType === 'delete' || newValue.updateType === 'update')) {
         this.refreshGraph()
       }
     }
-    // activatePipeline (newValue) {
-    //   this.refreshGraph()
-    // }
   }
 }
 </script>

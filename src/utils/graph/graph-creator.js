@@ -34,6 +34,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.state = {
     editable: false,
     selectedNode: null,
+    isUpdated: false, // watch this for to determine wheter to save or not
     contextNode: null,
     // selectedEdge: null,
     mouseDownNode: null,
@@ -191,7 +192,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       saveFile.nodes = nodeTransformSaveNodes(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
-      // return JSON.stringify(saveFile)
       return saveFile
     }
     return null
@@ -232,23 +232,6 @@ GraphCreator.prototype.constants = {
   nodeRadius: 50
 }
 
-// GraphCreator.prototype.state = {
-//   editable: false,
-//   isUpdated: false,
-//   selectedNode: null,
-//   contextNode: null,
-//   selectedEdge: null,
-//   mouseDownNode: null,
-//   mouseDownLink: null,
-//   justDragged: false,
-//   connecting: false,
-//   capturedTarget: null,
-//   justScaleTransGraph: false,
-//   lastKeyDown: -1,
-//   shiftNodeDrag: false,
-//   selectedText: null
-// }
-
 GraphCreator.prototype.dragLink = function dragLink (d) {
   if (this.isEditable()) {
     const x = d3Selection.mouse(this.svgG.node())[0]
@@ -277,7 +260,7 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
     }
   }
 
-  nodeElement.append('text')
+  d3Selection.select(nodeElement).append('text')
     .attr('transform', 'translate(100, 30)') // rect size is 200, 50
     .classed('dotme', true)
     .call(dotme)
@@ -371,14 +354,62 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
   const datas = thisGraph.nodes.getNodeList()
 
-  const exists = this.nodesGroup.selectAll('g').data(datas, function (d) {
-    return d.id
-  })
+  // console.log('drawNodes')
+  // console.log(datas)
+
+  // TODO exists와 newGs의 분리
+  // filter가 가능한 부분?
+  const exists = this.nodesGroup.selectAll('g')
+    .data(datas, function (d) {
+      return d.id
+    })
+
+  // for presentation text
+  function dotme (data, isNew = false) {
+    const nodeName = data.name
+    const words = nodeName.split(/\s+/)
+
+    if (isNew) {
+      return function (textnode) {
+        const insertedTextNode = textnode
+          .append('tspan').text(words)
+        const ellipsis = textnode.append('tspan').attr('class', 'elip').text('...')
+        const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
+        if (insertedTextNode.node().getComputedTextLength() > width) {
+          while (insertedTextNode.node().getComputedTextLength() > width && words.length) {
+            words.pop()
+            insertedTextNode.text(words.join(' '))
+          }
+        } else {
+          ellipsis.remove()
+        }
+      }
+    }
+
+    return function (textnode) {
+      const existNode = textnode.select('tspan').text(words)
+      const ellipsis = textnode.append('tspan').attr('class', 'elip').text('...')
+
+      const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
+      if (existNode.node().getComputedTextLength() > width) {
+        while (existNode.node().getComputedTextLength() > width && words.length) {
+          words.pop()
+          existNode.text(words.join(' '))
+        }
+      } else {
+        ellipsis.remove()
+      }
+    }
+  }
 
   exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
+  exists.each(function (data) {
+    d3Selection.select(this)
+      .call(dotme(data))
+  })
 
   const nodeDrag = nodeDraghandler(thisGraph)
-  // .node-wrap
+
   const newGs = exists
     .enter()
     .append('g')
@@ -388,19 +419,18 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .attr('transform', function (d) {
       return `translate(${d.position.x},${d.position.y})`
     })
-    // .on('mouseover', function (d) {})
-    // .on('mouseout', function (d) {})
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
     })
-    // .on('dblclick', function (d) {
-    //   thisGraph.removeNode(d)
-    // })
     .call(nodeDrag)
     .call(d => getNodeShape(thisGraph, d, thisGraph.options.connectValidation))
 
-  newGs.each(function (d) {
-    thisGraph.appendText(d3Selection.select(this), d.name)
+  newGs.each(function (data) {
+    d3Selection.select(this)
+      .append('text')
+      .attr('transform', 'translate(100, 30)') // rect size is 200, 50
+      .classed('dotme', true)
+      .call(dotme(data, true))
   })
 
   exists.exit().remove()

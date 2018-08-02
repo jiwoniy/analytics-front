@@ -60,6 +60,11 @@ export default {
         nodes: pipeline.nodes || {}
       })
   },
+  UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS: (state, { updateType }) => {
+    state.pipelineUpdateStatus = Object.assign({}, { updateType })
+  },
+
+  // pipeline node
   SET_ACTIVATE_PIPELINE_NODE_ID: (state, nodeId) => {
     state.activatePipelineNodeId = nodeId
   },
@@ -79,13 +84,13 @@ export default {
       pipelineProxy.nodes = Object.assign({}, currentNodes)
     }
   },
-  UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
+  UPDATE_ACTIVATE_PIPELINE_NODE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
     // pipelineUpdateStatus
-    state.pipelineUpdateStatus = Object.assign({}, {
+    state.pipelineNodeUpdateStatus = Object.assign({}, {
       updateType,
+      updateTime,
       updateObjectId,
-      updateObject,
-      updateTime
+      updateObject
     })
   }
 }

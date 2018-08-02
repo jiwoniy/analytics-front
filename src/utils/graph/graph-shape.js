@@ -70,7 +70,7 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
               target: context.state.capturedTarget
             }
             context.links.add(newLink)
-            context.drawLinks()
+            context.drawGraph({ link: true })
           }
           context.state.capturedTarget = null
         }

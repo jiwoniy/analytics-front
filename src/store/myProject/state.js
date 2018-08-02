@@ -11,11 +11,13 @@ export default {
   activateWorksheetId: null,
 
   pipeline,
-  pipelineUpdateStatus: {
-    updateType: null,
-    updateObject: null,
-    updateTime: null
-  },
+  pipelineUpdateStatus: {},
 
-  activatePipelineNodeId: null
+  activatePipelineNodeId: null,
+  pipelineNodeUpdateStatus: {
+    updateType: null,
+    updateTime: null,
+    updateObjectId: null,
+    updateObject: null
+  }
 }

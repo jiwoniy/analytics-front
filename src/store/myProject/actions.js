@@ -90,6 +90,7 @@ export default {
   setActivatePipeline: ({ commit, state }, { pipeline }) => {
     if (pipeline) {
       commit('SET_ACTIVATE_PIPELINE', { pipeline })
+      commit('UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS', { updateType: 'init' })
     }
   },
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
@@ -100,6 +101,7 @@ export default {
   syncPipelineWithServer: async ({ state }, { pipeline }) => {
     const projectId = state.activateProjectId
     const worksheetId = state.activateWorksheetId
+    // TODO 만약 api로 쏜다면 직렬화를 해야함...
     const { success, error } = await api.projects.updatePipeline(projectId, worksheetId, pipeline)
     if (success) {
       console.log(`pipeline: ${worksheetId} update success`)
@@ -108,6 +110,8 @@ export default {
       console.log(`pipeline: ${worksheetId} update error`)
     }
   },
+
+  // pipeline node
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
@@ -116,7 +120,7 @@ export default {
     const activatePipelineNodeId = state.activatePipelineNodeId
     const pipelineProxyHandler = {
       set (target, key, value) {
-        commit('UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS', {
+        commit('UPDATE_ACTIVATE_PIPELINE_NODE_UPDATE_STATUS', {
           updateType,
           updateObject: 'node',
           updateObjectId: activatePipelineNodeId,
