@@ -18,8 +18,7 @@ function getNodeId (data, pIdentity = 'id') {
 
 function getLinkId (data, pIdentity = 'id') {
   if (data) {
-    const { source, target } = data
-    return `${source[pIdentity]}:${source.linkOutput.id}-${target[pIdentity]}:${target.linkInput.id}`
+    return data[pIdentity]
   }
   return null
 }

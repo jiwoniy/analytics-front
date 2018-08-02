@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid/v4'
+
 import { getLinkId } from '@/utils/normalize'
 
 function GraphLinks (links) {
@@ -12,8 +14,8 @@ GraphLinks.prototype.getLinks = function getLinks () {
   return this.links
 }
 
-GraphLinks.prototype.isDuplicate = function isDuplicate (newLink) {
-  if (this.links[getLinkId(newLink)]) {
+GraphLinks.prototype.isDuplicate = function isDuplicate (id) {
+  if (this.links[id]) {
     return true
   }
 
@@ -32,11 +34,15 @@ GraphLinks.prototype.findLinks = function findLinks (node) {
 GraphLinks.prototype.add = function add (link) {
   const thisGraphLinks = this
 
+  const id = uuidv4()
+
   if (!thisGraphLinks.isDuplicate(link)) {
-    thisGraphLinks.links[getLinkId(link)] = {
-      ...link,
+    thisGraphLinks.links[id] = {
+      id,
       sourceId: link.source.id,
-      targetId: link.target.id
+      source: link.source,
+      targetId: link.target.id,
+      target: link.target
     }
   }
 }

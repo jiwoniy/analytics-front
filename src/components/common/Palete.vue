@@ -127,18 +127,23 @@ export default {
 
       this.svgGraph.setZoomInit()
     },
-    refreshGraph () {
+    refreshGraph ({ updateObject, updateType }) {
+      // updateObject = pipeline or node
+      // updateType = init or update or delete
       // TODO make it clear when refresh..
-      // node가 새로 추가될때나 삭제될때
-      // link가 새로 추가될때나 삭제될때
       if (this.svgGraph) {
-        this.svgGraph.redraw(_cloneDeep(this.activatePipeline))
+        this.svgGraph.redraw({
+          pipeline: _cloneDeep(this.activatePipeline),
+          updateObject,
+          updateType
+        })
       }
     },
     saveGraph () {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
+          console.log('-----------')
           this.savePipeline({ pipeline: _cloneDeep(saveFile) })
         }
       }
@@ -229,12 +234,12 @@ export default {
     },
     activatePipelineUpdateStatus (newValue) {
       if (newValue && newValue.updateType === 'init') {
-        this.refreshGraph()
+        this.refreshGraph({ updateObject: 'pipeline', updateType: 'init' })
       }
     },
     activatePipelineNodeUpdateStatus (newValue) {
       if (newValue && (newValue.updateType === 'delete' || newValue.updateType === 'update')) {
-        this.refreshGraph()
+        this.refreshGraph({ updateObject: 'node', updateType: newValue.updateType })
       }
     }
   }

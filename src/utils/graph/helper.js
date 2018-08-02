@@ -24,6 +24,8 @@ function nodeTransformSaveNode (node, isLinks = false) {
     name: node.name,
     input: node.input,
     output: node.output,
+    linkInput: node.linkInput || null,
+    linkOutput: node.linkOutput || null,
     ui: {
       position: node.position
     }
@@ -60,6 +62,8 @@ function nodeTransformUiNode (node, isLinks = false) {
     input: node.input,
     output: node.output,
     name: node.name,
+    linkInput: node.linkInput || null,
+    linkOutput: node.linkOutput || null,
     position: node.ui.position,
     status: {
       moving: false,
@@ -74,23 +78,27 @@ function nodeTransformUiNodes (nodes) {
 }
 
 function linksTransformSaveLink (links) {
-  return links.map(link => {
-    const { source, target } = link
-    return {
-      source: nodeTransformSaveNode(source, true),
-      target: nodeTransformSaveNode(target, true)
-    }
-  })
+  return normalizeArray(Object.keys(links)
+    .map(key => {
+      const { source, target, id } = links[key]
+      return {
+        id,
+        source: nodeTransformSaveNode(source, true),
+        target: nodeTransformSaveNode(target, true)
+      }
+    }))
 }
 
 function linksTransformUiLinks (links) {
-  return links.map(link => {
-    const { source, target } = link
-    return {
-      source: nodeTransformUiNode(source, true),
-      target: nodeTransformUiNode(target, true)
-    }
-  })
+  return normalizeArray(Object.keys(links)
+    .map(key => {
+      const { source, target, id } = links[key]
+      return {
+        id,
+        source: nodeTransformUiNode(source, true),
+        target: nodeTransformUiNode(target, true)
+      }
+    }))
 }
 
 export {

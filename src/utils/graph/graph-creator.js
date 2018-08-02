@@ -164,10 +164,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     console.log('--remove node')
   }
 
-  this.redraw = function redraw (pipeline) {
+  this.redraw = function redraw ({ updateObject, updateType, pipeline }) {
     thisGraph.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
     thisGraph.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
-    thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
+
+    if (updateObject === 'pipeline') {
+      thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
+    } else if (updateObject === 'node' && updateType === 'update') {
+      thisGraph.drawGraph({ needUpdate: false, node: true, link: false })
+    } else if (updateObject === 'node' && updateType === 'delete') {
+      thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
+    }
   }
 
   // GraphCreator.prototype.removeNode = function removeNode (node) {
@@ -323,6 +330,7 @@ function nodeDraghandler (context) {
 // called by addNode, removeNode, drageNode, add & remove link
 GraphCreator.prototype.drawGraph = function drawGraph ({ needUpdate = true, link = false, node = false, nodeParam }) {
   const thisGraph = this
+
   if (link && node) {
     thisGraph.drawLinks()
     thisGraph.drawNodes()
@@ -386,27 +394,30 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
       }
     }
 
-    return function (textnode) {
-      const existNode = textnode.select('tspan').text(words)
-      const ellipsis = textnode.append('tspan').attr('class', 'elip').text('...')
-
-      const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-      if (existNode.node().getComputedTextLength() > width) {
-        while (existNode.node().getComputedTextLength() > width && words.length) {
-          words.pop()
-          existNode.text(words.join(' '))
-        }
-      } else {
-        ellipsis.remove()
-      }
-    }
+    // return function (textNode) {
+    //   console.log(textNode)
+    //   const existNode = textNode.select('tspan').text(words)
+    //   const ellipsis = textNode.append('tspan').attr('class', 'elip').text('...')
+    //   const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
+    //   // console.log(width)
+    //   // console.log(existNode.node().getComputedTextLength())
+    //   if (existNode.node().getComputedTextLength() > width) {
+    //     while (existNode.node().getComputedTextLength() > width && words.length) {
+    //       words.pop()
+    //       existNode.text(words.join(' '))
+    //     }
+    //   } else {
+    //     ellipsis.remove()
+    //   }
+    // }
   }
 
   exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
-  exists.each(function (data) {
-    d3Selection.select(this)
-      .call(dotme(data))
-  })
+
+  // exists.each(function (data) {
+  //   d3Selection.select(this).select('text')
+  //     .call(dotme(data))
+  // })
 
   const nodeDrag = nodeDraghandler(thisGraph)
 
@@ -438,19 +449,18 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const thisGraph = this
+  const nodes = thisGraph.nodes.getNodes()
 
   function draw () {
     const lineGenerator = d3Shape.linkHorizontal()
 
-    const exists = d3Selection.select('.path-group').selectAll('path').data(thisGraph.links.getLinkList(), function (d) {
-      return getLinkId(d)
-    })
+    const exists = d3Selection.select('.path-group')
+      .selectAll('path').data(thisGraph.links.getLinkList(), function (d) {
+        return getLinkId(d)
+      })
 
     // update
     exists
-      // .classed(consts.selectedClass, function (d) {
-      //   return d === state.selectedEdge
-      // })
       .attr('d', function (d) {
         if (dragingNode) { // draging node
           if (dragingNode.id === d.source.id) {
@@ -465,8 +475,6 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         const data = {
           source: [d.source.position.x + d.source.linkOutput.cx, d.source.position.y + d.source.linkOutput.cy],
           target: [d.target.position.x + d.target.linkInput.cx, d.target.position.y + d.target.linkInput.cy]
-          // source: [d.source.x, d.source.y],
-          // target: [d.target.x, d.target.y]
         }
 
         return lineGenerator(data)
@@ -477,10 +485,15 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       .append('path')
       .classed('link', true)
       .attr('d', function (d) {
+        const source = nodes[d.sourceId]
+        const target = nodes[d.targetId]
+        console.log(source)
+        console.log(target)
         const data = {
-          source: [d.source.position.x + d.source.linkOutput.cx, d.source.position.y + d.source.linkOutput.cy],
-          target: [d.target.position.x + d.target.linkInput.cx, d.target.position.y + d.target.linkInput.cy]
+          source: [source.position.x + d.source.linkOutput.cx, source.position.y + d.source.linkOutput.cy],
+          target: [target.position.x + d.target.linkInput.cx, target.position.y + d.target.linkInput.cy]
         }
+        console.log(data)
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
@@ -488,6 +501,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         thisGraph.drawGraph({ link: true })
       })
 
+    // remove
     exists.exit().remove()
   }
 
