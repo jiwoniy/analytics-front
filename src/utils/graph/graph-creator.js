@@ -54,7 +54,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       if (key === 'selectedNode') {
         if (thisGraph.callback && thisGraph.callback.node_select) {
           thisGraph.nodes.setSelectedNode(value)
-          thisGraph.drawGraph({ node: true })
+          // To highlight select node
+          thisGraph.drawGraph({ node: true, needUpdate: false })
           thisGraph.callback.node_select(value)
         }
       } else if (key === 'isUpdated') {
@@ -163,7 +164,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   }
 
   this.redraw = function redraw (pipeline) {
-    console.log('--redraw--')
     thisGraph.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
     thisGraph.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
     thisGraph.drawGraph({ needUpdate: false, node: true, link: true })

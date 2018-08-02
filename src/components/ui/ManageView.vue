@@ -93,7 +93,7 @@ export default {
       if (activateNode) {
         return Object.keys(activateNode)
           .map(key => ({ key, value: activateNode[key] }))
-          .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'position')
+          .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'ui')
       //     // TODO utils filter 만들기...lodash 찾아보기
       }
       return null

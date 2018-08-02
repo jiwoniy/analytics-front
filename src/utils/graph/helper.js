@@ -31,8 +31,8 @@ function nodeTransformSaveNode (node, isLinks = false) {
 }
 
 function nodeTransformSaveNodes (nodes) {
-  return Object.keys(nodes)
-    .map(key => nodeTransformSaveNode(nodes[key]))
+  return normalizeArray(Object.keys(nodes)
+    .map(key => nodeTransformSaveNode(nodes[key])))
 }
 
 // Make Copy For use UI Node(precautions: shallow copy vs deep copy)

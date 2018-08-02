@@ -177,6 +177,7 @@ export default {
       }
     },
     watchGraphUpdate (isGraphUpdate) {
+      console.log(`watchGraphUpdate: ${isGraphUpdate}`)
       if (isGraphUpdate) {
         this.saveGraph()
       }
