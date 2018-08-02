@@ -19,6 +19,7 @@ import { mapGetters, mapActions } from 'vuex'
 import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
 import _isEmpty from 'lodash.isempty'
+import _cloneDeep from 'lodash.clonedeep'
 // import moment from 'moment'
 
 import DefSvg from '@/components/common/DefSvg'
@@ -114,11 +115,10 @@ export default {
         validate(true),
         validate()
       ], true)
-
       this.svgGraph = new GraphCreator(svgContainer, {
         options: {
           ...options,
-          saveFile: _isEmpty(this.activatePipeline) ? null : this.activatePipeline,
+          saveFile: _isEmpty(this.activatePipeline) ? null : _cloneDeep(this.activatePipeline),
           connectValidation: composeValidate
         },
         callback })
@@ -126,15 +126,18 @@ export default {
       this.svgGraph.setZoomInit()
     },
     refreshGraph () {
+      // TODO make it clear when refresh..
+      // node가 새로 추가될때나 삭제될때
+      // link가 새로 추가될때나 삭제될때
       if (this.svgGraph) {
-        this.svgGraph.redraw(this.activatePipeline)
+        this.svgGraph.redraw(_cloneDeep(this.activatePipeline))
       }
     },
     saveGraph () {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          this.savePipeline({ pipeline: saveFile })
+          this.savePipeline({ pipeline: _cloneDeep(saveFile) })
         }
       }
     },
@@ -164,7 +167,7 @@ export default {
     nodeSelect (nodeItem) {
       if (nodeItem && nodeItem.status.selected) {
         eventController.RIGHT_PANEL({
-          item: nodeItem,
+          item: _cloneDeep(nodeItem),
           type: 'pipeline-node'
         })
         this.setActivatePipelineNodeId(nodeItem.id)
@@ -190,12 +193,7 @@ export default {
       const { data } = payload
       this.svgGraph.addNode({
         ...data,
-        id: uuidv4(),
-        type: data.node_type,
-        position: {
-          x: data.position.x * 0.3,
-          y: data.position.y * 0.7
-        }
+        id: uuidv4()
       })
     })
 
@@ -230,10 +228,10 @@ export default {
       if (newValue && newValue.updateType === 'delete') {
         this.refreshGraph()
       }
-    },
-    activatePipeline (newValue) {
-      this.refreshGraph()
     }
+    // activatePipeline (newValue) {
+    //   this.refreshGraph()
+    // }
   }
 }
 </script>

@@ -1,37 +1,42 @@
+// import _cloneDeep from 'lodash.clonedeep'
 import { normalizeArray } from '@/utils/normalize'
 
-// meta to graph node
-function transformNode (node, isLinks = false) {
+// Make Copy (precautions: shallow copy vs deep copy)
+function nodeTransformSaveNode (node, isLinks = false) {
   if (isLinks) {
     return {
       id: node.id,
-      node_type: node.node_type,
       name: node.name,
+      node_type: node.node_type,
       input: node.input,
       output: node.output,
       linkInput: node.linkInput || null,
       linkOutput: node.linkOutput || null,
-      position: {
-        x: node.x,
-        y: node.y
+      ui: {
+        position: node.position
       }
     }
   }
+
   return {
     id: node.id,
     node_type: node.node_type,
     name: node.name,
     input: node.input,
     output: node.output,
-    position: {
-      x: node.x,
-      y: node.y
+    ui: {
+      position: node.position
     }
   }
 }
 
-// graph node to save node
-function saveNodeTransformNode (node, isLinks = false) {
+function nodeTransformSaveNodes (nodes) {
+  return Object.keys(nodes)
+    .map(key => nodeTransformSaveNode(nodes[key]))
+}
+
+// Make Copy For use UI Node(precautions: shallow copy vs deep copy)
+function nodeTransformUiNode (node, isLinks = false) {
   if (isLinks) {
     return {
       id: node.id,
@@ -41,12 +46,11 @@ function saveNodeTransformNode (node, isLinks = false) {
       name: node.name,
       linkInput: node.linkInput || null,
       linkOutput: node.linkOutput || null,
+      position: node.ui.position,
       status: {
         moving: false,
         selected: false
-      },
-      x: node.position.x,
-      y: node.position.y
+      }
     }
   }
 
@@ -56,51 +60,43 @@ function saveNodeTransformNode (node, isLinks = false) {
     input: node.input,
     output: node.output,
     name: node.name,
+    position: node.ui.position,
     status: {
       moving: false,
       selected: false
-    },
-    x: node.position.x,
-    y: node.position.y
+    }
   }
 }
 
-function nodesTransformForSave (nodes) {
-  const arr = Object.keys(nodes).map(key => transformNode(nodes[key]))
-  // return Object.keys(nodes).map(key => transformNode(nodes[key]))
-  return normalizeArray(arr)
+function nodeTransformUiNodes (nodes) {
+  return normalizeArray(Object.keys(nodes)
+    .map(key => nodeTransformUiNode(nodes[key])))
 }
 
-function linksTransformForSave (links) {
+function linksTransformSaveLink (links) {
   return links.map(link => {
     const { source, target } = link
     return {
-      source: transformNode(source, true),
-      target: transformNode(target, true)
+      source: nodeTransformSaveNode(source, true),
+      target: nodeTransformSaveNode(target, true)
     }
   })
 }
 
-function saveNodesTransformToNodes (nodes) {
-  return Object.keys(nodes)
-    .map(key => nodes[key])
-    .map(node => saveNodeTransformNode(node))
-}
-
-function saveLinksTransformToLinks (links) {
+function linksTransformUiLinks (links) {
   return links.map(link => {
     const { source, target } = link
     return {
-      source: saveNodeTransformNode(source, true),
-      target: saveNodeTransformNode(target, true)
+      source: nodeTransformUiNode(source, true),
+      target: nodeTransformUiNode(target, true)
     }
   })
 }
 
 export {
-  saveNodeTransformNode, // save nodes => graph nodes
-  nodesTransformForSave, // graph nodds => save file nodes
-  linksTransformForSave, // graph links => save file links
-  saveNodesTransformToNodes,
-  saveLinksTransformToLinks
+  nodeTransformUiNode, // save node => UI node
+  nodeTransformUiNodes, // save nodes => UI nodes
+  nodeTransformSaveNodes, // UI nodes => save nodes
+  linksTransformSaveLink, // UI link => save link
+  linksTransformUiLinks // UI links => save links
 }

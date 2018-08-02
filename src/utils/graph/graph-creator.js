@@ -3,19 +3,18 @@ import * as d3Drag from 'd3-drag'
 import * as d3Zoom from 'd3-zoom'
 // import * as d3Force from 'd3-force'
 import * as d3Shape from 'd3-shape'
-import _cloneDeep from 'lodash.clonedeep'
 
 // import onChange from '@/helper/onChange'
 import { getLinkId } from '@/utils/normalize'
 
 import {
-  saveNodeTransformNode,
-  nodesTransformForSave,
-  linksTransformForSave,
-  saveNodesTransformToNodes,
-  saveLinksTransformToLinks
+  nodeTransformUiNode,
+  nodeTransformUiNodes,
+  nodeTransformSaveNodes,
+  linksTransformSaveLink,
+  linksTransformUiLinks
 } from './helper'
-import getNodeShape from './graph-getShape'
+import getNodeShape from './graph-shape'
 import GraphNodes from './graph-nodes'
 import GraphLinks from './graph-links'
 // import contextMenu from './context-menu'
@@ -56,7 +55,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
         if (thisGraph.callback && thisGraph.callback.node_select) {
           thisGraph.nodes.setSelectedNode(value)
           thisGraph.drawGraph({ node: true })
-          thisGraph.callback.node_select(_cloneDeep(value))
+          thisGraph.callback.node_select(value)
         }
       } else if (key === 'isUpdated') {
         if (thisGraph.callback && thisGraph.callback.watch_update) {
@@ -84,8 +83,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   if (options.saveFile) {
     // const file = JSON.parse(options.saveFile)
     const file = options.saveFile
-    this.nodes = new GraphNodes(saveNodesTransformToNodes(file.nodes))
-    this.links = new GraphLinks(saveLinksTransformToLinks(file.links))
+    this.nodes = new GraphNodes(nodeTransformUiNodes(file.nodes))
+    this.links = new GraphLinks(linksTransformUiLinks(file.links))
     this.drawGraph({ needUpdate: false, link: true, node: true })
   }
 
@@ -154,7 +153,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.addNode = function addNode (node) {
     if (thisGraph.isEditable()) {
-      thisGraph.nodes.add(saveNodeTransformNode(node))
+      thisGraph.nodes.add(nodeTransformUiNode(node))
       thisGraph.drawGraph({ node: true })
     }
   }
@@ -164,8 +163,9 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   }
 
   this.redraw = function redraw (pipeline) {
-    thisGraph.nodes = new GraphNodes(saveNodesTransformToNodes(pipeline.nodes))
-    thisGraph.links = new GraphLinks(saveLinksTransformToLinks(pipeline.links))
+    console.log('--redraw--')
+    thisGraph.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
+    thisGraph.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
     thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
   }
 
@@ -187,8 +187,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     }
 
     if (thisGraph.links.getLinkList().length || thisGraph.nodes.getNodeList().length) {
-      saveFile.links = linksTransformForSave(thisGraph.links.getLinkList())
-      saveFile.nodes = nodesTransformForSave(thisGraph.nodes.getNodes())
+      saveFile.links = linksTransformSaveLink(thisGraph.links.getLinkList())
+      saveFile.nodes = nodeTransformSaveNodes(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
       // return JSON.stringify(saveFile)
@@ -253,9 +253,8 @@ GraphCreator.prototype.dragLink = function dragLink (d) {
   if (this.isEditable()) {
     const x = d3Selection.mouse(this.svgG.node())[0]
     const y = d3Selection.mouse(this.svgG.node())[1]
-
     this.dragLine.attr('d',
-      `M${d.x},${d.y}L${x},${y}`)
+      `M${d.position.x},${d.position.y}L${x},${y}`)
   }
 }
 
@@ -299,7 +298,7 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
 function nodeDraghandler (context) {
   return d3Drag.drag()
     .subject(function (d) {
-      return { x: d.x, y: d.y }
+      return { x: d.position.x, y: d.position.y }
     })
     .on('start', function (d) {
       if (context.isEditable()) {
@@ -312,8 +311,8 @@ function nodeDraghandler (context) {
           // move node
           d3Selection.select(this)
             .attr('transform', `translate(${d3Selection.event.x}, ${d3Selection.event.y})`)
-          d.x = d3Selection.event.x
-          d.y = d3Selection.event.y
+          d.position.x = d3Selection.event.x
+          d.position.y = d3Selection.event.y
 
           context.drawGraph({ link: true, nodeParam: d })
         }
@@ -387,7 +386,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
   newGs
     .attr('transform', function (d) {
-      return `translate(${d.x},${d.y})`
+      return `translate(${d.position.x},${d.position.y})`
     })
     // .on('mouseover', function (d) {})
     // .on('mouseout', function (d) {})
@@ -425,17 +424,17 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       .attr('d', function (d) {
         if (dragingNode) { // draging node
           if (dragingNode.id === d.source.id) {
-            d.source.x = dragingNode.x
-            d.source.y = dragingNode.y
+            d.source.position.x = dragingNode.position.x
+            d.source.position.y = dragingNode.position.y
           } else if (dragingNode.id === d.target.id) {
-            d.target.x = dragingNode.x
-            d.target.y = dragingNode.y
+            d.target.position.x = dragingNode.position.x
+            d.target.position.y = dragingNode.position.y
           }
         }
 
         const data = {
-          source: [d.source.x + d.source.linkOutput.cx, d.source.y + d.source.linkOutput.cy],
-          target: [d.target.x + d.target.linkInput.cx, d.target.y + d.target.linkInput.cy]
+          source: [d.source.position.x + d.source.linkOutput.cx, d.source.position.y + d.source.linkOutput.cy],
+          target: [d.target.position.x + d.target.linkInput.cx, d.target.position.y + d.target.linkInput.cy]
           // source: [d.source.x, d.source.y],
           // target: [d.target.x, d.target.y]
         }
@@ -449,8 +448,8 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       .classed('link', true)
       .attr('d', function (d) {
         const data = {
-          source: [d.source.x + d.source.linkOutput.cx, d.source.y + d.source.linkOutput.cy],
-          target: [d.target.x + d.target.linkInput.cx, d.target.y + d.target.linkInput.cy]
+          source: [d.source.position.x + d.source.linkOutput.cx, d.source.position.y + d.source.linkOutput.cy],
+          target: [d.target.position.x + d.target.linkInput.cx, d.target.position.y + d.target.linkInput.cy]
         }
         return lineGenerator(data)
       })

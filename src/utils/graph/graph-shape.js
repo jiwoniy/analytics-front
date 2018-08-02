@@ -33,7 +33,7 @@ function removeTooltip (selection) {
 function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
   return d3Drag.drag()
     .subject(function (d) {
-      return { x: d.x, y: d.y }
+      return { x: d.position.x, y: d.position.y }
     })
     // .on('start', function (d) {
     // d3Selection.select(this)
@@ -45,8 +45,8 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
         context.dragLine.classed('hidden', false)
         context.state.connecting = true
 
-        const originX = d.x + linkOutput.cx
-        const originY = d.y + linkOutput.cy
+        const originX = d.position.x + linkOutput.cx
+        const originY = d.position.y + linkOutput.cy
 
         const ToX = d3Selection.event.x + linkOutput.cx
         const ToY = d3Selection.event.y + linkOutput.cy
