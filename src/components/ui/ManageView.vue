@@ -15,7 +15,11 @@
     >
       <label>
         {{ item.key }}
-        <wrapper-input v-model="item.value" @wrapperEvent="(value) => wrapperEvent(item.key, value)"></wrapper-input>
+        <wrapper-input
+          :is-editable="isPipelineEditable"
+          v-model="item.value"
+          @wrapperEvent="(value) => wrapperEvent(item.key, value)">
+        </wrapper-input>
       </label>
 
       <div class="right-footer" @click="remove">
@@ -34,7 +38,11 @@
     >
       <label>
         {{ item.key }}
-        <wrapper-input v-model="item.value" @wrapperEvent="(value) => wrapperEvent(item.key, value)"></wrapper-input>
+        <wrapper-input
+          :is-editable="isPipelineEditable"
+          v-model="item.value"
+          @wrapperEvent="(value) => wrapperEvent(item.key, value)">
+        </wrapper-input>
       </label>
 
       <div class="right-footer" @click="remove">
@@ -78,6 +86,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      isPipelineEditable: 'myProject/isPipelineEditable',
       activateWorksheet: 'myProject/getActivateWorksheet',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
@@ -102,45 +111,50 @@ export default {
   methods: {
     ...mapActions({
       updateWorksheets: 'myProject/updateWorksheets',
-      // deleteActivateWorksheet: 'myProject/deleteActivateWorksheet',
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     remove () {
-      eventController.SHOW_MODAL({
-        position: 'center',
-        size: 'small',
-        isNeedAccept: true,
-        params: {},
-        callback: (isAccept) => {
-          if (isAccept) {
-            if (this.currentItemType === 'worksheet') {
-              this.updateWorksheets({
-                updateType: 'delete',
-                worksheetId: this.activateWorksheetId
-              })
-            } else if (this.currentItemType === 'pipeline-node') {
-              this.updateActivatePipelineNode({
-                updateType: 'delete'
-              })
+      if (this.isPipelineEditable) {
+        eventController.SHOW_MODAL({
+          position: 'center',
+          size: 'small',
+          isNeedAccept: true,
+          params: {},
+          callback: (isAccept) => {
+            if (isAccept) {
+              if (this.currentItemType === 'worksheet') {
+                this.updateWorksheets({
+                  updateType: 'delete',
+                  worksheetId: this.activateWorksheetId
+                })
+              } else if (this.currentItemType === 'pipeline-node') {
+                this.updateActivatePipelineNode({
+                  updateType: 'delete'
+                })
+              }
             }
           }
-        }
-      })
+        })
+      }
     },
     wrapperEvent (key, value) {
-      if (this.currentItemType === 'worksheet') {
-        this.updateWorksheets({
-          updateType: 'update',
-          worksheetId: this.activateWorksheetId,
-          updatedProp: key,
-          updatedValue: value
-        })
-      } else if (this.currentItemType === 'pipeline-node') {
-        this.updateActivatePipelineNode({
-          updateType: 'update',
-          updatedProp: key,
-          updatedValue: value
-        })
+      if (this.isPipelineEditable) {
+        if (this.currentItemType === 'worksheet') {
+          this.updateWorksheets({
+            updateType: 'update',
+            worksheetId: this.activateWorksheetId,
+            updatedProp: key,
+            updatedValue: value
+          })
+        } else if (this.currentItemType === 'pipeline-node') {
+          this.updateActivatePipelineNode({
+            updateType: 'update',
+            updatedProp: key,
+            updatedValue: value
+          })
+        }
+      } else {
+        return false
       }
     }
   }

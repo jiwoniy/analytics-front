@@ -24,6 +24,7 @@ export default {
   },
 
   // about pipeline
+  isPipelineEditable: state => state.pipelineEditable,
   getActivatePipeline: state => state.pipeline || {},
   getPipelineUpdateStatus: state => state.pipelineUpdateStatus || {},
 

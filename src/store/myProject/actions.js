@@ -1,8 +1,9 @@
+import moment from 'moment'
 import _isEmpty from 'lodash.isempty'
 import _isEqual from 'lodash.isequal'
-import moment from 'moment'
+import _debounce from 'lodash.debounce'
 
-// import store from '@/store'
+import { setting } from '@/config'
 import api from '@/api'
 import { normalizeArray } from '@/utils/normalize'
 
@@ -50,7 +51,6 @@ export default {
     }
   },
   updateWorksheets: ({ dispatch, commit, state }, { updateType, updatedProp, updatedValue }) => {
-    // const { updateType = 'update', worksheetId, key, value: updateValue } = payload
     const activateWorksheetId = state.activateWorksheetId
     if (activateWorksheetId && updateType === 'update' && !_isEmpty(updatedValue)) {
       if (!_isEqual(updatedValue, state.worksheets[activateWorksheetId][updatedProp])) {
@@ -96,9 +96,10 @@ export default {
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
     commit('SAVE_PIPELINE', { pipeline })
   },
-  syncPipelineWithServer: async ({ state }, { pipeline }) => {
+  syncPipelineWithServer: _debounce(async ({ state }, { pipeline }) => {
     const projectId = state.activateProjectId
     const worksheetId = state.activateWorksheetId
+
     // TODO 만약 api로 쏜다면 직렬화를 해야함...
     const { success, error } = await api.projects.updatePipeline(projectId, worksheetId, pipeline)
     if (success) {
@@ -107,9 +108,12 @@ export default {
       // TODO How to handle
       console.log(`pipeline: ${worksheetId} update error`)
     }
-  },
+  }, setting.saveTimer),
 
   // pipeline node
+  setPipelineEditable: ({ commit, state }, editable) => {
+    commit('SET_PIPELINE_EDITABLE', editable)
+  },
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
@@ -121,7 +125,6 @@ export default {
     })
   },
   updateActivatePipelineNode: async ({ dispatch, commit, state }, { updateType, updatedProp, updatedValue }) => {
-    // TODO
     const activatePipelineNodeId = state.activatePipelineNodeId
     const pipelineProxyHandler = {
       set (target, key, value) {

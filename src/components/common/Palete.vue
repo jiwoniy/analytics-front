@@ -1,8 +1,8 @@
 <template>
   <transition>
     <div id="svgContainer" class="palete" v-resize:debounce.250="onResize">
-      <img class="lock" v-if="isGraphEditable" src="@/assets/img/lock-open-solid.svg" />
-      <img class="lock" v-if="!isGraphEditable" src="@/assets/img/lock-solid.svg" />
+      <img class="lock" v-if="isPipelineEditable" src="@/assets/img/lock-open-solid.svg" />
+      <img class="lock" v-if="!isPipelineEditable" src="@/assets/img/lock-solid.svg" />
       <svg>
         <def-svg></def-svg>
       </svg>
@@ -50,7 +50,6 @@ export default {
       svgContainer: null,
       svgContainerGroup: null,
       svgGraph: null,
-      isGraphEditable: false,
       leftPanelWidth: null,
       rightPanelWidth: null,
       saveTimer: null
@@ -58,6 +57,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      isPipelineEditable: 'myProject/isPipelineEditable',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       activatePipeline: 'myProject/getActivatePipeline',
       activatePipelineUpdateStatus: 'myProject/getPipelineUpdateStatus',
@@ -73,6 +73,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      setPipelineEditable: 'myProject/setPipelineEditable',
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
@@ -187,7 +188,6 @@ export default {
       }
     },
     init () {
-      this.isGraphEditable = false
       this.removeSvgGraph()
       this.setSvgContainer()
     }
@@ -207,8 +207,7 @@ export default {
     })
 
     eventController.addListner('EDIT', () => {
-      this.isGraphEditable = !this.isGraphEditable
-      this.svgGraph.setEditable(this.isGraphEditable)
+      this.setPipelineEditable(!this.isPipelineEditable)
     })
 
     eventController.addListner('REFRESH', () => {
@@ -226,6 +225,11 @@ export default {
     })
   },
   watch: {
+    isPipelineEditable (newValue) {
+      if (this.svgGraph) {
+        this.svgGraph.setEditable(newValue)
+      }
+    },
     activateWorksheetId (newValue) {
       this.init()
     },

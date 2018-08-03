@@ -40,6 +40,9 @@ export default {
   },
 
   // pipeline
+  SET_PIPELINE_EDITABLE: (state, editable) => {
+    state.pipelineEditable = editable
+  },
   SET_ACTIVATE_PIPELINE: (state, { pipeline }) => {
     if (pipeline) {
       if (_isEmpty(pipeline)) {

@@ -11,6 +11,7 @@ export default {
   activateWorksheetId: null,
 
   pipeline,
+  pipelineEditable: false,
   pipelineUpdateStatus: {},
 
   activatePipelineNodeId: null,

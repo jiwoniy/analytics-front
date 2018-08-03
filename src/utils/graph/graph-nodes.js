@@ -12,14 +12,6 @@ GraphNodes.prototype.getNodes = function getNodes () {
   return this.nodes
 }
 
-// GraphNodes.prototype.getSelectNodeId = function getSelectNodeId () {
-//   return this.selectNodeId
-// }
-
-// GraphNodes.prototype.getSelectNode = function getSelectNode () {
-//   return this.nodes[this.selectNodeId]
-// }
-
 GraphNodes.prototype.setSelectClean = function setSelectClean () {
   const that = this
   Object.keys(this.nodes).map(key => {
