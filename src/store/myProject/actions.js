@@ -94,9 +94,7 @@ export default {
     }
   },
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
-    if (!_isEmpty(pipeline)) {
-      commit('SAVE_PIPELINE', { pipeline })
-    }
+    commit('SAVE_PIPELINE', { pipeline })
   },
   syncPipelineWithServer: async ({ state }, { pipeline }) => {
     const projectId = state.activateProjectId
@@ -132,6 +130,7 @@ export default {
           updateObject: 'node',
           updateObjectId: activatePipelineNodeId,
           updateTime: moment().valueOf() })
+        dispatch('savePipeline', { pipeline: state.pipeline })
         return true
       }
     }

@@ -173,7 +173,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     } else if (updateObject === 'node' && updateType === 'update') {
       thisGraph.drawGraph({ needUpdate: false, node: true, link: false })
     } else if (updateObject === 'node' && updateType === 'delete') {
-      console.log('---delete--')
       thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
     }
   }
