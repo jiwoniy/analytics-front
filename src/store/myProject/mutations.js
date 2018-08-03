@@ -84,6 +84,15 @@ export default {
       pipelineProxy.nodes = Object.assign({}, currentNodes)
     }
   },
+  DELETE_CONNECT_LINK: (state, { pipelineProxy, linkIdList }) => {
+    if (linkIdList.length) {
+      const { links: currentLinks } = state.pipeline
+      linkIdList.forEach(id => {
+        delete currentLinks[id]
+      })
+      pipelineProxy.links = Object.assign({}, currentLinks)
+    }
+  },
   UPDATE_ACTIVATE_PIPELINE_NODE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
     // pipelineUpdateStatus
     state.pipelineNodeUpdateStatus = Object.assign({}, {

@@ -39,9 +39,7 @@ GraphLinks.prototype.add = function add (link) {
   if (!thisGraphLinks.isDuplicate(link)) {
     thisGraphLinks.links[id] = {
       id,
-      sourceId: link.source.id,
       source: link.source,
-      targetId: link.target.id,
       target: link.target
     }
   }

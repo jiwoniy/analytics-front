@@ -115,7 +115,14 @@ export default {
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)
   },
-  updateActivatePipelineNode: ({ commit, state }, { updateType, updatedProp, updatedValue }) => {
+  findConnectLinks: ({ commit, state }, activatePipelineNodeId) => {
+    const { links: currentLinks } = state.pipeline
+    return Object.keys(currentLinks).filter(key => {
+      const { source, target } = currentLinks[key]
+      return source.sourceId === activatePipelineNodeId || target.targetId === activatePipelineNodeId
+    })
+  },
+  updateActivatePipelineNode: async ({ dispatch, commit, state }, { updateType, updatedProp, updatedValue }) => {
     // TODO
     const activatePipelineNodeId = state.activatePipelineNodeId
     const pipelineProxyHandler = {
@@ -132,6 +139,8 @@ export default {
 
     if (updateType === 'delete') {
       if (activatePipelineNodeId) {
+        const connectLinks = await dispatch('findConnectLinks', activatePipelineNodeId)
+        commit('DELETE_CONNECT_LINK', { pipelineProxy, linkIdList: connectLinks })
         commit('DELETE_ACTIVATE_PIPELINE_NODE', { pipelineProxy, activatePipelineNodeId })
       }
     } else if (updateType === 'update') {

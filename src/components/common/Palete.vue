@@ -143,7 +143,6 @@ export default {
       if (this.svgGraph) {
         const saveFile = this.svgGraph.save()
         if (saveFile) {
-          console.log('-----------')
           this.savePipeline({ pipeline: _cloneDeep(saveFile) })
         }
       }

@@ -64,7 +64,7 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
           if (isCanConnect({ ...d, linkOutput }, context.state.capturedTarget)) {
             const newLink = {
               source: {
-                ...d,
+                sourceId: d.id,
                 linkOutput
               },
               target: context.state.capturedTarget
@@ -98,7 +98,7 @@ function getNodeShape (context, selections, isCanConnect) {
             drawTooltip(d3Selection.select(this.parentNode), d, 'input', startPositionInput + (increaseInputValue * circleIn))
             if (context.state.connecting) {
               context.state.capturedTarget = {
-                ...d,
+                targetId: d.id,
                 linkInput: {
                   cx: startPositionInput + (increaseInputValue * circleIn),
                   cy: 0,

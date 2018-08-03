@@ -173,6 +173,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     } else if (updateObject === 'node' && updateType === 'update') {
       thisGraph.drawGraph({ needUpdate: false, node: true, link: false })
     } else if (updateObject === 'node' && updateType === 'delete') {
+      console.log('---delete--')
       thisGraph.drawGraph({ needUpdate: false, node: true, link: true })
     }
   }
@@ -195,7 +196,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     }
 
     if (thisGraph.links.getLinkList().length || thisGraph.nodes.getNodeList().length) {
-      saveFile.links = linksTransformSaveLink(thisGraph.links.getLinkList())
+      saveFile.links = linksTransformSaveLink(thisGraph.links.getLinks())
+      console.log(saveFile.links)
       saveFile.nodes = nodeTransformSaveNodes(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
@@ -449,9 +451,8 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const thisGraph = this
-  const nodes = thisGraph.nodes.getNodes()
 
-  function draw () {
+  function draw (nodes) {
     const lineGenerator = d3Shape.linkHorizontal()
 
     const exists = d3Selection.select('.path-group')
@@ -462,19 +463,23 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
     // update
     exists
       .attr('d', function (d) {
+        const { source, target } = d
+        const sourceNode = nodes[source.sourceId]
+        const targetNode = nodes[target.targetId]
+
         if (dragingNode) { // draging node
-          if (dragingNode.id === d.source.id) {
-            d.source.position.x = dragingNode.position.x
-            d.source.position.y = dragingNode.position.y
-          } else if (dragingNode.id === d.target.id) {
-            d.target.position.x = dragingNode.position.x
-            d.target.position.y = dragingNode.position.y
+          if (dragingNode.id === d.source.sourceId) {
+            sourceNode.position.x = dragingNode.position.x
+            sourceNode.position.y = dragingNode.position.y
+          } else if (dragingNode.id === d.target.targetId) {
+            targetNode.position.x = dragingNode.position.x
+            targetNode.position.y = dragingNode.position.y
           }
         }
 
         const data = {
-          source: [d.source.position.x + d.source.linkOutput.cx, d.source.position.y + d.source.linkOutput.cy],
-          target: [d.target.position.x + d.target.linkInput.cx, d.target.position.y + d.target.linkInput.cy]
+          source: [sourceNode.position.x + source.linkOutput.cx, sourceNode.position.y + source.linkOutput.cy],
+          target: [targetNode.position.x + target.linkInput.cx, targetNode.position.y + target.linkInput.cy]
         }
 
         return lineGenerator(data)
@@ -485,15 +490,13 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
       .append('path')
       .classed('link', true)
       .attr('d', function (d) {
-        const source = nodes[d.sourceId]
-        const target = nodes[d.targetId]
-        console.log(source)
-        console.log(target)
+        const { source, target } = d
+        const sourceNode = nodes[source.sourceId]
+        const targetNode = nodes[target.targetId]
         const data = {
-          source: [source.position.x + d.source.linkOutput.cx, source.position.y + d.source.linkOutput.cy],
-          target: [target.position.x + d.target.linkInput.cx, target.position.y + d.target.linkInput.cy]
+          source: [sourceNode.position.x + source.linkOutput.cx, sourceNode.position.y + source.linkOutput.cy],
+          target: [targetNode.position.x + target.linkInput.cx, targetNode.position.y + target.linkInput.cy]
         }
-        console.log(data)
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
@@ -505,7 +508,8 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
     exists.exit().remove()
   }
 
-  draw()
+  const nodes = thisGraph.nodes.getNodes()
+  draw(nodes)
 }
 
 GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {

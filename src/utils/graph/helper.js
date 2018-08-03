@@ -83,8 +83,8 @@ function linksTransformSaveLink (links) {
       const { source, target, id } = links[key]
       return {
         id,
-        source: nodeTransformSaveNode(source, true),
-        target: nodeTransformSaveNode(target, true)
+        source,
+        target
       }
     }))
 }
@@ -95,8 +95,8 @@ function linksTransformUiLinks (links) {
       const { source, target, id } = links[key]
       return {
         id,
-        source: nodeTransformUiNode(source, true),
-        target: nodeTransformUiNode(target, true)
+        source,
+        target
       }
     }))
 }
