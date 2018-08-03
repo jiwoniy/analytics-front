@@ -160,11 +160,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     }
   }
 
-  this.removeNode = function removeNode () {
-    console.log('--remove node')
-  }
-
   this.redraw = function redraw ({ updateObject, updateType, pipeline }) {
+    thisGraph.nodesGroup.selectAll('g').remove()
+    thisGraph.pathsGroup.selectAll('path').remove()
+
     thisGraph.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
     thisGraph.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
 
@@ -177,17 +176,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     }
   }
 
-  // GraphCreator.prototype.removeNode = function removeNode (node) {
-  //   if (this.isEditable()) {
-  //     const relatedEdges = this.findRelatedEdges(node)
-  //     if (relatedEdges.length) {
-  //       relatedEdges.forEach(edge => this.edges.remove(edge))
-  //     }
-  //     this.nodes.remove(node)
-  //     this.drawGraph({ link: true, node: true })
-  //   }
-  // }
-
   this.save = function save (node) {
     const saveFile = {
       links: [],
@@ -196,7 +184,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
     if (thisGraph.links.getLinkList().length || thisGraph.nodes.getNodeList().length) {
       saveFile.links = linksTransformSaveLink(thisGraph.links.getLinks())
-      console.log(saveFile.links)
       saveFile.nodes = nodeTransformSaveNodes(thisGraph.nodes.getNodes())
 
       thisGraph.stateProxy.isUpdated = false
@@ -240,14 +227,14 @@ GraphCreator.prototype.constants = {
   nodeRadius: 50
 }
 
-GraphCreator.prototype.dragLink = function dragLink (d) {
-  if (this.isEditable()) {
-    const x = d3Selection.mouse(this.svgG.node())[0]
-    const y = d3Selection.mouse(this.svgG.node())[1]
-    this.dragLine.attr('d',
-      `M${d.position.x},${d.position.y}L${x},${y}`)
-  }
-}
+// GraphCreator.prototype.dragLink = function dragLink (d) {
+//   if (this.isEditable()) {
+//     const x = d3Selection.mouse(this.svgG.node())[0]
+//     const y = d3Selection.mouse(this.svgG.node())[1]
+//     this.dragLine.attr('d',
+//       `M${d.position.x},${d.position.y}L${x},${y}`)
+//   }
+// }
 
 GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
   function dotme (selectTextNode) {
@@ -274,17 +261,6 @@ GraphCreator.prototype.appendText = function appendText (nodeElement, insertText
     .call(dotme)
 }
 
-// remove edges associated with a node
-// GraphCreator.prototype.spliceLinksForNode = function spliceLinksForNode (node) {
-//   const thisGraph = this
-//   const toSplice = thisGraph.edges.filter(function (l) {
-//     return (l.source === node || l.target === node)
-//   })
-//   toSplice.map(function (l) {
-//     // thisGraph.edges.splice(thisGraph.edges.indexOf(l), 1)
-//   })
-// }
-
 // Important Node drag handler
 function nodeDraghandler (context) {
   return d3Drag.drag()
@@ -305,33 +281,22 @@ function nodeDraghandler (context) {
           d.position.x = d3Selection.event.x
           d.position.y = d3Selection.event.y
 
-          context.drawGraph({ link: true, nodeParam: d })
+          context.drawGraph({ node: true, link: true })
         }
       }
     })
-    // .on('end', function (d) {
-    //   if (context.state.editable) {
-    //     if (context.state.justDragged) {
-    //       context.state.justDragged = false
-    //       context.dragLine.classed('hidden', true)
-    //       if (context.state.capturedTarget) {
-    //         const newEdge = {
-    //           source: d,
-    //           target: context.state.capturedTarget
-    //         }
-    //         context.edges.add(newEdge)
-    //         context.drawLinks()
-    //         context.state.capturedTarget = null
-    //       }
-    //     }
-    //   }
-    // })
+    .on('end', function (d) {
+      if (context.isEditable()) {
+        if (!d.status.selected) {
+          d.status.moving = false
+        }
+      }
+    })
 }
 
 // called by addNode, removeNode, drageNode, add & remove link
 GraphCreator.prototype.drawGraph = function drawGraph ({ needUpdate = true, link = false, node = false, nodeParam }) {
   const thisGraph = this
-
   if (link && node) {
     thisGraph.drawLinks()
     thisGraph.drawNodes()
@@ -350,17 +315,9 @@ GraphCreator.prototype.drawGraph = function drawGraph ({ needUpdate = true, link
   }
 }
 
-// GraphCreator.prototype.canNodeLink = function canNodeLink (source, target) {
-//   if (this.state.justDragged && target.input > 0 && source.id !== target.id) {
-//     return true
-//   }
-//   return false
-// }
-
 GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
-
   const datas = thisGraph.nodes.getNodeList()
 
   // console.log('drawNodes')
@@ -413,14 +370,8 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     // }
   }
 
-  exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
-
-  // exists.each(function (data) {
-  //   d3Selection.select(this).select('text')
-  //     .call(dotme(data))
-  // })
-
   const nodeDrag = nodeDraghandler(thisGraph)
+  exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
 
   const newGs = exists
     .enter()
@@ -454,7 +405,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   function draw (nodes) {
     const lineGenerator = d3Shape.linkHorizontal()
 
-    const exists = d3Selection.select('.path-group')
+    const exists = thisGraph.pathsGroup
       .selectAll('path').data(thisGraph.links.getLinkList(), function (d) {
         return getLinkId(d)
       })
@@ -499,8 +450,10 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
-        thisGraph.links.remove(d)
-        thisGraph.drawGraph({ link: true })
+        if (thisGraph.isEditable()) {
+          thisGraph.links.remove(d)
+          thisGraph.drawGraph({ link: true })
+        }
       })
 
     // remove
@@ -519,18 +472,6 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
     this.stateProxy.selectedNode = null
   }
 }
-
-// TODO
-// GraphCreator.prototype.removeNode = function removeNode (node) {
-//   if (this.isEditable()) {
-//     const relatedEdges = this.findRelatedEdges(node)
-//     if (relatedEdges.length) {
-//       relatedEdges.forEach(edge => this.edges.remove(edge))
-//     }
-//     this.nodes.remove(node)
-//     this.drawGraph({ link: true, node: true })
-//   }
-// }
 
 GraphCreator.prototype.findRelatedLinks = function findRelatedLinks (node) {
   return this.links.findLinks(node)

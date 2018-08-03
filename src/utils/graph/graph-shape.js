@@ -35,11 +35,6 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
     .subject(function (d) {
       return { x: d.position.x, y: d.position.y }
     })
-    // .on('start', function (d) {
-    // d3Selection.select(this)
-    //   .attr('x', d.x = d3Selection.event.x)
-    //   .attr('y', d.y = d3Selection.event.y)
-    // })
     .on('drag', function (d) {
       if (context.isEditable()) {
         context.dragLine.classed('hidden', false)

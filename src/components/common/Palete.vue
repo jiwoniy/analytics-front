@@ -75,7 +75,6 @@ export default {
     ...mapActions({
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
-      // updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     onResize (elem) {
       if (this.svgContainer) {
@@ -183,7 +182,6 @@ export default {
       }
     },
     watchGraphUpdate (isGraphUpdate) {
-      // console.log(`watchGraphUpdate: ${isGraphUpdate}`)
       if (isGraphUpdate) {
         this.saveGraph()
       }
