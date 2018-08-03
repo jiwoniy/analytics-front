@@ -1,12 +1,14 @@
 import * as d3Selection from 'd3-selection'
 import * as d3Drag from 'd3-drag'
 import * as d3Zoom from 'd3-zoom'
-// import * as d3Force from 'd3-force'
 import * as d3Shape from 'd3-shape'
+// import * as d3Force from 'd3-force'
 
-// import onChange from '@/helper/onChange'
+import getNodeShape from './graph-shape'
+import GraphNodes from './graph-nodes'
+import GraphLinks from './graph-links'
+
 import { getLinkId } from '@/utils/normalize'
-
 import {
   nodeTransformUiNode,
   nodeTransformUiNodes,
@@ -14,9 +16,6 @@ import {
   linksTransformSaveLink,
   linksTransformUiLinks
 } from './helper'
-import getNodeShape from './graph-shape'
-import GraphNodes from './graph-nodes'
-import GraphLinks from './graph-links'
 // import contextMenu from './context-menu'
 
 // This source from https://github.com/cjrd/directed-graph-creator
@@ -36,7 +35,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     selectedNode: null,
     isUpdated: false, // watch this for to determine wheter to save or not
     contextNode: null,
-    // selectedEdge: null,
     mouseDownNode: null,
     mouseDownLink: null,
     justDragged: false,
@@ -89,15 +87,6 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     this.links = new GraphLinks(linksTransformUiLinks(file.links))
     this.drawGraph({ needUpdate: false, link: true, node: true })
   }
-
-  // listen for key events
-  // d3Selection.select(window)
-  //   .on('keydown', function () {
-  //     thisGraph.svgKeyDown()
-  //   })
-  //   .on('keyup', function () {
-  //     thisGraph.svgKeyUp()
-  //   })
 
   const dragSvg = d3Zoom.zoom()
     .on('zoom', function () {
@@ -227,40 +216,6 @@ GraphCreator.prototype.constants = {
   nodeRadius: 50
 }
 
-// GraphCreator.prototype.dragLink = function dragLink (d) {
-//   if (this.isEditable()) {
-//     const x = d3Selection.mouse(this.svgG.node())[0]
-//     const y = d3Selection.mouse(this.svgG.node())[1]
-//     this.dragLine.attr('d',
-//       `M${d.position.x},${d.position.y}L${x},${y}`)
-//   }
-// }
-
-GraphCreator.prototype.appendText = function appendText (nodeElement, insertText) {
-  function dotme (selectTextNode) {
-    const words = insertText.split(/\s+/)
-
-    const insertedTextNode = selectTextNode.append('tspan').text(insertText)
-    const ellipsis = selectTextNode.append('tspan').attr('class', 'elip').text('...')
-
-    const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-
-    if (insertedTextNode.node().getComputedTextLength() > width) {
-      while (insertedTextNode.node().getComputedTextLength() > width && words.length) {
-        words.pop()
-        insertedTextNode.text(words.join(' '))
-      }
-    } else {
-      ellipsis.remove()
-    }
-  }
-
-  d3Selection.select(nodeElement).append('text')
-    .attr('transform', 'translate(100, 30)') // rect size is 200, 50
-    .classed('dotme', true)
-    .call(dotme)
-}
-
 // Important Node drag handler
 function nodeDraghandler (context) {
   return d3Drag.drag()
@@ -320,9 +275,6 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const consts = thisGraph.constants
   const datas = thisGraph.nodes.getNodeList()
 
-  // console.log('drawNodes')
-  // console.log(datas)
-
   // TODO exists와 newGs의 분리
   // filter가 가능한 부분?
   const exists = this.nodesGroup.selectAll('g')
@@ -330,48 +282,10 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
       return d.id
     })
 
-  // for presentation text
-  function dotme (data, isNew = false) {
-    const nodeName = data.name
-    const words = nodeName.split(/\s+/)
-
-    if (isNew) {
-      return function (textnode) {
-        const insertedTextNode = textnode
-          .append('tspan').text(words)
-        const ellipsis = textnode.append('tspan').attr('class', 'elip').text('...')
-        const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-        if (insertedTextNode.node().getComputedTextLength() > width) {
-          while (insertedTextNode.node().getComputedTextLength() > width && words.length) {
-            words.pop()
-            insertedTextNode.text(words.join(' '))
-          }
-        } else {
-          ellipsis.remove()
-        }
-      }
-    }
-
-    // return function (textNode) {
-    //   console.log(textNode)
-    //   const existNode = textNode.select('tspan').text(words)
-    //   const ellipsis = textNode.append('tspan').attr('class', 'elip').text('...')
-    //   const width = parseFloat(200) - ellipsis.node().getComputedTextLength()
-    //   // console.log(width)
-    //   // console.log(existNode.node().getComputedTextLength())
-    //   if (existNode.node().getComputedTextLength() > width) {
-    //     while (existNode.node().getComputedTextLength() > width && words.length) {
-    //       words.pop()
-    //       existNode.text(words.join(' '))
-    //     }
-    //   } else {
-    //     ellipsis.remove()
-    //   }
-    // }
-  }
-
   const nodeDrag = nodeDraghandler(thisGraph)
-  exists.classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
+  exists
+    .classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
+    .call(thisGraph.appendText)
 
   const newGs = exists
     .enter()
@@ -387,16 +301,24 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     })
     .call(nodeDrag)
     .call(d => getNodeShape(thisGraph, d, thisGraph.options.connectValidation))
-
-  newGs.each(function (data) {
-    d3Selection.select(this)
-      .append('text')
-      .attr('transform', 'translate(100, 30)') // rect size is 200, 50
-      .classed('dotme', true)
-      .call(dotme(data, true))
-  })
+  newGs.call(thisGraph.appendText)
 
   exists.exit().remove()
+}
+
+GraphCreator.prototype.appendText = function appendText (nodes) {
+  nodes.append('text')
+    .attr('transform', 'translate(100, 30)') // rect size is 200, 50
+    .classed('dotme', true)
+    .text(function (d) {
+      // lenght < 17
+      const text = d.name
+      let result = text
+      if (text.length > 16) {
+        result = `${text.slice(0, 20)}...`
+      }
+      return result
+    })
 }
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
