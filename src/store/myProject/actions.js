@@ -21,7 +21,7 @@ export default {
       commit('SET_ACTIVATE_PROJECT_ID', projectId)
       const { success } = await api.projects.getWorksheets(projectId)
       if (success) {
-        dispatch('setWorksheets', success)
+        dispatch('fetchWorksheets', success)
       }
     }
   },
@@ -34,14 +34,21 @@ export default {
   },
 
   // worksheet
-  setWorksheets: ({ dispatch, commit, state }, worksheets) => {
+  fetchWorksheets: ({ dispatch, commit, state }, worksheets) => {
     if (worksheets && worksheets.length) {
-      commit('SET_WORKSHEETS', normalizeArray(worksheets))
+      commit('FETCH_WORKSHEETS', normalizeArray(worksheets))
       dispatch('findActivateWorksheets')
     } else if (worksheets) {
-      commit('SET_WORKSHEETS', {})
+      commit('FETCH_WORKSHEETS', {})
       dispatch('setActivateWorksheetId', null)
     }
+  },
+  createWorksheet: async ({ dispatch, commit, state }, { worksheetName, worksheetDesc }) => {
+    const projectId = state.activateProjectId
+    const { success } = await api.projects.createWorksheet(projectId, { worksheetName, worksheetDesc })
+
+    commit('ADD_WORKSHEET', normalizeObject(success))
+    dispatch('setActivateWorksheetId', success.id)
   },
   setActivateWorksheetId: async ({ dispatch, commit }, worksheetId) => {
     commit('SET_ACTIVATE_WORKSHEETS', worksheetId)

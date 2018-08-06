@@ -10,8 +10,8 @@
         :position="modal.modalPosition"
         :pass-params="modal.passModalParams"
         :is-need-accept="modal.isNeedAccept"
+        :content-component="modal.contentComponent"
       >
-        <h3 slot="body"> 삭제 하시겠습니까? </h3>
       </modal>
     </div>
   </transition>
@@ -33,7 +33,8 @@ export default {
         modalPosition: 'center',
         passModalParams: null,
         isNeedAccept: false,
-        callback: null
+        callback: null,
+        contentComponent: null
       },
       showModal: false
     }
@@ -52,11 +53,12 @@ export default {
   },
   mounted () {
     eventController.addListner('SHOW_MODAL', (payload) => {
-      const { position, size, params, isNeedAccept, callback } = payload
+      const { position, size, params, isNeedAccept, callback, contentComponent } = payload
       this.showModal = true
       this.modal.passModalParams = params || null
       this.modal.isNeedAccept = isNeedAccept || false
       this.modal.callback = callback || null
+      this.modal.contentComponent = contentComponent || null
 
       if (position) {
         this.modal.modalPosition = position

@@ -22,9 +22,16 @@ export default {
   },
 
   // worksheet
-  SET_WORKSHEETS: (state, worksheets) => {
+  FETCH_WORKSHEETS: (state, worksheets) => {
     if (worksheets) {
       state.worksheets = worksheets
+    }
+  },
+  ADD_WORKSHEET: (state, worksheet) => {
+    if (worksheet) {
+      state.worksheets = Object.assign({}, state.worksheets, {
+        ...worksheet
+      })
     }
   },
   SET_ACTIVATE_WORKSHEETS: (state, worksheetId) => {

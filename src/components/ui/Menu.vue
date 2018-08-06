@@ -25,15 +25,11 @@
             :item-click="selectProject">
           </list-view>
 
-          <div class="add-project" @click.stop="toggleAddProject">
+          <div class="add-project" @click.stop="clickAddProject">
             <img class="add-project close" src="/static/img/plus-circle-solid.svg" />
             <span class="add-project"> {{ $t('Add project') }} </span>
           </div>
         </div>
-      </div>
-
-      <div class="modal-container__wrapper center" v-show="isAddProjectModalOpen" @click.prevent="toggleAddProject">
-        <create-project :callback="() => this.isAddProjectModalOpen = false"></create-project>
       </div>
 
     </div>
@@ -43,19 +39,17 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import eventController from '@/utils/EventController'
 import ListView from '@/components/ui/ListView'
-import CreateProject from '@/components/CreateProject'
 
 export default {
   name: 'Menu',
   components: {
-    ListView,
-    CreateProject
+    ListView
   },
   data () {
     return {
-      isProjectModalOpen: false,
-      isAddProjectModalOpen: false
+      isProjectModalOpen: false
     }
   },
   i18n: {
@@ -90,11 +84,18 @@ export default {
     toggleProject () {
       this.isProjectModalOpen = !this.isProjectModalOpen
     },
-    toggleAddProject (event) {
+    clickAddProject (event) {
       let className = event.target.className || ''
 
       if (className.indexOf('modal-container__wrapper') > -1 || className.indexOf('add-project') > -1) {
-        this.isAddProjectModalOpen = !this.isAddProjectModalOpen
+        eventController.SHOW_MODAL({
+          position: 'center',
+          size: 'small',
+          isNeedAccept: true,
+          params: {},
+          contentComponent: 'CreateProject'
+        })
+
         if (this.isProjectModalOpen) {
           this.toggleProject()
         }
@@ -126,20 +127,6 @@ export default {
       margin: 6px 0;
       transition: 0.4s;
     }
-  }
-
-  .modal-container__wrapper {
-    position: absolute;
-    background-color: rgba(0,0,0,0.4);
-    width: 100vw;
-    height: 100vh;
-    z-index: 999;
-  }
-
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .modal-container__wrapper .project-container {

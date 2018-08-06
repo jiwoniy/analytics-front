@@ -1,13 +1,14 @@
 <template>
-  <div class="div--Accordion">
+  <div class="H--Accordion">
     <ul>
 
       <li>
         <input id="worksheet" type="radio" name="rad" checked="checked"  value="worksheet" v-model="selectMenu"/>
         <label for="worksheet">
           <div v-if="activateWorksheet && activateWorksheet.name"> {{ activateWorksheet.name }} </div>
-          <div v-if="!(activateWorksheet && activateWorksheet.name)"> {{ $t('Add worksheet') }} </div>
+          <div v-if="!(activateWorksheet && activateWorksheet.name)"> {{ $t('worksheet') }} </div>
         </label>
+
         <div class="accslide">
           <div class="content">
             <h1> {{ $t('Worksheet List') }} </h1>
@@ -23,9 +24,9 @@
             </list-view>
           </div>
 
-          <div class="add-worksheet">
+          <div class="add-worksheet" @click.stop="clickAddWorksheet">
             <img class="close" src="/static/img/plus-circle-solid.svg" />
-            <span> {{ $t('Add worksheet') }} </span>
+            <span> {{ $t('worksheet') }} </span>
           </div>
         </div>
       </li>
@@ -44,30 +45,34 @@
       </li>
 
     </ul>
+
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import eventController from '@/utils/EventController'
+// import CreateWorksheet from '@/components/CreateWorksheet'
 import ListView from '@/components/ui/ListView'
 
 export default {
   name: 'Horizontal-Accordion',
   components: {
     ListView
+    // CreateWorksheet
   },
   i18n: {
     messages: {
       'en': {
         'Worksheet List': 'Worksheet List',
         'Pipeline Design Tool': 'Pipeline Design Tool',
-        'Add worksheet': 'Add worksheet'
+        'worksheet': 'worksheet'
       },
       'ko': {
         'Worksheet List': '워크시트',
         'Pipeline Design Tool': '파이프라인 설계',
-        'Add worksheet': '워크시트 추가'
+        'worksheet': '워크시트 추가'
       }
     }
   },
@@ -101,6 +106,15 @@ export default {
         this.setActivateWorksheetId(worksheetId)
         this.selectMenu = 'tools'
       }
+    },
+    clickAddWorksheet () {
+      eventController.SHOW_MODAL({
+        position: 'center',
+        size: 'small',
+        isNeedAccept: true,
+        params: {},
+        contentComponent: 'CreateWorksheet'
+      })
     }
   },
   watch: {
@@ -112,7 +126,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.div--Accordion {
+.H--Accordion {
   display: inline-block;
   width: 100%;
   // height: calc(100vh - var(--app-top-panel-height));

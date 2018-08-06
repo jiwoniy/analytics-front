@@ -1,19 +1,19 @@
 <template>
   <transition>
-    <section class="create-project">
+    <section class="create-worksheet">
 
       <div class="contents header">
-        <h1> {{ $t('Create Project') }} </h1>
+        <h1> {{ $t('Create Worksheet') }} </h1>
       </div>
 
       <div class="contents body">
         <label>
-          {{ $t('Project name') }}
+          {{ $t('Worksheet name') }}
         </label>
         <wrapper-input
           :is-editable="true"
-          v-model="projectName"
-          @wrapperEvent="(value) => wrapperEvent('projectName', value)">
+          v-model="worksheetName"
+          @wrapperEvent="(value) => wrapperEvent('worksheetName', value)">
         </wrapper-input>
 
         <label>
@@ -21,14 +21,14 @@
         </label>
         <wrapper-textarea
           :is-editable="true"
-          v-model="projectDesc"
-          @wrapperEvent="(value) => wrapperEvent('projectDesc', value)">
+          v-model="worksheetDesc"
+          @wrapperEvent="(value) => wrapperEvent('worksheetDesc', value)">
         </wrapper-textarea>
       </div>
 
       <div class="contents bottom" >
         <wrapper-button
-          :click-event="clickCreateProject"
+          :click-event="clickCreateWorksheet"
           :button-text="$t('Create')">
         </wrapper-button>
         <wrapper-button
@@ -48,7 +48,7 @@ import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
 
 export default {
-  name: 'Create-Project',
+  name: 'Create-Worksheet',
   components: {
     WrapperButton,
     WrapperInput,
@@ -59,23 +59,23 @@ export default {
       'en': {
         'Create': 'Create',
         'Cancel': 'Cancel',
-        'Create Project': 'Create Project',
-        'Project name': 'Project name',
+        'Create Worksheet': 'Create Worksheet',
+        'Worksheet name': 'Worksheet name',
         'Description': 'Description'
       },
       'ko': {
         'Create': '생성',
         'Cancel': 'Cancel',
-        'Create Project': '프로젝트 생성',
-        'Project name': '프로젝트명',
+        'Create Worksheet': '워크시트 생성',
+        'Worksheet name': '워크시트명',
         'Description': '설명'
       }
     }
   },
   data () {
     return {
-      projectName: '',
-      projectDesc: ''
+      worksheetName: '',
+      worksheetDesc: ''
     }
   },
   props: {
@@ -86,16 +86,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      createProject: 'myProject/createProject'
+      createWorksheet: 'myProject/createWorksheet'
     }),
     wrapperEvent (key, value) {
       this[key] = value
     },
-    clickCreateProject () {
-      if (this.projectName && this.projectName.length) {
-        this.createProject({
-          projectName: this.projectName,
-          projectDesc: this.projectDesc
+    clickCreateWorksheet () {
+      if (this.worksheetName && this.worksheetName.length) {
+        this.createWorksheet({
+          worksheetName: this.worksheetName,
+          worksheetDesc: this.worksheetDesc
         })
         if (this.modalClose) {
           this.modalClose()
@@ -112,7 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scroped>
-.create-project {
+.create-worksheet {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

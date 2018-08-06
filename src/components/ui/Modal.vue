@@ -17,30 +17,10 @@
             'large': size === 'large'
           }"
         >
-          <div class="header">
-            <slot name="header">
-            </slot>
-          </div>
-
-          <div class="body">
-            <slot name="body">
-            </slot>
-          </div>
-
-          <div class="footer">
-            <slot name="footer">
-              <wrapper-button
-                class="modal-close-with-accept"
-                :button-text="$t('Ok')"
-              >
-              </wrapper-button>
-              <wrapper-button
-                class="modal-close-with-decline"
-                :button-text="$t('No')"
-              >
-              </wrapper-button>
-            </slot>
-          </div>
+          <component
+            v-bind:is="contentComponent"
+            :modal-close="() => $emit('close')">
+          </component>
 
         </div>
       </div>
@@ -50,12 +30,16 @@
 </template>
 
 <script>
+import CreateProject from '@/components/CreateProject'
+import CreateWorksheet from '@/components/CreateWorksheet'
 import WrapperButton from '@/components/ui/Wrapper/Button'
 
 export default {
   name: 'Modal',
   components: {
-    WrapperButton
+    WrapperButton,
+    CreateProject,
+    CreateWorksheet
   },
   props: {
     modalId: {
@@ -79,6 +63,14 @@ export default {
       type: Boolean,
       default: () => false
       // if this value is true, should pass flag to callback
+    },
+    contentComponent: {
+      type: String,
+      default: () => ''
+    },
+    callback: {
+      type: Function,
+      default: () => null
     }
   },
   i18n: {
@@ -93,11 +85,11 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      showModal: false
-    }
-  },
+  // data () {
+  //   return {
+  //     showModal: false
+  //   }
+  // },
   methods: {
     clickModal (event) {
       const id = event.target.className || ''
@@ -148,27 +140,14 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  // width: 300px;
   margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  // padding: 20px 30px;
+  // background-color: #fff;
+  // border-radius: 2px;
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
-
-  .header h3 {
-    margin-top: 0;
-    color: #42b983;
-  }
-  .body {
-    margin: 20px 0;
-  }
-  .footer {
-    .modal-close-button {
-      float: right;
-    }
-  }
 }
 
 .modal-container.small {

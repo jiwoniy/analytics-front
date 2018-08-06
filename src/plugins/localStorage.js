@@ -35,6 +35,25 @@ function StorageFun () {
     getWorksheets: (projectId) => {
       return this.storage.worksheets[projectId]
     },
+    createWorksheet: (projectId, { worksheetName, worksheetDesc }) => {
+      const worksheetId = uuidv4()
+      const newWorksheet = {
+        id: worksheetId,
+        name: worksheetName,
+        desc: worksheetDesc
+      }
+
+      if (this.storage.worksheets[projectId]) {
+        this.storage.worksheets[projectId].push(newWorksheet)
+      } else {
+        this.storage.worksheets[projectId] = []
+        this.storage.worksheets[projectId].push(newWorksheet)
+      }
+
+      localStorage.setItem('worksheets', JSON.stringify(this.storage.worksheets))
+      return newWorksheet
+    },
+
     updateWorksheet: (projectId, worksheetId, worksheet) => {
       const currentProjectWorksheet = this.storage.worksheets[projectId]
       const findIndex = currentProjectWorksheet.findIndex(worksheet => worksheet.id === worksheetId)
