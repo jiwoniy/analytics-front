@@ -6,6 +6,7 @@
         <button @click="edit"> edit </button>
         <button @click="refresh"> recover </button>
         <button @click="load"> Reload </button>
+        <!-- <button @click="openModal"> modal </button> -->
       </div>
       <drop-comp>
         <svg-palete
@@ -40,6 +41,13 @@ export default {
     load () {
       eventController.LOAD({})
     }
+    // openModal () {
+    //   eventController.SHOW_MODAL({
+    //     position: 'center',
+    //     size: 'large',
+    //     contentComponent: 'Palete'
+    //   })
+    // }
   }
 }
 </script>

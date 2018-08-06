@@ -13,6 +13,7 @@ export default {
   pipeline,
   pipelineEditable: false,
   pipelineUpdateStatus: {},
+  pipelineSyncTime: null,
 
   activatePipelineNodeId: null,
   pipelineNodeUpdateStatus: {

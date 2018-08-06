@@ -109,7 +109,7 @@ export default {
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
     commit('SAVE_PIPELINE', { pipeline })
   },
-  syncPipelineWithServer: _debounce(async ({ state }, { pipeline }) => {
+  syncPipelineWithServer: _debounce(async ({ state, commit }, { pipeline }) => {
     const projectId = state.activateProjectId
     const worksheetId = state.activateWorksheetId
 
@@ -117,6 +117,7 @@ export default {
     const { success, error } = await api.projects.updatePipeline(projectId, worksheetId, pipeline)
     if (success) {
       console.log(`pipeline: ${worksheetId} update success`)
+      commit('SET_PIPELINE_SYNC_TIME', moment().valueOf())
     } else if (error) {
       // TODO How to handle
       console.log(`pipeline: ${worksheetId} update error`)

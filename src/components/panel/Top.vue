@@ -9,7 +9,7 @@
 
       <div class="right-menu">
         <button @click="clearCache">
-          cache
+          cache clear
         </button>
       </div>
     </div>

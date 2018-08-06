@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
   // about project
   getProjects: state => state.projects || {},
@@ -26,6 +28,12 @@ export default {
   // about pipeline
   isPipelineEditable: state => state.pipelineEditable,
   getActivatePipeline: state => state.pipeline || {},
+  getActivatePipelineSyncTime: state => {
+    if (state.pipelineSyncTime) {
+      return moment(state.pipelineSyncTime).format('YYYY-MM-DD HH:mm')
+    }
+    return null
+  },
   getPipelineUpdateStatus: state => state.pipelineUpdateStatus || {},
 
   getActivatePipelineNodeId: state => state.activatePipelineNodeId || null,

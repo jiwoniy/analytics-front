@@ -60,15 +60,12 @@ export default {
       isPipelineEditable: 'myProject/isPipelineEditable',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       activatePipeline: 'myProject/getActivatePipeline',
+      activatePipelineSyncTime: 'myProject/getActivatePipelineSyncTime',
       activatePipelineUpdateStatus: 'myProject/getPipelineUpdateStatus',
       activatePipelineNodeUpdateStatus: 'myProject/getActivatePipelineNodeUpdateStatus'
     }),
     lastSavedTime () {
-      // TODO
-      // if (this.currentWorkPipelineInfo.saveTime) {
-      //   return moment(this.currentWorkPipelineInfo.saveTime).format('YYYY-MM-DD HH:mm')
-      // }
-      return null
+      return this.activatePipelineSyncTime
     }
   },
   methods: {

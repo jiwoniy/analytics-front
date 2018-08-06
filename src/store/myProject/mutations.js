@@ -78,6 +78,9 @@ export default {
         nodes: pipeline.nodes || {}
       })
   },
+  SET_PIPELINE_SYNC_TIME: (state, syncTime) => {
+    state.pipelineSyncTime = syncTime
+  },
   UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS: (state, { updateType }) => {
     state.pipelineUpdateStatus = Object.assign({}, { updateType })
   },

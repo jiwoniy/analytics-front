@@ -10,7 +10,13 @@
         }"
       >
 
-        <div class="modal-container">
+        <div class="modal-container"
+          :class="{
+            'small': size === 'small',
+            'medium': size === 'medium',
+            'large': size === 'large'
+          }"
+        >
           <component
             v-bind:is="contentComponent"
             :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)">
@@ -24,6 +30,7 @@
 </template>
 
 <script>
+import Palete from '@/components/common/Palete'
 import CreateProject from '@/components/CreateProject'
 import CreateWorksheet from '@/components/CreateWorksheet'
 import Confirmation from '@/components/ui/Confirmation'
@@ -31,6 +38,7 @@ import Confirmation from '@/components/ui/Confirmation'
 export default {
   name: 'Modal',
   components: {
+    Palete,
     CreateProject,
     CreateWorksheet,
     Confirmation
@@ -134,19 +142,19 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-// .modal-container.small {
-//   width: 40%;
-//   min-width: 300px;
-//   height: calc(40% - var(--app-modal-margin-double));
-// }
-// .modal-container.medium {
-//   width: 60%;
-//   height: calc(60% - var(--app-modal-margin-double));
-// }
-// .modal-container.large {
-//   width: 90%;
-//   height: calc(90% - var(--app-modal-margin-double));
-// }
+.modal-container.small {
+  width: 40%;
+  min-width: 300px;
+  height: calc(40% - var(--app-modal-margin-double));
+}
+.modal-container.medium {
+  width: 60%;
+  height: calc(60% - var(--app-modal-margin-double));
+}
+.modal-container.large {
+  width: 90%;
+  height: calc(90% - var(--app-modal-margin-double));
+}
 
 /* transition modal */
 .modal-enter {
