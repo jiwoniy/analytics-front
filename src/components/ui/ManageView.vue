@@ -117,8 +117,9 @@ export default {
       if (this.isPipelineEditable) {
         eventController.SHOW_MODAL({
           position: 'center',
-          size: 'small',
+          // size: 'x-small',
           isNeedAccept: true,
+          contentComponent: 'Confirmation',
           params: {},
           callback: (isAccept) => {
             if (isAccept) {

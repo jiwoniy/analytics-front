@@ -6,7 +6,6 @@
         <button @click="edit"> edit </button>
         <button @click="refresh"> recover </button>
         <button @click="load"> Reload </button>
-        <button @click="showModal"> modal </button>
       </div>
       <drop-comp>
         <svg-palete
@@ -40,12 +39,6 @@ export default {
     },
     load () {
       eventController.LOAD({})
-    },
-    showModal () {
-      eventController.SHOW_MODAL({
-        position: 'bottom',
-        size: 'large'
-      })
     }
   }
 }

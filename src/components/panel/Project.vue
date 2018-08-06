@@ -54,6 +54,7 @@ export default {
   mounted () {
     eventController.addListner('SHOW_MODAL', (payload) => {
       const { position, size, params, isNeedAccept, callback, contentComponent } = payload
+
       this.showModal = true
       this.modal.passModalParams = params || null
       this.modal.isNeedAccept = isNeedAccept || false

@@ -90,7 +90,7 @@ export default {
       if (className.indexOf('modal-container__wrapper') > -1 || className.indexOf('add-project') > -1) {
         eventController.SHOW_MODAL({
           position: 'center',
-          size: 'small',
+          // size: 'small',
           isNeedAccept: true,
           params: {},
           contentComponent: 'CreateProject'

@@ -110,7 +110,7 @@ export default {
     clickAddWorksheet () {
       eventController.SHOW_MODAL({
         position: 'center',
-        size: 'small',
+        // size: 'small',
         isNeedAccept: true,
         params: {},
         contentComponent: 'CreateWorksheet'

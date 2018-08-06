@@ -10,16 +10,10 @@
         }"
       >
 
-        <div class="modal-container"
-          :class="{
-            'small': size === 'small',
-            'medium': size === 'medium',
-            'large': size === 'large'
-          }"
-        >
+        <div class="modal-container">
           <component
             v-bind:is="contentComponent"
-            :modal-close="() => $emit('close')">
+            :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)">
           </component>
 
         </div>
@@ -32,14 +26,14 @@
 <script>
 import CreateProject from '@/components/CreateProject'
 import CreateWorksheet from '@/components/CreateWorksheet'
-import WrapperButton from '@/components/ui/Wrapper/Button'
+import Confirmation from '@/components/ui/Confirmation'
 
 export default {
   name: 'Modal',
   components: {
-    WrapperButton,
     CreateProject,
-    CreateWorksheet
+    CreateWorksheet,
+    Confirmation
   },
   props: {
     modalId: {
@@ -85,11 +79,6 @@ export default {
       }
     }
   },
-  // data () {
-  //   return {
-  //     showModal: false
-  //   }
-  // },
   methods: {
     clickModal (event) {
       const id = event.target.className || ''
@@ -140,29 +129,24 @@ export default {
 }
 
 .modal-container {
-  // width: 300px;
   margin: 0px auto;
-  // padding: 20px 30px;
-  // background-color: #fff;
-  // border-radius: 2px;
-  // box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-container.small {
-  width: 40%;
-  min-width: 300px;
-  height: calc(40% - var(--app-modal-margin-double));
-}
-.modal-container.medium {
-  width: 60%;
-  height: calc(60% - var(--app-modal-margin-double));
-}
-.modal-container.large {
-  width: 90%;
-  height: calc(90% - var(--app-modal-margin-double));
-}
+// .modal-container.small {
+//   width: 40%;
+//   min-width: 300px;
+//   height: calc(40% - var(--app-modal-margin-double));
+// }
+// .modal-container.medium {
+//   width: 60%;
+//   height: calc(60% - var(--app-modal-margin-double));
+// }
+// .modal-container.large {
+//   width: 90%;
+//   height: calc(90% - var(--app-modal-margin-double));
+// }
 
 /* transition modal */
 .modal-enter {
