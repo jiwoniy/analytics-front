@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal-page" @click="clickModal">
+    <div :id="modalId" class="modal-page" @click="clickModal">
 
       <div class="modal-wrapper"
         :class="{
@@ -58,6 +58,11 @@ export default {
     WrapperButton
   },
   props: {
+    modalId: {
+      require: true,
+      type: String,
+      default: () => 'modal'
+    },
     size: {
       type: String,
       default: () => 'small' // small, medium, large

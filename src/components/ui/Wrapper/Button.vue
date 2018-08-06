@@ -1,5 +1,5 @@
 <template>
-  <button class="button__default">
+  <button class="button-wrapper">
     {{ buttonText }}
   </button>
 </template>
@@ -16,8 +16,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.button__default {
+<style scoped>
+.button-wrapper {
   background-color: var(--app-button-color);
   border: none;
   color: white;

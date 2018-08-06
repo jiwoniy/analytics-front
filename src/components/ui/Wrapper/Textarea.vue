@@ -1,19 +1,15 @@
 <template>
-  <div class="input-wrapper">
+  <div class="textarea-wrapper">
     <label v-if="!isEditable">
       {{ value }}
     </label>
-    <input
-      v-if="isEditable"
-      :type="inputType"
-      @input="eventHandler"
-      :value="value" />
+    <textarea v-if="isEditable" @input="eventHandler" :value="value" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Wrapper-Input',
+  name: 'Wrapper-Textarea',
   props: {
     isEditable: {
       type: Boolean,
@@ -22,11 +18,6 @@ export default {
     value: {
       type: [String, Number],
       default: () => ''
-    }
-  },
-  data () {
-    return {
-      inputType: 'text'
     }
   },
   methods: {
@@ -38,11 +29,11 @@ export default {
 </script>
 
 <style scoped>
-.input-wrapper {
+.textarea-wrapper {
   width: 100%;
 }
 
-.input-wrapper input {
+.textarea-wrapper textarea{
   width: 300px;
 }
 </style>

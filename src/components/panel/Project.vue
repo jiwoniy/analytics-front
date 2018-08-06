@@ -3,6 +3,7 @@
     <div class="div--project__page">
       <main-panel></main-panel>
       <modal
+        :modalId="'projectModal'"
         v-show="showModal"
         @close="modalClose"
         :size="modal.modalSize"

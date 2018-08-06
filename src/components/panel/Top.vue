@@ -1,6 +1,7 @@
 <template>
   <transition>
     <div class="top-panel__page">
+      <div id="tf-widget-container"></div>
       <menu-list
         class="menu-icon"
         :project-list="projectList">

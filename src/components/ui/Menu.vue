@@ -1,28 +1,41 @@
 <template>
   <transition>
     <div class="Menu">
-      <div class="menubar-container" @click.stop="clickMenuBar($event)">
+
+      <div class="menubar-container" @click.stop.prevent="toggleProject">
         <p class="bar1"></p>
         <p class="bar2"></p>
         <p class="bar3"></p>
       </div>
-      <div class="menu-container" v-show="isOpen">
-        <list-view
-          :items="projectList"
-          :item-style="{
-            'font-size': '1.6rem',
-            'margin': '0.5rem 0.4rem'
-          }"
-          :item-class="'text-ellipsis__default'"
-          :selected-item-id="activateProjectId"
-          :item-click="selectProject">
-        </list-view>
 
-        <div class="add-project">
-          <img class="close" src="/static/img/plus-circle-solid.svg" />
-          <span> {{ $t('Add project') }} </span>
+      <div
+        class="modal-container__wrapper"
+        v-show="isProjectModalOpen"
+        @click.stop.prevent="toggleProject"
+      >
+        <div class="project-container">
+          <list-view
+            :items="projectList"
+            :item-style="{
+              'font-size': '1.6rem',
+              'margin': '0.5rem 0.4rem'
+            }"
+            :item-class="'text-ellipsis__default'"
+            :selected-item-id="activateProjectId"
+            :item-click="selectProject">
+          </list-view>
+
+          <div class="add-project" @click.stop="toggleAddProject">
+            <img class="add-project close" src="/static/img/plus-circle-solid.svg" />
+            <span class="add-project"> {{ $t('Add project') }} </span>
+          </div>
         </div>
       </div>
+
+      <div class="modal-container__wrapper center" v-show="isAddProjectModalOpen" @click.prevent="toggleAddProject">
+        <create-project></create-project>
+      </div>
+
     </div>
   </transition>
 </template>
@@ -31,15 +44,18 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import ListView from '@/components/ui/ListView'
+import CreateProject from '@/components/CreateProject'
 
 export default {
   name: 'Menu',
   components: {
-    ListView
+    ListView,
+    CreateProject
   },
   data () {
     return {
-      isOpen: false
+      isProjectModalOpen: false,
+      isAddProjectModalOpen: false
     }
   },
   i18n: {
@@ -71,15 +87,24 @@ export default {
     ...mapActions({
       setActivateProjectId: 'myProject/setActivateProjectId'
     }),
+    toggleProject () {
+      this.isProjectModalOpen = !this.isProjectModalOpen
+    },
+    toggleAddProject (event) {
+      let className = event.target.className || ''
+
+      if (className.indexOf('modal-container__wrapper') > -1 || className.indexOf('add-project') > -1) {
+        this.isAddProjectModalOpen = !this.isAddProjectModalOpen
+        if (this.isProjectModalOpen) {
+          this.toggleProject()
+        }
+      }
+    },
     selectProject (event) {
       if (event.target) {
         const projectId = event.target.id || event.target.parentElement.id
         this.setActivateProjectId(projectId)
-        this.isOpen = !this.isOpen
       }
-    },
-    clickMenuBar (ev) {
-      this.isOpen = !this.isOpen
     }
   }
 }
@@ -103,14 +128,26 @@ export default {
     }
   }
 
-  .menu-container {
+  .modal-container__wrapper {
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-container__wrapper .project-container {
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: #ffffff;
     background-color: #eee;
-    z-index: 999;
 
     width: 250px;
     overflow-y: auto;
