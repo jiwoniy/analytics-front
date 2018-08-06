@@ -16,8 +16,12 @@ export default {
     // return apiHandler(Axios.post(baseUrl, params))
     return apiHandler(returnPromise(storageFun.getProjects()))
   },
-  // updateProject (projectId, project) {
-  // },
+  createProject ({ projectName, projectDesc }) {
+    return apiHandler(returnPromise(storageFun.createProject({
+      projectName,
+      projectDesc
+    })))
+  },
   // deleteProject (projectId) {
   // },
   getWorksheets (projectId) {

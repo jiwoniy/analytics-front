@@ -43,6 +43,6 @@ export default {
 }
 
 .input-wrapper input {
-  width: 300px;
+  width: calc(100% - 0.4rem);
 }
 </style>

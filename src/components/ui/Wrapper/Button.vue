@@ -1,5 +1,5 @@
 <template>
-  <button class="button-wrapper">
+  <button class="button-wrapper" @click="clickEvent">
     {{ buttonText }}
   </button>
 </template>
@@ -11,6 +11,10 @@ export default {
     buttonText: {
       type: String,
       default: () => ''
+    },
+    clickEvent: {
+      type: Function,
+      default: () => null
     }
   }
 }

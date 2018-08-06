@@ -2,11 +2,19 @@ import _isEmpty from 'lodash.isempty'
 
 export default {
   // project
-  SET_PROJECTS: (state, projects) => {
+  FETCH_PROJECTS: (state, projects) => {
     if (projects) {
       state.projects = projects
     }
   },
+  ADD_PROJECT: (state, project) => {
+    if (project) {
+      state.projects = Object.assign({}, state.projects, {
+        ...project
+      })
+    }
+  },
+
   SET_ACTIVATE_PROJECT_ID: (state, projectId) => {
     if (projectId) {
       state.activateProjectId = projectId

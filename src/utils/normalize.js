@@ -9,6 +9,15 @@ function normalizeArray (datas, pIdentity = 'id') {
   return null
 }
 
+function normalizeObject (data, pIdentity = 'id') {
+  if (data) {
+    const normalizeObj = {}
+    normalizeObj[data[pIdentity]] = { ...data }
+    return normalizeObj
+  }
+  return null
+}
+
 function getNodeId (data, pIdentity = 'id') {
   if (data) {
     return data[pIdentity]
@@ -24,6 +33,7 @@ function getLinkId (data, pIdentity = 'id') {
 }
 
 export {
+  normalizeObject,
   normalizeArray,
   getNodeId,
   getLinkId

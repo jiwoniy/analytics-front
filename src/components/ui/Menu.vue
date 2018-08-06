@@ -33,7 +33,7 @@
       </div>
 
       <div class="modal-container__wrapper center" v-show="isAddProjectModalOpen" @click.prevent="toggleAddProject">
-        <create-project></create-project>
+        <create-project :callback="() => this.isAddProjectModalOpen = false"></create-project>
       </div>
 
     </div>

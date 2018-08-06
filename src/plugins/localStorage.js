@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid/v4'
+
 import projetSchema from '@/api/mockup/project-schema.json'
 import worksheetSchema from '@/api/mockup/worksheets-schema.json'
 import pipelinesSchema from '@/api/mockup/pipelines-schema.json'
@@ -14,6 +16,19 @@ function StorageFun () {
     // projects
     getProjects: () => {
       return this.storage.projects
+    },
+    createProject: ({ projectName, projectDesc }) => {
+      const projectId = uuidv4()
+      const newProject = {
+        id: projectId,
+        name: projectName,
+        desc: projectDesc
+      }
+      this.storage.projects.push(newProject)
+      localStorage.setItem('projects', JSON.stringify(this.storage.projects))
+      this.storage.worksheets[projectId] = []
+      localStorage.setItem('worksheets', JSON.stringify(this.storage.worksheets))
+      return newProject
     },
 
     // worksheets

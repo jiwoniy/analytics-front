@@ -10,7 +10,7 @@
         </label>
         <div class="accslide">
           <div class="content">
-            <!-- <h1> {{ $t('Worksheet List') }} </h1> -->
+            <h1> {{ $t('Worksheet List') }} </h1>
             <list-view
               :items="worksheetList"
               :item-class="'text-ellipsis__default'"

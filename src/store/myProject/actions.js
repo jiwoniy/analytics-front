@@ -5,14 +5,14 @@ import _debounce from 'lodash.debounce'
 
 import { setting } from '@/config'
 import api from '@/api'
-import { normalizeArray } from '@/utils/normalize'
+import { normalizeObject, normalizeArray } from '@/utils/normalize'
 
 export default {
   // project
   getProjects: async ({ dispatch, commit }) => {
     const { success } = await api.projects.getMyProjects()
     if (success && success.length) {
-      commit('SET_PROJECTS', normalizeArray(success))
+      commit('FETCH_PROJECTS', normalizeArray(success))
       dispatch('setActivateProjectId', success[0].id)
     }
   },
@@ -20,28 +20,34 @@ export default {
     if (projectId) {
       commit('SET_ACTIVATE_PROJECT_ID', projectId)
       const { success } = await api.projects.getWorksheets(projectId)
-      if (success && success.length) {
+      if (success) {
         dispatch('setWorksheets', success)
       }
     }
   },
+  createProject: async ({ dispatch, commit }, { projectName, projectDesc }) => {
+    const { success } = await api.projects.createProject({ projectName, projectDesc })
+    if (success) {
+      commit('ADD_PROJECT', normalizeObject(success))
+      dispatch('setActivateProjectId', success.id)
+    }
+  },
 
   // worksheet
-  setWorksheets: ({ dispatch, commit }, worksheets) => {
-    if (worksheets) {
-      if (worksheets && worksheets.length) {
-        commit('SET_WORKSHEETS', normalizeArray(worksheets))
-        dispatch('findActivateWorksheets')
-      }
+  setWorksheets: ({ dispatch, commit, state }, worksheets) => {
+    if (worksheets && worksheets.length) {
+      commit('SET_WORKSHEETS', normalizeArray(worksheets))
+      dispatch('findActivateWorksheets')
+    } else if (worksheets) {
+      commit('SET_WORKSHEETS', {})
+      dispatch('setActivateWorksheetId', null)
     }
   },
   setActivateWorksheetId: async ({ dispatch, commit }, worksheetId) => {
-    if (worksheetId) {
-      commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
-      const { success } = await api.projects.getPipeline(worksheetId)
-      if (!_isEmpty(success)) {
-        dispatch('setActivatePipeline', { pipeline: success })
-      }
+    commit('SET_ACTIVATE_WORKSHEETS', worksheetId)
+    const { success } = await api.projects.getPipeline(worksheetId)
+    if (!_isEmpty(success)) {
+      dispatch('setActivatePipeline', { pipeline: success })
     }
   },
   findActivateWorksheets: ({ dispatch, commit, state }) => {
