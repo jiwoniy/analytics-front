@@ -105,9 +105,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
       thisGraph.setSelectNode(this, null)
     })
     // .on('mouseup', function (d) {
-    //   thisGraph.svgMouseUp(this, null)
+    // thisGraph.svgMouseUp(this, null)
     // })
-    .call(dragSvg).on('dblclick.zoom', null)
+    .call(dragSvg)
+    .on('dblclick.zoom', null)
 
   // listen for dragging
   this.setWidth = function setWidth (payload) {

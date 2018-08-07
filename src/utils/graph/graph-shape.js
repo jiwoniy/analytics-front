@@ -32,6 +32,9 @@ function removeTooltip (selection) {
 // Output drag handler
 function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
   return d3Drag.drag()
+    // .filter(function (d) {
+    //   return true
+    // })
     .subject(function (d) {
       return { x: d.position.x, y: d.position.y }
     })
@@ -43,8 +46,11 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
         const originX = d.position.x + linkOutput.cx
         const originY = d.position.y + linkOutput.cy
 
-        const ToX = d3Selection.event.x + linkOutput.cx
-        const ToY = d3Selection.event.y + linkOutput.cy
+        const mouse = d3Selection.mouse(this)
+        const ToX = mouse[0] + d.position.x
+        const ToY = mouse[1] + d.position.y
+        // const ToX = d3Selection.event.x + linkOutput.cx
+        // const ToY = d3Selection.event.y + linkOutput.cy
 
         context.dragLine.attr('d',
           `M${originX},${originY}L${ToX},${ToY}`)
@@ -89,9 +95,8 @@ function getNodeShape (context, selections, isCanConnect) {
           .attr('cy', 0)
           .attr('r', 10)
           .on('mouseover', function (d) {
-            d3Selection.select(this).classed('hover', true)
-            drawTooltip(d3Selection.select(this.parentNode), d, 'input', startPositionInput + (increaseInputValue * circleIn))
             if (context.state.connecting) {
+              d3Selection.select(this).classed('hover', true)
               context.state.capturedTarget = {
                 targetId: d.id,
                 linkInput: {
@@ -101,12 +106,19 @@ function getNodeShape (context, selections, isCanConnect) {
                   index: circleIn
                 }
               }
+            } else if (!context.state.connecting) {
+              d3Selection.select(this).classed('hover', true)
+              drawTooltip(d3Selection.select(this.parentNode), d, 'input', startPositionInput + (increaseInputValue * circleIn))
             }
           })
           .on('mouseout', function (d) {
-            d3Selection.select(this).classed('hover', false)
-            removeTooltip(d3Selection.select(this.parentNode))
-            context.state.capturedTarget = null
+            if (context.state.connecting) {
+              d3Selection.select(this).classed('hover', false)
+              context.state.capturedTarget = null
+            } else {
+              d3Selection.select(this).classed('hover', false)
+              removeTooltip(d3Selection.select(this.parentNode))
+            }
           })
       }
     } else if (type === 'output') {
@@ -145,7 +157,6 @@ function getNodeShape (context, selections, isCanConnect) {
 
   if (selections.size() === 1) {
     const bindingData = selections.datum()
-    // const { input, output } = bindingData
     drawCircle.call(selections.node(), bindingData, 'input')
     selections.append('rect')
       .attr('width', 200)

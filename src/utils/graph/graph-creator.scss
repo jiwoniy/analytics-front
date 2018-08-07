@@ -6,6 +6,9 @@ marker {
 }
 
 path.link {
+  // important!!
+  pointer-events: none;
+  // important!!
   fill: none;
   stroke: #333;
   stroke-width: 3px;
