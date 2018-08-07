@@ -21,7 +21,7 @@ function drawTooltip (selection, d, inOut, xPosition) {
 
   tooltip
     .append('text')
-    .text(d.node_type)
+    // .text(d.node_type)
     .attr('transform', 'translate(50,15)') // base rect height
 }
 

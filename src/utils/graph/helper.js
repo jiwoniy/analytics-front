@@ -6,7 +6,7 @@ function nodeTransformSaveNode (node, isLinks = false) {
     return {
       id: node.id,
       name: node.name,
-      node_type: node.node_type,
+      // node_type: node.node_type,
       input: node.input,
       output: node.output,
       linkInput: node.linkInput || null,
@@ -19,7 +19,7 @@ function nodeTransformSaveNode (node, isLinks = false) {
 
   return {
     id: node.id,
-    node_type: node.node_type,
+    // node_type: node.node_type,
     name: node.name,
     input: node.input,
     output: node.output,
@@ -41,7 +41,7 @@ function nodeTransformUiNode (node, isLinks = false) {
   if (isLinks) {
     return {
       id: node.id,
-      node_type: node.node_type,
+      // node_type: node.node_type,
       input: node.input,
       output: node.output,
       name: node.name,
@@ -57,7 +57,7 @@ function nodeTransformUiNode (node, isLinks = false) {
 
   return {
     id: node.id,
-    node_type: node.node_type,
+    // node_type: node.node_type,
     input: node.input,
     output: node.output,
     name: node.name,

@@ -29,11 +29,14 @@
 
         <SplitArea :size="split_size.right" :minSize="20">
           <right-panel>
-            <manage-view
-              slot="data-manage"
-              :current-item-type="currentItemType"
-            >
-            </manage-view>
+            <worksheet-manager
+              v-if="currentItemType === 'worksheet'"
+              slot="worksheet-manager">
+            </worksheet-manager>
+            <node-manager
+              v-if="currentItemType === 'pipeline-node'"
+              slot="node-manager">
+            </node-manager>
           </right-panel>
         </SplitArea>
       </Split>
@@ -52,7 +55,8 @@ import LeftPanel from '@/components/panel/Left'
 import RightPanel from '@/components/panel/Right'
 import WorkPanel from '@/components/panel/Working'
 import FootPanel from '@/components/panel/Foot'
-import ManageView from '@/components/ui/ManageView'
+import WorksheetManager from '@/components/WorksheetManager'
+import NodeManager from '@/components/NodeManager'
 
 export default {
   name: 'Work-Panel',
@@ -61,7 +65,8 @@ export default {
     RightPanel,
     WorkPanel,
     FootPanel,
-    ManageView
+    WorksheetManager,
+    NodeManager
   },
   data () {
     return {

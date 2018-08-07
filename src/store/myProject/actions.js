@@ -104,6 +104,7 @@ export default {
     if (pipeline) {
       commit('SET_ACTIVATE_PIPELINE', { pipeline })
       commit('UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS', { updateType: 'init' })
+      commit('SET_PIPELINE_EDITABLE', false)
     }
   },
   savePipeline: ({ dispatch, commit }, { pipeline }) => {

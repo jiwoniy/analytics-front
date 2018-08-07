@@ -5,28 +5,40 @@
     {
       "id": "TABLE - 1",
       "name": "TABLE - 1",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     {
       "id": "TABLE - 2",
       "name": "TABLE - 2",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     {
       "id": "TABLE - 3",
       "name": "TABLE - 3",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     {
       "id": "TABLE - 4",
       "name": "TABLE - 4",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "2"
     }
@@ -42,7 +54,10 @@
         {
           "id": "Split",
           "name": "Split sdfsfasjj dslfjsldkfjslkdjsdklj",
-          "node_type": "pipeline",
+          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+          "parameters": {
+            "parameter_key": "value"
+          },
           "input": "2",
           "output": "3"
         }
@@ -54,7 +69,10 @@
         {
           "id": "Filed Selection1",
           "name": "Filed Selection1klsadjfl skfjlskdjfslkfjslkdfjsldfjslkdfjslfkjsldkfjsdlkfjsdlkfjslkfjslkfjsdlkjdslk",
-          "node_type": "pipeline",
+          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+          "parameters": {
+            "parameter_key": "value"
+          },
           "input": "1",
           "output": "1"
         }
@@ -66,7 +84,10 @@
         {
           "id": "Normalization",
           "name": "Normalization",
-          "node_type": "pipeline",
+          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+          "parameters": {
+            "parameter_key": "value"
+          },
           "input": "1",
           "output": "1"
         }
@@ -80,27 +101,39 @@
   "children": [
     { "id": "RDBMS1",
       "name": "RDBMS ",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     { "id": "HBase", 
       "name": "HBase",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     {
       "id": "Visualize1", 
       "name": "Visualize",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "1"
     },
     {
       "id": "File", 
       "name": "File",
-      "node_type": "pipeline",
+      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "parameters": {
+        "parameter_key": "value"
+      },
       "input": "0",
       "output": "2"
     }
