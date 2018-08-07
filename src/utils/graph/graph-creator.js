@@ -10,7 +10,7 @@ import GraphLinks from './graph-links'
 
 import { getLinkId } from '@/utils/normalize'
 import {
-  nodeTransformUiNode,
+  metaNodeToNode,
   nodeTransformUiNodes,
   nodeTransformSaveNodes,
   linksTransformSaveLink,
@@ -151,7 +151,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.addNode = function addNode (node) {
     if (thisGraph.isEditable()) {
-      thisGraph.nodes.add(nodeTransformUiNode(node))
+      thisGraph.nodes.add(metaNodeToNode(node))
       thisGraph.drawGraph({ node: true })
     }
   }
@@ -231,12 +231,12 @@ function nodeDraghandler (context) {
     })
     .on('start', function (d) {
       if (context.isEditable()) {
-        d.status.moving = true
+        d.ui_status.moving = true
       }
     })
     .on('drag', function (d) {
       if (context.isEditable()) {
-        if (!d.status.selected) {
+        if (!d.ui_status.selected) {
           // move node
           d3Selection.select(this)
             .attr('transform', `translate(${d3Selection.event.x}, ${d3Selection.event.y})`)
@@ -249,8 +249,8 @@ function nodeDraghandler (context) {
     })
     .on('end', function (d) {
       if (context.isEditable()) {
-        if (!d.status.selected) {
-          d.status.moving = false
+        if (!d.ui_status.selected) {
+          d.ui_status.moving = false
         }
       }
     })
@@ -291,7 +291,7 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
   const nodeDrag = nodeDraghandler(thisGraph)
   exists
-    .classed(thisGraph.constants.nodeSelectedClass, d => d.status.selected)
+    .classed(thisGraph.constants.nodeSelectedClass, d => d.ui_status.selected)
     .call(thisGraph.appendText)
 
   const newGs = exists
@@ -395,7 +395,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
 
 GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
   if (data) {
-    const isSelected = data.status.selected
+    const isSelected = data.ui_status.selected
     this.stateProxy.selectedNode = isSelected ? null : data
   } else {
     this.stateProxy.selectedNode = null

@@ -1,12 +1,12 @@
 <template>
   <transition>
-    <section class="div--Working__page">
+    <section class="working__page">
       <div id="tool-box" class="tool-box">
         <button @click="save"> save </button>
         <button @click="edit"> edit </button>
         <button @click="refresh"> recover </button>
         <button @click="load"> Reload </button>
-        <!-- <button @click="openModal"> modal </button> -->
+        <button @click="openModal"> modal </button>
       </div>
       <drop-comp>
         <svg-palete
@@ -40,27 +40,27 @@ export default {
     },
     load () {
       eventController.LOAD({})
+    },
+    openModal () {
+      eventController.SHOW_MODAL({
+        position: 'center',
+        size: 'large',
+        contentComponent: 'Palete'
+      })
     }
-    // openModal () {
-    //   eventController.SHOW_MODAL({
-    //     position: 'center',
-    //     size: 'large',
-    //     contentComponent: 'Palete'
-    //   })
-    // }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.div--Working__page {
+.working__page {
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.div--Working__page .tool-box {
+.working__page .tool-box {
   position: absolute;
   display: flex;
   flex-direction: column;

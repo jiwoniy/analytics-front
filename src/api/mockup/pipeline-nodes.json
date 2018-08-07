@@ -5,42 +5,9 @@
     {
       "id": "TABLE - 1",
       "name": "TABLE - 1",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
+      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
       "input": "0",
       "output": "1"
-    },
-    {
-      "id": "TABLE - 2",
-      "name": "TABLE - 2",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
-      "input": "0",
-      "output": "1"
-    },
-    {
-      "id": "TABLE - 3",
-      "name": "TABLE - 3",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
-      "input": "0",
-      "output": "1"
-    },
-    {
-      "id": "TABLE - 4",
-      "name": "TABLE - 4",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
-      "input": "0",
-      "output": "2"
     }
   ]
 },
@@ -54,10 +21,7 @@
         {
           "id": "Split",
           "name": "Split sdfsfasjj dslfjsldkfjslkdjsdklj",
-          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-          "parameters": {
-            "parameter_key": "value"
-          },
+          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
           "input": "2",
           "output": "3"
         }
@@ -69,10 +33,7 @@
         {
           "id": "Filed Selection1",
           "name": "Filed Selection1klsadjfl skfjlskdjfslkfjslkdfjsldfjslkdfjslfkjsldkfjsdlkfjsdlkfjslkfjslkfjsdlkjdslk",
-          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-          "parameters": {
-            "parameter_key": "value"
-          },
+          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
           "input": "1",
           "output": "1"
         }
@@ -84,10 +45,7 @@
         {
           "id": "Normalization",
           "name": "Normalization",
-          "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-          "parameters": {
-            "parameter_key": "value"
-          },
+          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
           "input": "1",
           "output": "1"
         }
@@ -101,39 +59,27 @@
   "children": [
     { "id": "RDBMS1",
       "name": "RDBMS ",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
+      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
       "input": "0",
       "output": "1"
     },
     { "id": "HBase", 
       "name": "HBase",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
+      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
       "input": "0",
       "output": "1"
     },
     {
       "id": "Visualize1", 
       "name": "Visualize",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
+      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
       "input": "0",
       "output": "1"
     },
     {
       "id": "File", 
       "name": "File",
-      "ref_node_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "parameters": {
-        "parameter_key": "value"
-      },
+      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
       "input": "0",
       "output": "2"
     }

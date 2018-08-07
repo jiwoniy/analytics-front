@@ -6,7 +6,9 @@ function nodeTransformSaveNode (node, isLinks = false) {
     return {
       id: node.id,
       name: node.name,
-      // node_type: node.node_type,
+      desc: node.desc,
+      properties: node.properties,
+      node_type_id: node.node_type_id,
       input: node.input,
       output: node.output,
       linkInput: node.linkInput || null,
@@ -19,8 +21,10 @@ function nodeTransformSaveNode (node, isLinks = false) {
 
   return {
     id: node.id,
-    // node_type: node.node_type,
     name: node.name,
+    desc: node.desc,
+    node_type_id: node.node_type_id,
+    properties: node.properties,
     input: node.input,
     output: node.output,
     linkInput: node.linkInput || null,
@@ -41,14 +45,16 @@ function nodeTransformUiNode (node, isLinks = false) {
   if (isLinks) {
     return {
       id: node.id,
-      // node_type: node.node_type,
+      name: node.name,
+      desc: node.desc,
+      node_type_id: node.node_type_id,
+      properties: node.properties,
       input: node.input,
       output: node.output,
-      name: node.name,
       linkInput: node.linkInput || null,
       linkOutput: node.linkOutput || null,
       position: node.ui.position,
-      status: {
+      ui_status: {
         moving: false,
         selected: false
       }
@@ -57,14 +63,16 @@ function nodeTransformUiNode (node, isLinks = false) {
 
   return {
     id: node.id,
-    // node_type: node.node_type,
+    name: node.name,
+    desc: node.desc,
+    node_type_id: node.node_type_id,
+    properties: node.properties,
     input: node.input,
     output: node.output,
-    name: node.name,
     linkInput: node.linkInput || null,
     linkOutput: node.linkOutput || null,
     position: node.ui.position,
-    status: {
+    ui_status: {
       moving: false,
       selected: false
     }
@@ -100,7 +108,27 @@ function linksTransformUiLinks (links) {
     }))
 }
 
+function metaNodeToNode (node) {
+  return {
+    id: node.id,
+    node_type_id: node.node_type_id,
+    // input: node.input,
+    // output: node.output,
+    name: node.name,
+    desc: node.desc,
+    properties: node.properties,
+    // linkInput: node.linkInput || null,
+    // linkOutput: node.linkOutput || null,
+    position: node.position,
+    ui_status: {
+      moving: false,
+      selected: false
+    }
+  }
+}
+
 export {
+  metaNodeToNode,
   nodeTransformUiNode, // save node => UI node
   nodeTransformUiNodes, // save nodes => UI nodes
   nodeTransformSaveNodes, // UI nodes => save nodes

@@ -18,11 +18,12 @@
           }"
         >
           <component
-            v-bind:is="contentComponent"
+            v-if="lazyLoadComponent"
+            v-bind:is="lazyLoadComponent"
             :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)">
           </component>
-
         </div>
+
       </div>
 
     </div>
@@ -30,19 +31,8 @@
 </template>
 
 <script>
-import Palete from '@/components/common/Palete'
-import CreateProject from '@/components/CreateProject'
-import CreateWorksheet from '@/components/CreateWorksheet'
-import Confirmation from '@/components/ui/Confirmation'
-
 export default {
   name: 'Modal',
-  components: {
-    Palete,
-    CreateProject,
-    CreateWorksheet,
-    Confirmation
-  },
   props: {
     modalId: {
       require: true,
@@ -85,6 +75,20 @@ export default {
         'Ok': 'Ok',
         'No': 'No'
       }
+    }
+  },
+  computed: {
+    lazyLoadComponent () {
+      if (this.contentComponent === 'CreateProject') {
+        return () => import('@/components/CreateWorksheet')
+      } else if (this.contentComponent === 'CreateWorksheet') {
+        return () => import('@/components/CreateWorksheet')
+      } else if (this.contentComponent === 'Confirmation') {
+        return () => import('@/components/ui/Confirmation')
+      } else if (this.contentComponent === 'Palete') {
+        return () => import('@/components/common/Palete')
+      }
+      return () => null
     }
   },
   methods: {

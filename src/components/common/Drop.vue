@@ -20,18 +20,16 @@ export default {
       event.preventDefault()
     },
     drop (event) {
-      const ui = {
-        position: {
-          x: (event.x * 0.3) || 100,
-          y: (event.y * 0.7) || 100
-        }
+      const position = {
+        x: (event.x * 0.3) || 100,
+        y: (event.y * 0.7) || 100
       }
       const data = event.dataTransfer.getData('data')
       if (data) {
         eventController.SEND_DATA_TRANSFER({
           data: {
             ...JSON.parse(data),
-            ui
+            position
           }
         })
       }

@@ -9,7 +9,7 @@ import { normalizeObject, normalizeArray } from '@/utils/normalize'
 
 export default {
   // project
-  getProjects: async ({ dispatch, commit }) => {
+  fetchProjects: async ({ dispatch, commit }) => {
     const { success } = await api.projects.getMyProjects()
     if (success && success.length) {
       commit('FETCH_PROJECTS', normalizeArray(success))

@@ -15,16 +15,16 @@ GraphNodes.prototype.getNodes = function getNodes () {
 GraphNodes.prototype.setSelectClean = function setSelectClean () {
   const that = this
   Object.keys(this.nodes).map(key => {
-    that.nodes[key].status.selected = false
+    that.nodes[key].ui_status.selected = false
   })
 }
 
 GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
   if (selectNode) {
-    if (selectNode.status.selected) {
-      this.nodes[selectNode.id].status.selected = false
-    } else if (!selectNode.status.selected) {
-      this.nodes[selectNode.id].status.selected = true
+    if (selectNode.ui_status.selected) {
+      this.nodes[selectNode.id].ui_status.selected = false
+    } else if (!selectNode.ui_status.selected) {
+      this.nodes[selectNode.id].ui_status.selected = true
     }
   } else {
     this.setSelectClean()

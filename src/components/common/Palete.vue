@@ -1,6 +1,6 @@
 <template>
   <transition>
-    <div id="svgContainer" class="palete" v-resize:debounce.250="onResize">
+    <div :id="`svgContainer${_uid}`" class="palete" v-resize:debounce.250="onResize">
       <img class="lock" v-if="isPipelineEditable" src="@/assets/img/lock-open-solid.svg" />
       <img class="lock" v-if="!isPipelineEditable" src="@/assets/img/lock-solid.svg" />
       <svg>
@@ -20,13 +20,13 @@ import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
 import _isEmpty from 'lodash.isempty'
 import _cloneDeep from 'lodash.clonedeep'
-// import moment from 'moment'
 
 import DefSvg from '@/components/common/DefSvg'
 import eventController from '@/utils/EventController'
 import GraphCreator from '@/utils/graph/graph-creator'
 import compose from '@/utils/compose'
 
+// TODO Make read, read/write mode
 export default {
   name: 'Svg-palete',
   components: {
@@ -62,7 +62,8 @@ export default {
       activatePipeline: 'myProject/getActivatePipeline',
       activatePipelineSyncTime: 'myProject/getActivatePipelineSyncTime',
       activatePipelineUpdateStatus: 'myProject/getPipelineUpdateStatus',
-      activatePipelineNodeUpdateStatus: 'myProject/getActivatePipelineNodeUpdateStatus'
+      activatePipelineNodeUpdateStatus: 'myProject/getActivatePipelineNodeUpdateStatus',
+      metaNodes: 'metaNode/getMetaNodes'
     }),
     lastSavedTime () {
       return this.activatePipelineSyncTime
@@ -74,6 +75,9 @@ export default {
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
+    getTypeNode (id) {
+      return this.metaNodes[id]
+    },
     onResize (elem) {
       if (this.svgContainer) {
         this.svgContainer
@@ -154,7 +158,7 @@ export default {
       this.width = this.$el.offsetWidth
       this.height = this.$el.offsetHeight
 
-      this.svgContainer = d3Selection.select('#svgContainer').select('svg')
+      this.svgContainer = d3Selection.select(`#svgContainer${this._uid}`).select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
       this.svgContainerGroup = this.svgContainer
@@ -168,7 +172,7 @@ export default {
       })
     },
     nodeSelect (nodeItem) {
-      if (nodeItem && nodeItem.status.selected) {
+      if (nodeItem && nodeItem.ui_status.selected) {
         eventController.RIGHT_PANEL({
           item: _cloneDeep(nodeItem),
           type: 'pipeline-node'
@@ -193,8 +197,10 @@ export default {
     // window.onresize = function(){thisGraph.updateWindow(svg);}
     eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
       const { data } = payload
+      // TODO Node Type Check!!
+      const sendData = Object.assign({}, data, this.getTypeNode(data.node_type_id))
       this.svgGraph.addNode({
-        ...data,
+        ...sendData,
         id: uuidv4()
       })
     })

@@ -19,6 +19,9 @@
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
+
+        <!-- <wrapper-selection>
+        </wrapper-selection> -->
       </label>
 
       <div class="right-footer" @click="remove">
@@ -37,12 +40,14 @@ import { mapGetters, mapActions } from 'vuex'
 import eventController from '@/utils/EventController'
 import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
+// import WrapperSelection from '@/components/ui/Wrapper/Selection'
 
 export default {
   name: 'Node-Manager-View',
   components: {
     WrapperButton,
     WrapperInput
+    // WrapperSelection
   },
   i18n: {
     messages: {
@@ -67,8 +72,9 @@ export default {
       if (activateNode) {
         return Object.keys(activateNode)
           .map(key => ({ key, value: activateNode[key] }))
-          .filter(item => item.key !== 'status' && item.key !== 'id' && item.key !== 'ui')
-      //     // TODO utils filter 만들기...lodash 찾아보기
+          .filter(item => item.key === 'desc' ||
+            item.key === 'name' ||
+            item.key === 'properties')
       }
       return null
     }

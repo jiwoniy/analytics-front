@@ -5,6 +5,7 @@ import createLogger from 'vuex/dist/logger'
 import common from './common'
 import pipelineMeta from './pipelineMeta'
 import myProject from './myProject'
+import metaNode from './metaNode'
 
 import configureMediator from '@/helper/mediator'
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   modules: {
     common,
     pipelineMeta,
+    metaNode,
     myProject
     // auth
   },
