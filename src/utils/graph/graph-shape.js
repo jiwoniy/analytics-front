@@ -49,11 +49,14 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
         const mouse = d3Selection.mouse(this)
         const ToX = mouse[0] + d.position.x
         const ToY = mouse[1] + d.position.y
+
         // const ToX = d3Selection.event.x + linkOutput.cx
         // const ToY = d3Selection.event.y + linkOutput.cy
 
+        const transform = context.state.currentZoomTransform
         context.dragLine.attr('d',
           `M${originX},${originY}L${ToX},${ToY}`)
+          .attr('transform', transform)
       }
     })
     .on('end', function (d) {

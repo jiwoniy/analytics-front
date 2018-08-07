@@ -40,6 +40,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     justDragged: false,
     connecting: false,
     capturedTarget: null,
+    currentZoomTransform: { k: 0, x: 0, y: 0 },
     justScaleTransGraph: false,
     lastKeyDown: -1,
     shiftNodeDrag: false,
@@ -90,12 +91,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   const dragSvg = d3Zoom.zoom()
     .on('zoom', function () {
-      thisGraph.zoomed()
+      thisGraph.svgG.attr('transform', d3Selection.event.transform)
     })
     .on('start', function () {
       thisGraph.svg.style('cursor', 'move')
+      thisGraph.state.justScaleTransGraph = true
     })
     .on('end', function () {
+      if (thisGraph.state.justScaleTransGraph) {
+        thisGraph.state.currentZoomTransform = d3Selection.event.transform
+        thisGraph.state.justScaleTransGraph = false
+      }
       thisGraph.svg.style('cursor', 'auto')
     })
 
@@ -398,12 +404,6 @@ GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
 
 GraphCreator.prototype.findRelatedLinks = function findRelatedLinks (node) {
   return this.links.findLinks(node)
-}
-
-GraphCreator.prototype.zoomed = function zoomed () {
-  this.state.justScaleTransGraph = true
-
-  this.svgG.attr('transform', d3Selection.event.transform)
 }
 
 // GraphCreator.prototype.svgMouseDown = function svgMouseDown () {
