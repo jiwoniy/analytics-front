@@ -66,13 +66,8 @@ export default {
       this.modal.callback = callback || null
       this.modal.contentComponent = contentComponent || null
 
-      if (position) {
-        this.modal.modalPosition = position
-      }
-
-      if (size) {
-        this.modal.modalSize = size
-      }
+      this.modal.modalPosition = position || 'center'
+      this.modal.modalSize = size || 'small'
     })
   }
 }
