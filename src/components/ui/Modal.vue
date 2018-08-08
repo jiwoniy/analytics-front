@@ -80,7 +80,7 @@ export default {
   computed: {
     lazyLoadComponent () {
       if (this.contentComponent === 'CreateProject') {
-        return () => import('@/components/CreateWorksheet')
+        return () => import('@/components/CreateProject')
       } else if (this.contentComponent === 'CreateWorksheet') {
         return () => import('@/components/CreateWorksheet')
       } else if (this.contentComponent === 'Confirmation') {
