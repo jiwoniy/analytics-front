@@ -20,7 +20,7 @@
             v-if="lazyLoadComponent"
             v-bind:is="lazyLoadComponent"
             :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)"
-            :read-mode="true">
+            :read-only="true">
           </component>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default {
       } else if (this.contentComponent === 'Confirmation') {
         return () => import('@/components/ui/Confirmation')
       } else if (this.contentComponent === 'Palete') {
-        return () => import('@/components/common/Palete')
+        return () => import('@/components/panel/ReadOnlyPalete')
       }
       return () => null
     }
@@ -145,6 +145,7 @@ export default {
 }
 
 .modal-container {
+  position: relative;
   margin: 0px auto;
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;

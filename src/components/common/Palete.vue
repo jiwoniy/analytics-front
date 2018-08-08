@@ -7,10 +7,10 @@
     >
       <img
         class="lock"
-        v-if="!readMode && isPipelineUnlock"
+        v-if="!readOnly && isPipelineUnlock"
         src="@/assets/img/lock-open-solid.svg" />
       <img class="lock"
-        v-if="!readMode && !isPipelineUnlock"
+        v-if="!readOnly && !isPipelineUnlock"
         src="@/assets/img/lock-solid.svg" />
 
       <svg>
@@ -18,7 +18,7 @@
       </svg>
 
       <div
-        v-if="!readMode"
+        v-if="!readOnly"
         class="palete-footer"
       >
         <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
@@ -68,7 +68,7 @@ export default {
     }
   },
   props: {
-    readMode: {
+    readOnly: {
       type: Boolean,
       default: () => false
     }
@@ -202,14 +202,13 @@ export default {
       }
     },
     watchGraphUpdate (isGraphUpdate, uCompId) {
-      if (this.uCompId === uCompId && isGraphUpdate && !this.readMode) {
+      if (this.uCompId === uCompId && isGraphUpdate && !this.readOnly) {
         this.saveGraph()
       }
     },
     initEventListner () {
       eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
         const { data } = payload
-        // TODO Node Type Check!!
         const sendData = Object.assign({}, data, this.getTypeNode(data.node_type_id))
         this.svgGraph.addNode({
           ...sendData,
@@ -242,7 +241,7 @@ export default {
     this.uCompId = this._uid
   },
   beforeDestroy () {
-    if (!this.readMode) {
+    if (!this.readOnly) {
       eventController.removeListner('SEND_DATA_TRANSFER')
       eventController.removeListner('SAVE')
       eventController.removeListner('REFRESH')
@@ -251,7 +250,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.readMode) {
+    if (!this.readOnly) {
       this.initEventListner()
     }
 
@@ -263,7 +262,7 @@ export default {
   },
   watch: {
     isPipelineUnlock (newValue) {
-      if (this.svgGraph && !this.readMode) {
+      if (this.svgGraph && !this.readOnly) {
         this.svgGraph.setUnlock(newValue, this.uCompId)
       }
     },

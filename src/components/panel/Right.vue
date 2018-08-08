@@ -22,6 +22,7 @@ export default {
   position: relative;
   margin: 0 10px;
   background-color: #ffffff;
+  height: calc(100vh - var(--app-top-panel-height) - var(--app-foot-panel-height));
 }
 
 .fade-enter-active {

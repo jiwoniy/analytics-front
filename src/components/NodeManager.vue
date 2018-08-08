@@ -1,5 +1,5 @@
 <template>
-  <div class="manage-node">
+  <div :id="uCompId" class="manage-node">
     <div class="item-title">
       <label>
         {{ $t('Node') }}
@@ -9,7 +9,7 @@
     <!-- <label>
       {{ item.key }} : {{ item.value }}
       <wrapper-input
-        :is-un-lock="isPipelineUnlock"
+        :is-un-lock="isPipelineUnLock"
         v-model="item.value"
         @wrapperEvent="(value) => wrapperEvent(item.key, value)">
       </wrapper-input>
@@ -23,7 +23,7 @@
       <label>
         {{ item.key }}
         <wrapper-input
-          :is-un-lock="isPipelineUnlock"
+          :is-un-lock="isPipelineUnLock"
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
@@ -42,7 +42,7 @@
       <label>
         {{ item }}
         <wrapper-input
-          :is-un-lock="isPipelineUnlock"
+          :is-un-lock="isPipelineUnLock"
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.name, value)">
         </wrapper-input>
@@ -52,7 +52,7 @@
       </label>
     </div>
 
-    <div class="right-footer" @click="remove">
+    <div class="right-footer" v-if="!readOnly" @click="remove">
       <wrapper-button
         :button-text="$t('Delete')">
       </wrapper-button>
@@ -76,6 +76,12 @@ export default {
     WrapperInput
     // WrapperSelection
   },
+  props: {
+    readOnly: {
+      type: Boolean,
+      default: () => false
+    }
+  },
   i18n: {
     messages: {
       'en': {
@@ -88,9 +94,17 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      uCompId: null
+    }
+  },
+  beforeMount () {
+    this.uCompId = this._uid
+  },
   computed: {
     ...mapGetters({
-      isPipelineUnlock: 'myProject/isPipelineEditable',
+      isPipelineUnLock: 'myProject/isPipelineEditable',
       getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
       activatePipelineNodeId: 'myProject/getActivatePipelineNodeId'
     }),
@@ -123,7 +137,7 @@ export default {
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     remove () {
-      if (this.isPipelineUnlock) {
+      if (this.isPipelineUnLock) {
         eventController.SHOW_MODAL({
           position: 'center',
           // size: 'x-small',
@@ -141,7 +155,7 @@ export default {
       }
     },
     wrapperEvent (key, value) {
-      if (this.isPipelineUnlock) {
+      if (this.isPipelineUnLock) {
         this.updateActivatePipelineNode({
           updateType: 'update',
           updatedProp: key,
@@ -157,9 +171,10 @@ export default {
 
 <style lang="scss" scoped>
 .manage-node {
+  background-color: rgb(248, 248, 248);
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--app-top-panel-height) - var(--app-foot-panel-height));
+  height: 100%;
   display: flex;
   flex-direction: column;
 

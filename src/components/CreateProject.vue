@@ -79,6 +79,7 @@ export default {
     }
   },
   props: {
+    // get from modal comp
     modalClose: {
       type: Function,
       default: () => null
