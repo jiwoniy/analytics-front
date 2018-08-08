@@ -11,7 +11,7 @@
           {{ $t('Project name') }}
         </label>
         <wrapper-input
-          :is-editable="true"
+          :is-un-lock="true"
           v-model="projectName"
           @wrapperEvent="(value) => wrapperEvent('projectName', value)">
         </wrapper-input>
@@ -20,7 +20,7 @@
           {{ $t('Description') }}
         </label>
         <wrapper-textarea
-          :is-editable="true"
+          :is-un-lock="true"
           v-model="projectDesc"
           @wrapperEvent="(value) => wrapperEvent('projectDesc', value)">
         </wrapper-textarea>

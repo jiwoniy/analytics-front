@@ -32,7 +32,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
 
   this.state = {
     uParentCompId: uParentCompId || 1,
-    editable: false,
+    unLock: false,
     selectedNode: null,
     isUpdated: false, // watch this for to determine wheter to save or not
     contextNode: null,
@@ -134,14 +134,14 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     return thisGraph.height
   }
 
-  this.setEditable = function setEditable (status, uParentCompId) {
+  this.setUnlock = function setUnlock (status, uParentCompId) {
     if (uParentCompId === thisGraph.state.uParentCompId) {
-      thisGraph.state.editable = status
+      thisGraph.state.unLock = status
     }
   }
 
-  this.isEditable = function isEditable () {
-    return thisGraph.state.editable
+  this.isUnlock = function isUnlock () {
+    return thisGraph.state.unLock
   }
 
   this.getIsUpdated = function getIsUpdated () {
@@ -153,7 +153,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
   }
 
   this.addNode = function addNode (node) {
-    if (thisGraph.isEditable()) {
+    if (thisGraph.isUnlock()) {
       thisGraph.nodes.add(metaNodeToNode(node))
       thisGraph.drawGraph({ node: true })
     }
@@ -203,8 +203,8 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
   return {
     addNode: this.addNode,
     save: this.save,
-    setEditable: this.setEditable,
-    isEditable: this.isEditable,
+    setUnlock: this.setUnlock,
+    isUnlock: this.isUnlock,
     isUpdated: this.getIsUpdated,
     setUpdated: this.setUpdated,
     setWidth: this.setWidth,
@@ -238,12 +238,12 @@ function nodeDraghandler (context) {
       return { x: d.position.x, y: d.position.y }
     })
     .on('start', function (d) {
-      if (context.isEditable()) {
+      if (context.isUnlock()) {
         d.ui_status.moving = true
       }
     })
     .on('drag', function (d) {
-      if (context.isEditable()) {
+      if (context.isUnlock()) {
         if (!d.ui_status.selected) {
           // move node
           d3Selection.select(this)
@@ -256,7 +256,7 @@ function nodeDraghandler (context) {
       }
     })
     .on('end', function (d) {
-      if (context.isEditable()) {
+      if (context.isUnlock()) {
         if (!d.ui_status.selected) {
           d.ui_status.moving = false
         }
@@ -387,7 +387,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
-        if (thisGraph.isEditable()) {
+        if (thisGraph.isUnlock()) {
           thisGraph.links.remove(d)
           thisGraph.drawGraph({ link: true })
         }

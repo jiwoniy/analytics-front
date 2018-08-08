@@ -1,9 +1,9 @@
 <template>
   <div class="textarea-wrapper">
-    <label v-if="!isEditable">
+    <label v-if="!isUnlock">
       {{ value }}
     </label>
-    <textarea v-if="isEditable" @input="eventHandler" :value="value" />
+    <textarea v-if="isUnlock" @input="eventHandler" :value="value" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@
 export default {
   name: 'Wrapper-Textarea',
   props: {
-    isEditable: {
+    isUnlock: {
       type: Boolean,
       default: () => false
     },

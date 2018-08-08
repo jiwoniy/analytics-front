@@ -1,10 +1,10 @@
 <template>
   <div class="input-wrapper">
-    <label v-if="!isEditable">
+    <label v-if="!isUnlock">
       {{ value }}
     </label>
     <input
-      v-if="isEditable"
+      v-if="isUnlock"
       :type="inputType"
       @input="eventHandler"
       :value="value" />
@@ -15,7 +15,7 @@
 export default {
   name: 'Wrapper-Input',
   props: {
-    isEditable: {
+    isUnlock: {
       type: Boolean,
       default: () => false
     },

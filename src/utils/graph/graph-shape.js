@@ -39,7 +39,7 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
       return { x: d.position.x, y: d.position.y }
     })
     .on('drag', function (d) {
-      if (context.isEditable()) {
+      if (context.isUnLock()) {
         context.dragLine.classed('hidden', false)
         context.state.connecting = true
 

@@ -14,7 +14,7 @@
       <label>
         {{ item.key }}
         <wrapper-input
-          :is-editable="isPipelineEditable"
+          :is-un-lock="isPipelineUnlock"
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isPipelineEditable: 'myProject/isPipelineEditable',
+      isPipelineUnlock: 'myProject/isPipelineEditable',
       activateWorksheet: 'myProject/getActivateWorksheet',
       activateWorksheetId: 'myProject/getActivateWorksheetId'
     }),
@@ -71,7 +71,7 @@ export default {
       updateWorksheets: 'myProject/updateWorksheets'
     }),
     remove () {
-      if (this.isPipelineEditable) {
+      if (this.isPipelineUnlock) {
         eventController.SHOW_MODAL({
           position: 'center',
           // size: 'x-small',
@@ -90,7 +90,7 @@ export default {
       }
     },
     wrapperEvent (key, value) {
-      if (this.isPipelineEditable) {
+      if (this.isPipelineUnlock) {
         this.updateWorksheets({
           updateType: 'update',
           worksheetId: this.activateWorksheetId,

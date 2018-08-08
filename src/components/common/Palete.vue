@@ -7,15 +7,20 @@
     >
       <img
         class="lock"
-        v-if="!readMode && isPipelineEditable"
+        v-if="!readMode && isPipelineUnlock"
         src="@/assets/img/lock-open-solid.svg" />
       <img class="lock"
-        v-if="!readMode && !isPipelineEditable"
+        v-if="!readMode && !isPipelineUnlock"
         src="@/assets/img/lock-solid.svg" />
-      <svg class="svg-graph">
+
+      <svg>
         <def-svg></def-svg>
       </svg>
-      <div class="palete-footer">
+
+      <div
+        v-if="!readMode"
+        class="palete-footer"
+      >
         <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
       </div>
     </div>
@@ -70,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isPipelineEditable: 'myProject/isPipelineEditable',
+      isPipelineUnlock: 'myProject/isPipelineEditable',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       activatePipeline: 'myProject/getActivatePipeline',
       activatePipelineSyncTime: 'myProject/getActivatePipelineSyncTime',
@@ -84,7 +89,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      setPipelineEditable: 'myProject/setPipelineEditable',
+      setPipelineUnlock: 'myProject/setPipelineEditable',
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
@@ -225,7 +230,7 @@ export default {
       })
 
       eventController.addListner('EDIT', () => {
-        this.setPipelineEditable(!this.isPipelineEditable)
+        this.setPipelineUnlock(!this.isPipelineUnlock)
       })
     },
     init () {
@@ -257,9 +262,9 @@ export default {
     // window.onresize = function(){thisGraph.updateWindow(svg);}
   },
   watch: {
-    isPipelineEditable (newValue) {
+    isPipelineUnlock (newValue) {
       if (this.svgGraph && !this.readMode) {
-        this.svgGraph.setEditable(newValue, this.uCompId)
+        this.svgGraph.setUnlock(newValue, this.uCompId)
       }
     },
     activateWorksheetId (newValue) {

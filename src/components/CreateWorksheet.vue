@@ -11,7 +11,7 @@
           {{ $t('Worksheet name') }}
         </label>
         <wrapper-input
-          :is-editable="true"
+          :is-un-lock="true"
           v-model="worksheetName"
           @wrapperEvent="(value) => wrapperEvent('worksheetName', value)">
         </wrapper-input>
@@ -20,7 +20,7 @@
           {{ $t('Description') }}
         </label>
         <wrapper-textarea
-          :is-editable="true"
+          :is-un-lock="true"
           v-model="worksheetDesc"
           @wrapperEvent="(value) => wrapperEvent('worksheetDesc', value)">
         </wrapper-textarea>
