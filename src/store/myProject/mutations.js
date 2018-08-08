@@ -55,8 +55,8 @@ export default {
   },
 
   // pipeline
-  SET_PIPELINE_EDITABLE: (state, editable) => {
-    state.pipelineEditable = editable
+  SET_PIPELINE_UN_LOCK: (state, unLock) => {
+    state.pipelineUnLock = unLock
   },
   SET_ACTIVATE_PIPELINE: (state, { pipeline }) => {
     if (pipeline) {

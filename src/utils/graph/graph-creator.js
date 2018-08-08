@@ -140,7 +140,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     }
   }
 
-  this.isUnlock = function isUnlock () {
+  this.isUnLock = function isUnLock () {
     return thisGraph.state.unLock
   }
 
@@ -153,7 +153,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
   }
 
   this.addNode = function addNode (node) {
-    if (thisGraph.isUnlock()) {
+    if (thisGraph.isUnLock()) {
       thisGraph.nodes.add(metaNodeToNode(node))
       thisGraph.drawGraph({ node: true })
     }
@@ -204,7 +204,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     addNode: this.addNode,
     save: this.save,
     setUnlock: this.setUnlock,
-    isUnlock: this.isUnlock,
+    isUnLock: this.isUnLock,
     isUpdated: this.getIsUpdated,
     setUpdated: this.setUpdated,
     setWidth: this.setWidth,
@@ -238,12 +238,12 @@ function nodeDraghandler (context) {
       return { x: d.position.x, y: d.position.y }
     })
     .on('start', function (d) {
-      if (context.isUnlock()) {
+      if (context.isUnLock()) {
         d.ui_status.moving = true
       }
     })
     .on('drag', function (d) {
-      if (context.isUnlock()) {
+      if (context.isUnLock()) {
         if (!d.ui_status.selected) {
           // move node
           d3Selection.select(this)
@@ -256,7 +256,7 @@ function nodeDraghandler (context) {
       }
     })
     .on('end', function (d) {
-      if (context.isUnlock()) {
+      if (context.isUnLock()) {
         if (!d.ui_status.selected) {
           d.ui_status.moving = false
         }
@@ -387,7 +387,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         return lineGenerator(data)
       })
       .on('dblclick', function (d) {
-        if (thisGraph.isUnlock()) {
+        if (thisGraph.isUnLock()) {
           thisGraph.links.remove(d)
           thisGraph.drawGraph({ link: true })
         }

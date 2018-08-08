@@ -22,18 +22,35 @@
     >
       <label>
         {{ item.key }}
-        <wrapper-input
-          :is-un-lock="isPipelineUnLock"
-          v-model="item.value"
-          @wrapperEvent="(value) => wrapperEvent(item.key, value)">
-        </wrapper-input>
       </label>
+      <label v-if="readOnly">
+        {{ item.value }}
+      </label>
+
+      <wrapper-input
+        v-if="!readOnly"
+        :is-un-lock="isPipelineUnLock"
+        v-model="item.value"
+        @wrapperEvent="(value) => wrapperEvent(item.key, value)">
+      </wrapper-input>
     </div>
 
-    <br />
-    <p> Parameter </p>
+    <!-- <br />
+    <p> Parameter </p> -->
 
-    <div
+    <!-- <tabs>
+      <tab name="Services" :selected="true">
+        <h1>What we do</h1>
+      </tab>
+      <tab name="Pricing">
+        <h1>How much we do it for</h1>
+      </tab>
+      <tab name="About Us">
+        <h1>Why we do it</h1>
+      </tab>
+    </tabs> -->
+
+    <!-- <div
       class="item-node"
       v-if="filterNodeParamProperties"
       v-for="item in filterNodeParamProperties"
@@ -46,9 +63,6 @@
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.name, value)">
         </wrapper-input>
-
-        <!-- <wrapper-selection>
-        </wrapper-selection> -->
       </label>
     </div>
 
@@ -56,7 +70,7 @@
       <wrapper-button
         :button-text="$t('Delete')">
       </wrapper-button>
-    </div>
+    </div> -->
 
   </div>
 </template>
@@ -67,13 +81,17 @@ import { mapGetters, mapActions } from 'vuex'
 import eventController from '@/utils/EventController'
 import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
+import Tabs from '@/components/ui/Tabs'
+import Tab from '@/components/ui/Tab'
 // import WrapperSelection from '@/components/ui/Wrapper/Selection'
 
 export default {
   name: 'Node-Manager-View',
   components: {
     WrapperButton,
-    WrapperInput
+    WrapperInput,
+    Tabs,
+    Tab
     // WrapperSelection
   },
   props: {
@@ -104,7 +122,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isPipelineUnLock: 'myProject/isPipelineEditable',
+      isPipelineUnLock: 'myProject/isPipelineUnLock',
       getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
       activatePipelineNodeId: 'myProject/getActivatePipelineNodeId'
     }),
@@ -155,7 +173,7 @@ export default {
       }
     },
     wrapperEvent (key, value) {
-      if (this.isPipelineUnLock) {
+      if (!this.readOnly && this.isPipelineUnLock) {
         this.updateActivatePipelineNode({
           updateType: 'update',
           updatedProp: key,

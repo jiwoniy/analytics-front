@@ -16,7 +16,7 @@
       <label>
         {{ item.key }}
         <wrapper-input
-          :is-un-lock="isPipelineUnlock"
+          :is-un-lock="isPipelineUnLock"
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
@@ -39,7 +39,7 @@
       <label>
         {{ item.key }}
         <wrapper-input
-          :is-un-lock="isPipelineUnlock"
+          :is-un-lock="isPipelineUnLock"
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
@@ -86,7 +86,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isPipelineUnlock: 'myProject/isPipelineEditable',
+      isPipelineUnLock: 'myProject/isPipelineUnLock',
       activateWorksheet: 'myProject/getActivateWorksheet',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
@@ -114,7 +114,7 @@ export default {
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
     remove () {
-      if (this.isPipelineUnlock) {
+      if (this.isPipelineUnLock) {
         eventController.SHOW_MODAL({
           position: 'center',
           // size: 'x-small',
@@ -139,7 +139,7 @@ export default {
       }
     },
     wrapperEvent (key, value) {
-      if (this.isPipelineUnlock) {
+      if (this.isPipelineUnLock) {
         if (this.currentItemType === 'worksheet') {
           this.updateWorksheets({
             updateType: 'update',

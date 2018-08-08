@@ -26,7 +26,7 @@ export default {
   },
 
   // about pipeline
-  isPipelineEditable: state => state.pipelineEditable,
+  isPipelineUnLock: state => state.pipelineUnLock,
   getActivatePipeline: state => state.pipeline || {},
   getActivatePipelineSyncTime: state => {
     if (state.pipelineSyncTime) {

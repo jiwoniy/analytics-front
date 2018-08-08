@@ -104,7 +104,7 @@ export default {
     if (pipeline) {
       commit('SET_ACTIVATE_PIPELINE', { pipeline })
       commit('UPDATE_ACTIVATE_PIPELINE_UPDATE_STATUS', { updateType: 'init' })
-      commit('SET_PIPELINE_EDITABLE', false)
+      commit('SET_PIPELINE_UN_LOCK', false)
     }
   },
   savePipeline: ({ dispatch, commit }, { pipeline }) => {
@@ -126,8 +126,8 @@ export default {
   }, setting.saveTimer),
 
   // pipeline node
-  setPipelineEditable: ({ commit, state }, editable) => {
-    commit('SET_PIPELINE_EDITABLE', editable)
+  setPipelineUnLock: ({ commit, state }, unLock) => {
+    commit('SET_PIPELINE_UN_LOCK', unLock)
   },
   setActivatePipelineNodeId: ({ commit, state }, nodeId) => {
     commit('SET_ACTIVATE_PIPELINE_NODE_ID', nodeId)

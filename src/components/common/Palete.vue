@@ -7,10 +7,10 @@
     >
       <img
         class="lock"
-        v-if="!readOnly && isPipelineUnlock"
+        v-if="!readOnly && isPipelineUnLock"
         src="@/assets/img/lock-open-solid.svg" />
       <img class="lock"
-        v-if="!readOnly && !isPipelineUnlock"
+        v-if="!readOnly && !isPipelineUnLock"
         src="@/assets/img/lock-solid.svg" />
 
       <svg>
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isPipelineUnlock: 'myProject/isPipelineEditable',
+      isPipelineUnLock: 'myProject/isPipelineUnLock',
       activateWorksheetId: 'myProject/getActivateWorksheetId',
       activatePipeline: 'myProject/getActivatePipeline',
       activatePipelineSyncTime: 'myProject/getActivatePipelineSyncTime',
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      setPipelineUnlock: 'myProject/setPipelineEditable',
+      setPipelineUnLock: 'myProject/setPipelineUnLock',
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
@@ -229,7 +229,7 @@ export default {
       })
 
       eventController.addListner('EDIT', () => {
-        this.setPipelineUnlock(!this.isPipelineUnlock)
+        this.setPipelineUnLock(!this.isPipelineUnLock)
       })
     },
     init () {
@@ -261,7 +261,7 @@ export default {
     // window.onresize = function(){thisGraph.updateWindow(svg);}
   },
   watch: {
-    isPipelineUnlock (newValue) {
+    isPipelineUnLock (newValue) {
       if (this.svgGraph && !this.readOnly) {
         this.svgGraph.setUnlock(newValue, this.uCompId)
       }

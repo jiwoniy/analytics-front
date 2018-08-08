@@ -112,13 +112,13 @@ function metaNodeToNode (node) {
   return {
     id: node.id,
     node_type_id: node.node_type_id,
-    // input: node.input,
-    // output: node.output,
+    input: node.input,
+    output: node.output,
     name: node.name,
     desc: node.desc,
     properties: node.properties,
-    // linkInput: node.linkInput || null,
-    // linkOutput: node.linkOutput || null,
+    linkInput: node.linkInput || null,
+    linkOutput: node.linkOutput || null,
     position: node.position,
     ui_status: {
       moving: false,

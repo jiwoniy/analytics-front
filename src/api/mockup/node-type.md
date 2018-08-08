@@ -1,35 +1,67 @@
-properties 
+# Meta Node's schema
 
-* type
-- string
-- numeric
-- multiple numeric(?)
-- boolean
-- choice
-- list selector
-- column selector
-- mutliple column selector
-- code snippet
-- sequence
+- id
+> unique meta id
+- name
+> meta node name
+- desc
+> meta node description
+- [properties](#properties)
+> properties that a node may have
 
-> text(string), number, textarea(string), checkbox(boolean), radio(string), select(single)/select(multiple)
+## properties
 
-* require
+string, boolean, number, null, undefined, object(Array, Date, Object)
 
-* name
+- id(?)
+- name
+- require
+- default
+> default value
+- type
+```
+String
+Number
+Boolean
+Array
+Date
+```
 
-* scope
+- [UI Type](https://semantic-ui.com/modules/checkbox.html)
 
-* negative
-
-* default
-
-* paramter_key
-
-* language
+1. string
+> ex) code snippet
+```
+- input(text)
+- textarea
+- radio
+- dropdown(single/multiple)
+```
+2. boolean
+```
+- checkbox
+- slider
+- toggle
+```
+3. number
+```
+- input(number)
+```
+4. array
+```
+- dropdown(single/multiple)
+```
+5. date
+```
+- dropdown
+- calendar
+```
+- validation
+- postprocess
+- paramter_key
+- language
+```
 - Sql
 - Python
-
-
-1. UI properties가 정의된 meta data
+```
 
