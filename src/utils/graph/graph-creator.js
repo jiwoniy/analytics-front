@@ -19,7 +19,7 @@ import {
 // import contextMenu from './context-menu'
 
 // This source from https://github.com/cjrd/directed-graph-creator
-const GraphCreator = function GraphCreatorConstructor (svg, { options, callback }) {
+const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentCompId, { options, callback }) {
   const thisGraph = this
 
   this.options = options || {}
@@ -31,6 +31,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
   this.links = new GraphLinks()
 
   this.state = {
+    uParentCompId: uParentCompId || 1,
     editable: false,
     selectedNode: null,
     isUpdated: false, // watch this for to determine wheter to save or not
@@ -60,7 +61,7 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
         }
       } else if (key === 'isUpdated') {
         if (thisGraph.callback && thisGraph.callback.watch_update) {
-          thisGraph.callback.watch_update(value)
+          thisGraph.callback.watch_update(value, uParentCompId)
         }
       }
       return true
@@ -69,17 +70,17 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
-  this.svg = svg
-  this.svgG = svg.select('#graphG')
+  this.svgContainer = svgContainer
+  this.svgGroup = svgContainer.select('#graphG')
 
   // displayed when dragging between nodes
-  this.dragLine = this.svg.append('svg:path')
+  this.dragLine = this.svgContainer.append('svg:path')
     .attr('class', 'link hidden')
     .attr('d', 'M0,0L0,0')
     .style('marker-end', 'url(#marker-arrow)')
 
-  this.pathsGroup = this.svgG.append('g').classed('path-group', true)
-  this.nodesGroup = this.svgG.append('g').classed('node-group', true)
+  this.pathsGroup = this.svgGroup.append('g').classed('path-group', true)
+  this.nodesGroup = this.svgGroup.append('g').classed('node-group', true)
 
   if (options.saveFile) {
     // const file = JSON.parse(options.saveFile)
@@ -91,10 +92,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   const dragSvg = d3Zoom.zoom()
     .on('zoom', function () {
-      thisGraph.svgG.attr('transform', d3Selection.event.transform)
+      thisGraph.svgGroup.attr('transform', d3Selection.event.transform)
     })
     .on('start', function () {
-      thisGraph.svg.style('cursor', 'move')
+      thisGraph.svgContainer.style('cursor', 'move')
       thisGraph.state.justScaleTransGraph = true
     })
     .on('end', function () {
@@ -102,11 +103,11 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
         thisGraph.state.currentZoomTransform = d3Selection.event.transform
         thisGraph.state.justScaleTransGraph = false
       }
-      thisGraph.svg.style('cursor', 'auto')
+      thisGraph.svgContainer.style('cursor', 'auto')
     })
 
   // const menu = contextMenu().items('first item', 'second option', 'whatever, man')
-  this.svg
+  this.svgContainer
     .on('mousedown', function () {
       thisGraph.setSelectNode(this, null)
     })
@@ -133,8 +134,10 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     return thisGraph.height
   }
 
-  this.setEditable = function setEditable (status) {
-    thisGraph.state.editable = status
+  this.setEditable = function setEditable (status, uParentCompId) {
+    if (uParentCompId === thisGraph.state.uParentCompId) {
+      thisGraph.state.editable = status
+    }
   }
 
   this.isEditable = function isEditable () {
@@ -190,7 +193,11 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
 
   this.initZoomState = function initZoomState () {
     const t = d3Zoom.zoomIdentity.translate(0, 0).scale(1)
-    thisGraph.svg.call(dragSvg.transform, t)
+    thisGraph.svgContainer.call(dragSvg.transform, t)
+  }
+
+  this.getUParentCompId = function getUParentCompId () {
+    return thisGraph.state.uParentCompId
   }
 
   return {
@@ -205,7 +212,8 @@ const GraphCreator = function GraphCreatorConstructor (svg, { options, callback 
     getWidth,
     setHeight: this.setHeight,
     getHeight,
-    redraw: this.redraw
+    redraw: this.redraw,
+    getUParentCompId: this.getUParentCompId
   }
 }
 

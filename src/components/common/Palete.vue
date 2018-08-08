@@ -1,9 +1,18 @@
 <template>
   <transition>
-    <div :id="`svgContainer${_uid}`" class="palete" v-resize:debounce.250="onResize">
-      <img class="lock" v-if="isPipelineEditable" src="@/assets/img/lock-open-solid.svg" />
-      <img class="lock" v-if="!isPipelineEditable" src="@/assets/img/lock-solid.svg" />
-      <svg>
+    <div
+      :id="`svgContainer${uCompId}`"
+      class="palete"
+      v-resize:debounce.250="onResize"
+    >
+      <img
+        class="lock"
+        v-if="!readMode && isPipelineEditable"
+        src="@/assets/img/lock-open-solid.svg" />
+      <img class="lock"
+        v-if="!readMode && !isPipelineEditable"
+        src="@/assets/img/lock-solid.svg" />
+      <svg class="svg-graph">
         <def-svg></def-svg>
       </svg>
       <div class="palete-footer">
@@ -47,12 +56,16 @@ export default {
   },
   data () {
     return {
-      svgContainer: null,
-      svgContainerGroup: null,
+      uCompId: null,
       svgGraph: null,
-      leftPanelWidth: null,
-      rightPanelWidth: null,
-      saveTimer: null
+      svgContainer: null,
+      svgContainerGroup: null
+    }
+  },
+  props: {
+    readMode: {
+      type: Boolean,
+      default: () => false
     }
   },
   computed: {
@@ -75,9 +88,6 @@ export default {
       savePipeline: 'myProject/savePipeline',
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
-    getTypeNode (id) {
-      return this.metaNodes[id]
-    },
     onResize (elem) {
       if (this.svgContainer) {
         this.svgContainer
@@ -90,6 +100,9 @@ export default {
         this.svgGraph.setWidth(elem.offsetWidth)
         this.svgGraph.setHeight(elem.offsetHeight)
       }
+    },
+    getTypeNode (id) {
+      return this.metaNodes[id]
     },
     setGraph (svgContainer, options) {
       const callback = {
@@ -118,7 +131,7 @@ export default {
         validate(true),
         validate()
       ], true)
-      this.svgGraph = new GraphCreator(svgContainer, {
+      this.svgGraph = new GraphCreator(svgContainer, this.uCompId, {
         options: {
           ...options,
           saveFile: _isEmpty(this.activatePipeline) ? null : _cloneDeep(this.activatePipeline),
@@ -158,7 +171,7 @@ export default {
       this.width = this.$el.offsetWidth
       this.height = this.$el.offsetHeight
 
-      this.svgContainer = d3Selection.select(`#svgContainer${this._uid}`).select('svg')
+      this.svgContainer = d3Selection.select(`#svgContainer${this.uCompId}`).select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
       this.svgContainerGroup = this.svgContainer
@@ -183,54 +196,70 @@ export default {
         this.setActivatePipelineNodeId(null)
       }
     },
-    watchGraphUpdate (isGraphUpdate) {
-      if (isGraphUpdate) {
+    watchGraphUpdate (isGraphUpdate, uCompId) {
+      if (this.uCompId === uCompId && isGraphUpdate && !this.readMode) {
         this.saveGraph()
       }
+    },
+    initEventListner () {
+      eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
+        const { data } = payload
+        // TODO Node Type Check!!
+        const sendData = Object.assign({}, data, this.getTypeNode(data.node_type_id))
+        this.svgGraph.addNode({
+          ...sendData,
+          id: uuidv4()
+        })
+      })
+
+      eventController.addListner('SAVE', () => {
+        this.saveGraph()
+      })
+
+      eventController.addListner('REFRESH', () => {
+        this.svgGraph.setZoomInit()
+      })
+
+      eventController.addListner('LOAD', () => {
+        this.init()
+      })
+
+      eventController.addListner('EDIT', () => {
+        this.setPipelineEditable(!this.isPipelineEditable)
+      })
     },
     init () {
       this.removeSvgGraph()
       this.setSvgContainer()
     }
   },
+  beforeMount () {
+    this.uCompId = this._uid
+  },
+  beforeDestroy () {
+    if (!this.readMode) {
+      eventController.removeListner('SEND_DATA_TRANSFER')
+      eventController.removeListner('SAVE')
+      eventController.removeListner('REFRESH')
+      eventController.removeListner('LOAD')
+      eventController.removeListner('EDIT')
+    }
+  },
   mounted () {
-    // window.onresize = function(){thisGraph.updateWindow(svg);}
-    eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
-      const { data } = payload
-      // TODO Node Type Check!!
-      const sendData = Object.assign({}, data, this.getTypeNode(data.node_type_id))
-      this.svgGraph.addNode({
-        ...sendData,
-        id: uuidv4()
-      })
-    })
-
-    eventController.addListner('SAVE', () => {
-      this.saveGraph()
-    })
-
-    eventController.addListner('EDIT', () => {
-      this.setPipelineEditable(!this.isPipelineEditable)
-    })
-
-    eventController.addListner('REFRESH', () => {
-      this.svgGraph.setZoomInit()
-    })
-
-    eventController.addListner('LOAD', () => {
-      this.init()
-    })
+    if (!this.readMode) {
+      this.initEventListner()
+    }
 
     this.$nextTick(() => {
       this.init()
-      this.leftPanelWidth = document.getElementById('leftPanel').clientWidth
-      this.rightPanelWidth = document.getElementById('rightPanel').clientWidth
     })
+
+    // window.onresize = function(){thisGraph.updateWindow(svg);}
   },
   watch: {
     isPipelineEditable (newValue) {
-      if (this.svgGraph) {
-        this.svgGraph.setEditable(newValue)
+      if (this.svgGraph && !this.readMode) {
+        this.svgGraph.setEditable(newValue, this.uCompId)
       }
     },
     activateWorksheetId (newValue) {

@@ -42,12 +42,17 @@ export default {
   methods: {
     modalClose (accept) {
       if (this.modal.isNeedAccept) {
+        this.modal.contentComponent = null
         if (this.modal.callback) {
           this.modal.callback(accept)
         }
         this.showModal = false
       } else {
         this.showModal = false
+        this.modal.contentComponent = null
+        if (this.modal.callback) {
+          this.modal.callback()
+        }
       }
     }
   },

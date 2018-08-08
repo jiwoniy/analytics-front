@@ -9,7 +9,6 @@
           'bottom': position === 'bottom'
         }"
       >
-
         <div class="modal-container"
           :class="{
             'small': size === 'small',
@@ -20,10 +19,10 @@
           <component
             v-if="lazyLoadComponent"
             v-bind:is="lazyLoadComponent"
-            :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)">
+            :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)"
+            :read-mode="true">
           </component>
         </div>
-
       </div>
 
     </div>
@@ -93,16 +92,21 @@ export default {
   },
   methods: {
     clickModal (event) {
-      const id = event.target.className || ''
-      if (this.isNeedAccept) {
-        if (id.indexOf('modal-close-with-accept') > -1) {
-          this.$emit('close', true)
-        } else if (id.indexOf('modal-close-with-decline') > -1) {
-          this.$emit('close', false)
-        }
-      } else {
-        if (id.indexOf('modal-wrapper') > -1 || id.indexOf('modal-close-with-accept') > -1 || id === 'modal-close-with-decline') {
-          this.$emit('close')
+      const id = event.target.className || 'none'
+      // when click svg area id will SVGAnimatedString
+      if (typeof id === 'string') {
+        if (this.isNeedAccept) {
+          if (id.indexOf('modal-close-with-accept') > -1) {
+            this.$emit('close', true)
+          } else if (id.indexOf('modal-close-with-decline') > -1) {
+            this.$emit('close', false)
+          }
+        } else {
+          if (id.indexOf('modal-wrapper') > -1 ||
+            id.indexOf('modal-close-with-accept') > -1 ||
+            id === 'modal-close-with-decline') {
+            this.$emit('close')
+          }
         }
       }
     }
