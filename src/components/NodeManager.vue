@@ -6,10 +6,18 @@
       </label>
     </div>
 
+    <!-- <label>
+      {{ item.key }} : {{ item.value }}
+      <wrapper-input
+        :is-editable="isPipelineEditable"
+        v-model="item.value"
+        @wrapperEvent="(value) => wrapperEvent(item.key, value)">
+      </wrapper-input>
+    </label> -->
     <div
-      class="item-node"
-      v-if="filterActivatePipelineNode"
-      v-for="item in filterActivatePipelineNode"
+      class="item-node basic"
+      v-if="filterNodeBasicProperties"
+      v-for="item in filterNodeBasicProperties"
       :key="item.key"
     >
       <label>
@@ -19,16 +27,35 @@
           v-model="item.value"
           @wrapperEvent="(value) => wrapperEvent(item.key, value)">
         </wrapper-input>
+      </label>
+    </div>
+
+    <br />
+    <p> Parameter </p>
+
+    <div
+      class="item-node"
+      v-if="filterNodeParamProperties"
+      v-for="item in filterNodeParamProperties"
+      :key="item.id"
+    >
+      <label>
+        {{ item }}
+        <wrapper-input
+          :is-editable="isPipelineEditable"
+          v-model="item.value"
+          @wrapperEvent="(value) => wrapperEvent(item.name, value)">
+        </wrapper-input>
 
         <!-- <wrapper-selection>
         </wrapper-selection> -->
       </label>
+    </div>
 
-      <div class="right-footer" @click="remove">
-        <wrapper-button
-          :button-text="$t('Delete')">
-        </wrapper-button>
-      </div>
+    <div class="right-footer" @click="remove">
+      <wrapper-button
+        :button-text="$t('Delete')">
+      </wrapper-button>
     </div>
 
   </div>
@@ -67,14 +94,26 @@ export default {
       getActivatePipelineNodes: 'myProject/getActivatePipelineNodes',
       activatePipelineNodeId: 'myProject/getActivatePipelineNodeId'
     }),
-    filterActivatePipelineNode () {
+    filterNodeParamProperties () {
+      const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
+      if (activateNode && activateNode.properties) {
+        return activateNode.properties
+          .map(item => ({
+            id: item.id || item.name,
+            name: item.name,
+            value: item.value
+          }))
+        //   // .filter(item => item.key === 'properties')
+      }
+      return null
+    },
+    filterNodeBasicProperties () {
       const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
       if (activateNode) {
         return Object.keys(activateNode)
           .map(key => ({ key, value: activateNode[key] }))
-          .filter(item => item.key === 'desc' ||
-            item.key === 'name' ||
-            item.key === 'properties')
+          .filter(item => item.key === 'name' ||
+            item.key === 'desc')
       }
       return null
     }
