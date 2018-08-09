@@ -5,7 +5,7 @@
     </label>
     <input
       v-if="isUnLock"
-      :type="inputType"
+      type="text"
       @input="eventHandler"
       :value="value" />
   </div>
@@ -21,12 +21,7 @@ export default {
     },
     value: {
       type: [String, Number],
-      default: () => ''
-    }
-  },
-  data () {
-    return {
-      inputType: 'text'
+      required: true
     }
   },
   methods: {

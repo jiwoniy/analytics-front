@@ -41,7 +41,7 @@ Date
 ```
 - checkbox
 - slider
-- toggle
+- toggle switch
 ```
 3. number
 ```

@@ -6,26 +6,12 @@
       </label>
     </div>
 
-    <!-- <label>
-      {{ item.key }} : {{ item.value }}
-      <wrapper-input
-        :is-un-lock="isPipelineUnLock"
-        v-model="item.value"
-        @wrapperEvent="(value) => wrapperEvent(item.key, value)">
-      </wrapper-input>
-    </label> -->
     <div
       class="item-node basic"
       v-if="filterNodeBasicProperties"
       v-for="item in filterNodeBasicProperties"
       :key="item.key"
     >
-      <label>
-        {{ item.key }}
-      </label>
-      <label v-if="readOnly">
-        {{ item.value }}
-      </label>
 
       <wrapper-input
         v-if="!readOnly"
@@ -114,7 +100,24 @@ export default {
   },
   data () {
     return {
-      uCompId: null
+      uCompId: null,
+      options: [
+        {
+          id: '1',
+          label: '11',
+          value: 1
+        },
+        {
+          id: '2',
+          label: '22',
+          value: 2
+        },
+        {
+          id: '3',
+          label: '33',
+          value: 3
+        }
+      ]
     }
   },
   beforeMount () {
