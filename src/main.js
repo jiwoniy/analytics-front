@@ -7,6 +7,7 @@ import store from '@/store'
 // global components
 import TreeItem from '@/components/ui/TreeItem'
 import Modal from '@/components/ui/Modal'
+import Loader from '@/components/ui/Loader'
 
 // plugins
 import i18n from '@/plugins/vue-i18n'
@@ -19,6 +20,7 @@ Vue.config.productionTip = false
 // global components
 Vue.component('tree-item', TreeItem)
 Vue.component('modal', Modal)
+Vue.component('loader', Loader)
 
 /* eslint-disable no-new */
 new Vue({

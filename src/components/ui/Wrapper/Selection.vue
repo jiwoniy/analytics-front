@@ -1,34 +1,27 @@
 <template>
-  <transition>
-    <div
-      class="select-wrapper"
-      :id="compId"
+  <div
+    class="select-wrapper"
+    :id="compId"
+  >
+    <select
+      :id="`selectComp${compId}`"
+      @change="selectChange"
+      :disabled="isDisable"
     >
-      <select
-        :id="`selectComp${compId}`"
-        :class="{ isDisable: isDisable, isSelected: !isSelected }"
-        @change="selectChange"
-        :disabled="isDisable"
-      >
-        <option
-          v-if="showPlaceholder"
-          disabled
-        > {{ placeholder }} </option>
-        <option
-          id="selectOption"
-          v-for="entry in options"
-          :key="entry.id"
-          :value="entry"
-        > {{ entry.value }}
-        </option>
-      </select>
-        <!-- <img
-          alt="down"
-          src="static/btn-caret-down.svg"
-        > -->
+      <option
+        v-if="showPlaceholder"
+        disabled
+      > {{ placeholder }} </option>
+      <option
+        id="selectOption"
+        v-for="entry in options"
+        :key="entry.id"
+        :value="entry.value"
+      > {{ entry.value }}
+      </option>
+    </select>
 
-    </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -65,10 +58,6 @@ export default {
   methods: {
     selectChange (event) {
       if (!this.isDisable) {
-        // const option = this.options[event.target.options.selectedIndex - 1]
-        // if (this.postSelectChangeFunction) {
-        //   this.postSelectChangeFunction(option)
-        // }
         this.isSelected = true
       }
     },

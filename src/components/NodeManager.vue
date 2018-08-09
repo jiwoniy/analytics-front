@@ -12,7 +12,6 @@
       v-for="item in filterNodeBasicProperties"
       :key="item.key"
     >
-
       <wrapper-input
         v-if="!readOnly"
         :is-un-lock="isPipelineUnLock"
@@ -20,9 +19,12 @@
         @wrapperEvent="(value) => wrapperEvent(item.key, value)">
       </wrapper-input>
     </div>
-
-    <!-- <br />
-    <p> Parameter </p> -->
+    <!-- <wrapper-selection
+      :show-placeholder="true"
+      :options="options"
+      v-model="test"
+      @wrapperEvent="(value) => wrapperEvent('test', value)">
+    </wrapper-selection> -->
 
     <!-- <tabs>
       <tab name="Services" :selected="true">
@@ -69,7 +71,7 @@ import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 import Tabs from '@/components/ui/Tabs'
 import Tab from '@/components/ui/Tab'
-// import WrapperSelection from '@/components/ui/Wrapper/Selection'
+import WrapperSelection from '@/components/ui/Wrapper/Selection'
 
 export default {
   name: 'Node-Manager-View',
@@ -77,8 +79,8 @@ export default {
     WrapperButton,
     WrapperInput,
     Tabs,
-    Tab
-    // WrapperSelection
+    Tab,
+    WrapperSelection
   },
   props: {
     readOnly: {
@@ -100,24 +102,24 @@ export default {
   },
   data () {
     return {
-      uCompId: null,
-      options: [
-        {
-          id: '1',
-          label: '11',
-          value: 1
-        },
-        {
-          id: '2',
-          label: '22',
-          value: 2
-        },
-        {
-          id: '3',
-          label: '33',
-          value: 3
-        }
-      ]
+      uCompId: null
+      // options: [
+      //   {
+      //     id: '1',
+      //     label: '11',
+      //     value: 1
+      //   },
+      //   {
+      //     id: '2',
+      //     label: '22',
+      //     value: 2
+      //   },
+      //   {
+      //     id: '3',
+      //     label: '33',
+      //     value: 3
+      //   }
+      // ]
     }
   },
   beforeMount () {
