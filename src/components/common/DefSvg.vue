@@ -36,3 +36,9 @@ export default {
   name: 'Define-Svg'
 }
 </script>
+
+<style scoped>
+#marker-arrow {
+  pointer-events: none;
+}
+</style>

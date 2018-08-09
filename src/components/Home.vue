@@ -3,6 +3,7 @@
     <div class="div--home__page">
       <top-panel id="topPanel" class="top"></top-panel>
       <project class="project"></project>
+      <!-- <python-editor></python-editor> -->
     </div>
   </transition>
 </template>

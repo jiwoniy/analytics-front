@@ -16,9 +16,7 @@ import {
   linksTransformSaveLink,
   linksTransformUiLinks
 } from './helper'
-// import contextMenu from './context-menu'
 
-// This source from https://github.com/cjrd/directed-graph-creator
 const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentCompId, { options, callback }) {
   const thisGraph = this
 
@@ -48,6 +46,15 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     selectedText: null
   }
 
+  // const constextMenu = svgContainer
+  //   .append('rect')
+  //   .style('position', 'absolute')
+  //   .style('z-index', '999999')
+  //   .style('width', '100px')
+  //   .style('height', '100px')
+  //   .style('visibility', 'hidden')
+  //   .text('a simple tooltip')
+
   // watch state
   const stateProxyHandler = {
     set (target, key, value) {
@@ -75,7 +82,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
 
   // displayed when dragging between nodes
   this.dragLine = this.svgContainer.append('svg:path')
-    .attr('class', 'link hidden')
+    .attr('class', 'draglink hidden')
     .attr('d', 'M0,0L0,0')
     .style('marker-end', 'url(#marker-arrow)')
 
@@ -108,8 +115,13 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
 
   // const menu = contextMenu().items('first item', 'second option', 'whatever, man')
   this.svgContainer
-    .on('mousedown', function () {
-      thisGraph.setSelectNode(this, null)
+    .on('mousedown', function (event) {
+      if (d3Selection.event.button === 2) {
+        // click right button
+        // constextMenu.style('visibility', 'visible')
+      } else {
+        thisGraph.setSelectNode(this, null)
+      }
     })
     // .on('mouseup', function (d) {
     // thisGraph.svgMouseUp(this, null)
@@ -289,9 +301,8 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const thisGraph = this
   const consts = thisGraph.constants
   const datas = thisGraph.nodes.getNodeList()
+  // const links = thisGraph.links.getLinks()
 
-  // TODO exists와 newGs의 분리
-  // filter가 가능한 부분?
   const exists = this.nodesGroup.selectAll('g')
     .data(datas, function (d) {
       return d.id
@@ -299,7 +310,12 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
 
   const nodeDrag = nodeDraghandler(thisGraph)
   exists
-    .classed(thisGraph.constants.nodeSelectedClass, d => d.ui_status.selected)
+    .classed(thisGraph.constants.nodeSelectedClass, function (d) {
+      // if (d.ui_status.selected) {
+      //   const result = thisGraph.nodes.findConnectedNode(d, links)
+      // }
+      return d.ui_status.selected
+    })
     .call(thisGraph.appendText)
 
   const newGs = exists
@@ -386,12 +402,12 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         }
         return lineGenerator(data)
       })
-      .on('dblclick', function (d) {
-        if (thisGraph.isUnLock()) {
-          thisGraph.links.remove(d)
-          thisGraph.drawGraph({ link: true })
-        }
-      })
+      // .on('dblclick', function (d) {
+      //   if (thisGraph.isUnLock()) {
+      //     thisGraph.links.remove(d)
+      //     thisGraph.drawGraph({ link: true })
+      //   }
+      // })
 
     // remove
     exists.exit().remove()

@@ -5,10 +5,19 @@ marker {
   stroke-width: 1px;
 }
 
-path.link {
-  // important!!
+path.draglink {
+  fill: none;
   pointer-events: none;
-  // important!!
+  stroke: #333;
+  stroke-width: 3px;
+  cursor: default;
+}
+
+path.draglink.hidden {
+  stroke-width: 0;
+}
+
+path.link {
   fill: none;
   stroke: #333;
   stroke-width: 3px;
@@ -17,10 +26,6 @@ path.link {
 
 path.link:hover {
   stroke: rgb(94, 196, 204);
-}
-
-path.link.hidden {
-  stroke-width: 0;
 }
 
 path.link.selected  {

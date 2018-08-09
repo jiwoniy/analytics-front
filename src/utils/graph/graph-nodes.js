@@ -31,6 +31,13 @@ GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
   }
 }
 
+GraphNodes.prototype.findConnectedNode = function findConnectedNode (node, links) {
+  return Object.keys(links).filter(key => {
+    const { source, target } = links[key]
+    return source.sourceId === node.id || target.targetId === node.id
+  })
+}
+
 GraphNodes.prototype.add = function add (node) {
   this.nodes[getNodeId(node)] = node
 }

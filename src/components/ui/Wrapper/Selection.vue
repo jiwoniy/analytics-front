@@ -85,6 +85,8 @@ export default {
 }
 
 .select-wrapper select {
+  /*hide original SELECT element:*/
+  display: none;
   width: calc(100% - 0.4rem);
 }
 
