@@ -42,7 +42,7 @@ GraphNodes.prototype.add = function add (node) {
   this.nodes[getNodeId(node)] = node
 }
 
-GraphNodes.prototype.remove = function add (node) {
+GraphNodes.prototype.remove = function remove (node) {
   delete this.nodes[getNodeId(node)]
 }
 

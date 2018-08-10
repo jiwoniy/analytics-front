@@ -1,0 +1,21 @@
+.context-menu {
+  fill: none;
+  cursor: pointer;
+  stroke-width: 1px;
+
+  .menu-entry {
+    rect {
+      cursor: pointer;
+      fill: #ffffff;
+      stroke: #676a6c;
+    }
+
+    text {
+      tspan {
+        fill: black;
+        text-anchor: start;
+        font-size: 1rem;
+      }
+    }
+  }
+}

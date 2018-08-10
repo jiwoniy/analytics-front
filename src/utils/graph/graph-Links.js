@@ -26,7 +26,8 @@ GraphLinks.prototype.findLinks = function findLinks (node) {
   const results = Object.keys(this.links)
     .map(key => this.links[key])
     .filter(link => {
-      return link.sourceId === node.id || link.targetId === node.id
+      const { source, target } = link
+      return source.sourceId === node.id || target.targetId === node.id
     })
   return results
 }

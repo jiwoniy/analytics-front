@@ -180,9 +180,10 @@ export default {
       this.svgContainer = d3Selection.select(`#svgContainer${this.uCompId}`).select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
+        .attr('id', 'svgContainer')
       this.svgContainerGroup = this.svgContainer
         .append('g')
-        .attr('id', 'graphG')
+        .attr('id', 'graphGroup')
         .classed('graph', true)
 
       this.setGraph(this.svgContainer, {
@@ -286,6 +287,7 @@ export default {
 
 <style lang="scss">
 @import '@/utils/graph/graph-creator.scss';
+@import '@/utils/graph/context-menu.scss';
 </style>
 
 <style lang="scss" scoped>

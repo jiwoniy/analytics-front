@@ -7,6 +7,7 @@ import * as d3Shape from 'd3-shape'
 import getNodeShape from './graph-shape'
 import GraphNodes from './graph-nodes'
 import GraphLinks from './graph-links'
+import contextMenu from './context-menu'
 
 import { getLinkId } from '@/utils/normalize'
 import {
@@ -46,15 +47,6 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     selectedText: null
   }
 
-  // const constextMenu = svgContainer
-  //   .append('rect')
-  //   .style('position', 'absolute')
-  //   .style('z-index', '999999')
-  //   .style('width', '100px')
-  //   .style('height', '100px')
-  //   .style('visibility', 'hidden')
-  //   .text('a simple tooltip')
-
   // watch state
   const stateProxyHandler = {
     set (target, key, value) {
@@ -78,7 +70,7 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
   this.stateProxy = new Proxy(this.state, stateProxyHandler)
 
   this.svgContainer = svgContainer
-  this.svgGroup = svgContainer.select('#graphG')
+  this.svgGroup = svgContainer.select('#graphGroup')
 
   // displayed when dragging between nodes
   this.dragLine = this.svgContainer.append('svg:path')
@@ -88,6 +80,15 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
 
   this.pathsGroup = this.svgGroup.append('g').classed('path-group', true)
   this.nodesGroup = this.svgGroup.append('g').classed('node-group', true)
+
+  // this.constextMenu = this.svgGroup
+  //   .append('rect')
+  //   .style('position', 'absolute')
+  //   .style('z-index', '999999')
+  //   .style('width', '100px')
+  //   .style('height', '100px')
+  // .style('visibility', 'hidden')
+  // .text('a simple tooltip')
 
   if (options.saveFile) {
     // const file = JSON.parse(options.saveFile)
@@ -113,19 +114,16 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
       thisGraph.svgContainer.style('cursor', 'auto')
     })
 
-  // const menu = contextMenu().items('first item', 'second option', 'whatever, man')
   this.svgContainer
-    .on('mousedown', function (event) {
-      if (d3Selection.event.button === 2) {
-        // click right button
-        // constextMenu.style('visibility', 'visible')
-      } else {
+    .on('mousedown', function () {
+      if (d3Selection.event.target.id === 'svgContainer') {
         thisGraph.setSelectNode(this, null)
+        const existMenu = d3Selection.select('.menu-entry')
+        if (existMenu.size() > 0) {
+          existMenu.remove()
+        }
       }
     })
-    // .on('mouseup', function (d) {
-    // thisGraph.svgMouseUp(this, null)
-    // })
     .call(dragSvg)
     .on('dblclick.zoom', null)
 
@@ -187,16 +185,16 @@ const GraphCreator = function GraphCreatorConstructor (svgContainer, uParentComp
     }
   }
 
-  this.save = function save (node) {
+  // called from outer
+  this.save = function save () {
     const saveFile = {
       links: [],
       nodes: []
     }
 
-    if (thisGraph.links.getLinkList().length || thisGraph.nodes.getNodeList().length) {
+    if (!thisGraph.links.getLinkList().length && !thisGraph.nodes.getNodeList().length) {
       saveFile.links = linksTransformSaveLink(thisGraph.links.getLinks())
       saveFile.nodes = nodeTransformSaveNodes(thisGraph.nodes.getNodes())
-
       thisGraph.stateProxy.isUpdated = false
       return saveFile
     }
@@ -303,6 +301,20 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const datas = thisGraph.nodes.getNodeList()
   // const links = thisGraph.links.getLinks()
 
+  const menu = contextMenu(this.svgGroup).items({
+    id: 1,
+    type: 'node',
+    name: 'Delete',
+    callback: (node) => {
+      const result = thisGraph.findRelatedLinks(node)
+      thisGraph.nodes.remove(node)
+      result.forEach(function (link) {
+        thisGraph.links.remove(link)
+      })
+      thisGraph.stateProxy.isUpdated = true
+    }
+  })
+
   const exists = this.nodesGroup.selectAll('g')
     .data(datas, function (d) {
       return d.id
@@ -330,9 +342,16 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
     .on('click', function (d) {
       thisGraph.setSelectNode(this, d)
     })
+    .on('contextmenu', function (d) {
+      // Stop the context menu
+      d3Selection.event.preventDefault()
+      const mousePosition = d3Selection.mouse(this.parentNode)
+      menu(mousePosition[0], mousePosition[1], { node: d })
+    })
     .call(nodeDrag)
     .call(d => getNodeShape(thisGraph, d, thisGraph.options.connectValidation))
-  newGs.call(thisGraph.appendText)
+    .call(thisGraph.appendText)
+  // newGs.call(thisGraph.appendText)
 
   exists.exit().remove()
 }
@@ -354,6 +373,16 @@ GraphCreator.prototype.appendText = function appendText (nodes) {
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const thisGraph = this
+
+  const menu = contextMenu(this.svgGroup).items({
+    id: 1,
+    type: 'link',
+    name: 'Delete',
+    callback: (link) => {
+      thisGraph.links.remove(link)
+      thisGraph.drawGraph({ link: true })
+    }
+  })
 
   function draw (nodes) {
     const lineGenerator = d3Shape.linkHorizontal()
@@ -402,12 +431,12 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         }
         return lineGenerator(data)
       })
-      // .on('dblclick', function (d) {
-      //   if (thisGraph.isUnLock()) {
-      //     thisGraph.links.remove(d)
-      //     thisGraph.drawGraph({ link: true })
-      //   }
-      // })
+      .on('contextmenu', function (d) {
+        // Stop the context menu
+        d3Selection.event.preventDefault()
+        const mousePosition = d3Selection.mouse(this)
+        menu(mousePosition[0], mousePosition[1], { link: d })
+      })
 
     // remove
     exists.exit().remove()
