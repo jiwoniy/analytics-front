@@ -115,7 +115,6 @@ export default {
     }
   },
   UPDATE_ACTIVATE_PIPELINE_NODE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
-    // pipelineUpdateStatus
     state.pipelineNodeUpdateStatus = Object.assign({}, {
       updateType,
       updateTime,

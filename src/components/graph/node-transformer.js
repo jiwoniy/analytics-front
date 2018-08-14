@@ -1,6 +1,24 @@
 import { normalizeArray } from '@/utils/normalize'
 
-// Make Copy (precautions: shallow copy vs deep copy)
+function metaNodeToNode (node) {
+  return {
+    id: node.id,
+    node_type_id: node.node_type_id,
+    input: node.input,
+    output: node.output,
+    name: node.name,
+    desc: node.desc,
+    properties: node.properties,
+    linkInput: node.linkInput || null,
+    linkOutput: node.linkOutput || null,
+    position: node.position,
+    ui_status: {
+      moving: false,
+      selected: false
+    }
+  }
+}
+
 function nodeTransformSaveNode (node, isLinks = false) {
   if (isLinks) {
     return {
@@ -40,7 +58,6 @@ function nodeTransformSaveNodes (nodes) {
     .map(key => nodeTransformSaveNode(nodes[key])))
 }
 
-// Make Copy For use UI Node(precautions: shallow copy vs deep copy)
 function nodeTransformUiNode (node, isLinks = false) {
   if (isLinks) {
     return {
@@ -106,25 +123,6 @@ function linksTransformUiLinks (links) {
         target
       }
     }))
-}
-
-function metaNodeToNode (node) {
-  return {
-    id: node.id,
-    node_type_id: node.node_type_id,
-    input: node.input,
-    output: node.output,
-    name: node.name,
-    desc: node.desc,
-    properties: node.properties,
-    linkInput: node.linkInput || null,
-    linkOutput: node.linkOutput || null,
-    position: node.position,
-    ui_status: {
-      moving: false,
-      selected: false
-    }
-  }
 }
 
 export {

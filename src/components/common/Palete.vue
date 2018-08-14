@@ -277,11 +277,13 @@ export default {
       this.init()
     },
     activatePipelineUpdateStatus (newValue) {
+      // 현재는 init 밖에 없음
       if (newValue && newValue.updateType === 'init') {
         this.refreshGraph({ updateObject: 'pipeline', updateType: 'init' })
       }
     },
     activatePipelineNodeUpdateStatus (newValue) {
+      // 현재는 update, delete
       if (newValue && (newValue.updateType === 'delete' || newValue.updateType === 'update')) {
         this.refreshGraph({ updateObject: 'node', updateType: newValue.updateType })
       }

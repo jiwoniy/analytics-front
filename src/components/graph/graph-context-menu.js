@@ -1,56 +1,57 @@
-import * as d3Selection from 'd3-selection'
+// import * as d3Selection from 'd3-selection'
 
-function contextMenu (container, pOptions) {
+function contextMenu (container, type, pOptions) {
+  // type : link or node
   const options = pOptions || {}
   const height = options.height || 30
   const width = options.width || 150
   const margin = '0.4rem'
   const items = []
   const idName = 'contextMenu'
-  // console.log(container)
-  // const contextMenu = d3Selection.select('.context-menu')
-  // console.log(contextMenu)
 
+  // context-menu.scss
   const contextMenu = container
     .append('g')
     .attr('class', 'context-menu')
-    .attr('id', idName)
+    .attr('id', `${idName}-${type}`)
 
-  function menu (x, y, { link, node }) {
+  function menu (xPosition, yPosition, { link, node }) {
     // scaleItems()
 
     // Draw the menu
-    contextMenu
-      .selectAll('.menu-entry')
+    const selectMenu = contextMenu
+      .selectAll('.menu-item')
       .data(items, function (d) {
         return d.id
       })
+
+    const appendMenu = selectMenu
       .enter()
       .append('g')
-      .attr('class', 'menu-entry')
+      .attr('class', 'menu-item')
       .on('click', function (d) {
         if (d && d.callback) {
-          const obj = d.type === 'link' ? link : node
+          const obj = type === 'link' ? link : node
           d.callback(obj)
         }
-        contextMenu.selectAll('.menu-entry').remove()
+        contextMenu.selectAll('.menu-item').remove()
       })
 
-    d3Selection.selectAll('.menu-entry')
+    appendMenu
       .append('rect')
-      .attr('x', x)
-      .attr('y', function (d, i) { return y + (i * height) })
+      .attr('x', xPosition)
+      .attr('y', function (d, i) { return yPosition + (i * height) })
       .attr('width', width)
       .attr('height', height)
-      .attr('id', `${idName}-menu-entry`)
+      .attr('id', `${idName}-menu-item`)
 
-    d3Selection.selectAll('.menu-entry')
+    appendMenu
       .append('text')
-      .attr('id', `${idName}-menu-entry-text`)
+      .attr('id', `${idName}-menu-item-text`)
       .append('tspan')
-      .attr('id', `${idName}-menu-entry-text-tspan`)
-      .attr('x', x)
-      .attr('y', function (d, i) { return y + (i * height) })
+      .attr('id', `${idName}-menu-item-text-tspan`)
+      .attr('x', xPosition)
+      .attr('y', function (d, i) { return yPosition + (i * height) })
       .attr('dy', height / 2)
       .attr('dx', margin)
       .text(d => d.name)

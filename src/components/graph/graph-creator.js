@@ -1,7 +1,6 @@
 import * as d3Selection from 'd3-selection'
 import * as d3Zoom from 'd3-zoom'
 import * as d3Shape from 'd3-shape'
-// import * as d3Force from 'd3-force'
 
 import getNodeShape from './graph-shape'
 import GraphNodes from './graph-nodes'
@@ -10,14 +9,14 @@ import nodeDragHandler from './graph-node-drag-handler'
 import zoomHandler from './graph-zoom-handler'
 import contextMenu from './graph-context-menu'
 
-import { getLinkId } from '@/utils/normalize'
 import {
   metaNodeToNode,
   nodeTransformUiNodes,
   nodeTransformSaveNodes,
   linksTransformSaveLink,
   linksTransformUiLinks
-} from './helper'
+} from './node-transformer'
+import { getLinkId } from '@/utils/normalize'
 
 const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, { options, externalCallback }) {
   const graphContext = this
@@ -79,15 +78,6 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
   graphContext.nodeGroup = graphContext
     .graphGroup.append('g').classed(graphContext.constants.nodeGroupClass, true)
 
-  // this.constextMenu = this.svgGroup
-  //   .append('rect')
-  //   .style('position', 'absolute')
-  //   .style('z-index', '999999')
-  //   .style('width', '100px')
-  //   .style('height', '100px')
-  // .style('visibility', 'hidden')
-  // .text('a simple tooltip')
-
   if (options.saveFile) {
     const file = options.saveFile
     const { nodes, links } = file
@@ -101,7 +91,7 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
     .on('mousedown', function () {
       if (d3Selection.event.target.id === 'svgElem') {
         graphContext.setSelectNode(this, null)
-        const existMenu = d3Selection.select('.menu-entry')
+        const existMenu = d3Selection.select('.menu-item')
         if (existMenu.size() > 0) {
           existMenu.remove()
         }
@@ -109,6 +99,29 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
     })
     .call(zoomingHandler)
     .on('dblclick.zoom', null)
+
+  // context menu
+  graphContext.nodeMenu = contextMenu(graphContext.graphGroup, 'node').items({
+    id: 'node-1',
+    name: 'Delete',
+    callback: (node) => {
+      const result = graphContext.findRelatedLinks(node)
+      graphContext.nodes.remove(node)
+      result.forEach(function (link) {
+        graphContext.links.remove(link)
+      })
+      graphContext.stateProxy.isUpdated = true
+    }
+  })
+
+  graphContext.linkMenu = contextMenu(graphContext.graphGroup, 'link').items({
+    id: 'link-1',
+    name: 'Delete',
+    callback: (link) => {
+      graphContext.links.remove(link)
+      graphContext.drawGraph({ link: true })
+    }
+  })
 
   // define method
   graphContext.getUParentCompId = function getUParentCompId () {
@@ -181,7 +194,7 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
       nodes: []
     }
 
-    if (graphContext.links.getLinkList().length && graphContext.nodes.getNodeList().length) {
+    if (graphContext.nodes.getNodeList().length) {
       saveFile.links = linksTransformSaveLink(graphContext.links.getLinks())
       saveFile.nodes = nodeTransformSaveNodes(graphContext.nodes.getNodes())
       graphContext.stateProxy.isUpdated = false
@@ -247,20 +260,6 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   const datas = graphContext.nodes.getNodeList()
   // const links = thisGraph.links.getLinks()
 
-  const menu = contextMenu(graphContext.graphGroup).items({
-    id: 1,
-    type: 'node',
-    name: 'Delete',
-    callback: (node) => {
-      const result = graphContext.findRelatedLinks(node)
-      graphContext.nodes.remove(node)
-      result.forEach(function (link) {
-        graphContext.links.remove(link)
-      })
-      graphContext.stateProxy.isUpdated = true
-    }
-  })
-
   const exists = graphContext.nodeGroup.selectAll('g')
     .data(datas, function (d) {
       return d.id
@@ -289,10 +288,10 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
       graphContext.setSelectNode(this, d)
     })
     .on('contextmenu', function (d) {
-      // Stop the context menu
+      // Stop browser the context menu
       d3Selection.event.preventDefault()
       const mousePosition = d3Selection.mouse(this.parentNode)
-      menu(mousePosition[0], mousePosition[1], { node: d })
+      graphContext.nodeMenu(mousePosition[0], mousePosition[1], { node: d })
     })
     .call(nodeDrag)
     .call(d => getNodeShape(graphContext, d, graphContext.options.connectValidation))
@@ -319,16 +318,6 @@ GraphCreator.prototype.appendText = function appendText (nodes) {
 
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const graphContext = this
-
-  const menu = contextMenu(graphContext.graphGroup).items({
-    id: 1,
-    type: 'link',
-    name: 'Delete',
-    callback: (link) => {
-      graphContext.links.remove(link)
-      graphContext.drawGraph({ link: true })
-    }
-  })
 
   function draw (nodes) {
     const lineGenerator = d3Shape.linkHorizontal()
@@ -381,7 +370,7 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
         // Stop the context menu
         d3Selection.event.preventDefault()
         const mousePosition = d3Selection.mouse(this)
-        menu(mousePosition[0], mousePosition[1], { link: d })
+        graphContext.linkMenu(mousePosition[0], mousePosition[1], { link: d })
       })
 
     // remove
