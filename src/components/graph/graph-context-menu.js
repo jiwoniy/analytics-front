@@ -3,10 +3,10 @@
 function contextMenu (container, type, pOptions) {
   // type : link or node
   const options = pOptions || {}
-  const height = options.height || 30
-  const width = options.width || 150
-  const margin = '0.4rem'
+  const height = options.height || 25
+  const width = options.width || 100
   const items = []
+  const margin = '0.4rem'
   const idName = 'contextMenu'
 
   // context-menu.scss
@@ -52,7 +52,7 @@ function contextMenu (container, type, pOptions) {
       .attr('id', `${idName}-menu-item-text-tspan`)
       .attr('x', xPosition)
       .attr('y', function (d, i) { return yPosition + (i * height) })
-      .attr('dy', height / 2)
+      .attr('dy', '1rem')
       .attr('dx', margin)
       .text(d => d.name)
   }

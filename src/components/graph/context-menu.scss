@@ -5,16 +5,16 @@
 
   .menu-item {
     rect {
-      cursor: pointer;
       fill: #ffffff;
-      stroke: #676a6c;
+      stroke: none;
+      stroke-width: 0.5px;
     }
 
     text {
       tspan {
-        fill: black;
+        fill: steelblue;
         text-anchor: start;
-        font-size: 1rem;
+        font-size: 0.8rem;
       }
     }
   }

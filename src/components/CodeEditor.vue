@@ -1,8 +1,8 @@
 <template>
-  <div class="editor">
+  <section class="Editor__section">
     <textarea id="code" class="code" v-model="codeValue">
     </textarea>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -12,7 +12,7 @@ import 'codemirror/mode/python/python'
 import 'codemirror/mode/sql/sql'
 
 export default {
-  name: 'Python-Editor',
+  name: 'Editor-Section',
   props: {
     code: {
       type: String,
@@ -32,7 +32,7 @@ export default {
   mounted () {
     this.originalCode = document.getElementById('code')
     CodeMirror.fromTextArea(this.originalCode, {
-      mode: 'sql',
+      mode: this.mode,
       lineNumbers: true,
       value: this.codeValue
     })
@@ -47,8 +47,7 @@ export default {
 <style lang="scss" scroped>
 @import '@/styles/global.scss';
 @import 'codemirror/lib/codemirror.css';
-
-.editor {
+.Editor__section {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
