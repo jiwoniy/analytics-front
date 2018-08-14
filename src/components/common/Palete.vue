@@ -1,16 +1,20 @@
 <template>
   <section
     class="Palete__section"
-    :id="`svgContainer${uCompId}`"
+    :id="`svgElem${uCompId}`"
     v-resize:debounce.250="onResize"
   >
-    <img
-      class="lock"
-      v-if="!readOnly && isPipelineUnLock"
-      src="@/assets/img/lock-open-solid.svg" />
-    <img class="lock"
-      v-if="!readOnly && !isPipelineUnLock"
-      src="@/assets/img/lock-solid.svg" />
+
+    <toggle-button
+      v-if="!readOnly"
+      :toggle="isPipelineUnLock"
+      :custom-style="{
+        'top': '30px'
+      }"
+      :a-src="'/static/img/lock-open-solid.svg'"
+      :b-src="'/static/img/lock-solid.svg'"
+    >
+    </toggle-button>
 
     <svg>
       <def-svg></def-svg>
@@ -18,7 +22,7 @@
 
     <div
       v-if="!readOnly"
-      class="palete-footer"
+      class="footer"
     >
       <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
     </div>
@@ -28,22 +32,24 @@
 
 <script>
 import uuidv4 from 'uuid/v4'
-import { mapGetters, mapActions } from 'vuex'
-import * as d3Selection from 'd3-selection'
 import resize from 'vue-resize-directive'
 import _isEmpty from 'lodash.isempty'
 import _cloneDeep from 'lodash.clonedeep'
+import { mapGetters, mapActions } from 'vuex'
+import * as d3Selection from 'd3-selection'
 
-import DefSvg from '@/components/common/DefSvg'
-import eventController from '@/utils/EventController'
-import GraphCreator from '@/utils/graph/graph-creator'
 import compose from '@/utils/compose'
+import eventController from '@/utils/EventController'
+import DefSvg from '@/components/common/DefSvg'
+import GraphCreator from '@/components/graph/graph-creator'
+import ToggleButton from '@/components/ui/ToggleButton'
 
 // TODO Make read, read/write mode
 export default {
   name: 'Palete-Section',
   components: {
-    DefSvg
+    DefSvg,
+    ToggleButton
   },
   directives: {
     resize
@@ -61,9 +67,9 @@ export default {
   data () {
     return {
       uCompId: null,
-      svgGraph: null,
-      svgContainer: null,
-      svgContainerGroup: null
+      svgElem: null, // svg element
+      graphGroup: null, // g element
+      graphInstance: null // instance
     }
   },
   props: {
@@ -93,23 +99,26 @@ export default {
       setActivatePipelineNodeId: 'myProject/setActivatePipelineNodeId'
     }),
     onResize (elem) {
-      if (this.svgContainer) {
-        this.svgContainer
+      if (this.svgElem) {
+        this.svgElem
           .attr('width', elem.offsetWidth)
           .attr('height', elem.offsetHeight)
       }
 
-      if (this.svgGraph) {
-        this.svgGraph.setZoomInit()
-        this.svgGraph.setWidth(elem.offsetWidth)
-        this.svgGraph.setHeight(elem.offsetHeight)
+      if (this.graphInstance) {
+        this.graphInstance.setZoomInit()
+        this.graphInstance.setWidth(elem.offsetWidth)
+        this.graphInstance.setHeight(elem.offsetHeight)
       }
+    },
+    updateLock (lock) {
+      this.setPipelineUnLock(lock)
     },
     getTypeNode (id) {
       return this.metaNodes[id]
     },
-    setGraph (svgContainer, options) {
-      const callback = {
+    setGraph (svgElem, options) {
+      const externalCallback = {
         node_select: this.nodeSelect,
         watch_update: this.watchGraphUpdate
       }
@@ -135,22 +144,23 @@ export default {
         validate(true),
         validate()
       ], true)
-      this.svgGraph = new GraphCreator(svgContainer, this.uCompId, {
+
+      this.graphInstance = new GraphCreator(svgElem, this.uCompId, {
         options: {
           ...options,
           saveFile: _isEmpty(this.activatePipeline) ? null : _cloneDeep(this.activatePipeline),
           connectValidation: composeValidate
         },
-        callback })
+        externalCallback })
 
-      this.svgGraph.setZoomInit()
+      this.graphInstance.setZoomInit()
     },
     refreshGraph ({ updateObject, updateType }) {
       // updateObject = pipeline or node
       // updateType = init or update or delete
       // TODO make it clear when refresh..
-      if (this.svgGraph) {
-        this.svgGraph.redraw({
+      if (this.graphInstance) {
+        this.graphInstance.redraw({
           pipeline: _cloneDeep(this.activatePipeline),
           updateObject,
           updateType
@@ -158,33 +168,32 @@ export default {
       }
     },
     saveGraph () {
-      if (this.svgGraph) {
-        const saveFile = this.svgGraph.save()
+      if (this.graphInstance) {
+        const saveFile = this.graphInstance.save()
         if (saveFile) {
           this.savePipeline({ pipeline: _cloneDeep(saveFile) })
         }
       }
     },
-    removeSvgGraph () {
-      if (this.svgGraph) {
-        this.svgContainerGroup.remove()
+    removeGraph () {
+      if (this.graphInstance && this.graphGroup) {
+        this.graphGroup.remove()
       }
     },
-    setSvgContainer () {
-      // const margin = { top: 10, right: 10, bottom: 10, left: 10 }
+    setSvgElem () {
       this.width = this.$el.offsetWidth
       this.height = this.$el.offsetHeight
 
-      this.svgContainer = d3Selection.select(`#svgContainer${this.uCompId}`).select('svg')
+      this.svgElem = d3Selection.select(`#svgElem${this.uCompId}`).select('svg')
         .attr('width', this.width)
         .attr('height', this.height)
-        .attr('id', 'svgContainer')
-      this.svgContainerGroup = this.svgContainer
+        .attr('id', 'svgElem')
+      this.graphGroup = this.svgElem
         .append('g')
         .attr('id', 'graphGroup')
         .classed('graph', true)
 
-      this.setGraph(this.svgContainer, {
+      this.setGraph(this.svgElem, {
         width: this.width,
         height: this.height
       })
@@ -210,7 +219,7 @@ export default {
       eventController.addListner('SEND_DATA_TRANSFER', (payload) => {
         const { data } = payload
         const sendData = Object.assign({}, data, this.getTypeNode(data.node_type_id))
-        this.svgGraph.addNode({
+        this.graphInstance.addNode({
           ...sendData,
           id: uuidv4()
         })
@@ -221,7 +230,7 @@ export default {
       })
 
       eventController.addListner('REFRESH', () => {
-        this.svgGraph.setZoomInit()
+        this.graphInstance.setZoomInit()
       })
 
       eventController.addListner('LOAD', () => {
@@ -229,12 +238,12 @@ export default {
       })
 
       eventController.addListner('EDIT', () => {
-        this.setPipelineUnLock(!this.isPipelineUnLock)
+        this.updateLock(true)
       })
     },
     init () {
-      this.removeSvgGraph()
-      this.setSvgContainer()
+      this.removeGraph()
+      this.setSvgElem()
     }
   },
   beforeMount () {
@@ -257,13 +266,11 @@ export default {
     this.$nextTick(() => {
       this.init()
     })
-
-    // window.onresize = function(){thisGraph.updateWindow(svg);}
   },
   watch: {
     isPipelineUnLock (newValue) {
-      if (this.svgGraph && !this.readOnly) {
-        this.svgGraph.setUnlock(newValue, this.uCompId)
+      if (this.graphInstance && !this.readOnly) {
+        this.graphInstance.setUnlock(newValue, this.uCompId)
       }
     },
     activateWorksheetId (newValue) {
@@ -284,8 +291,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/utils/graph/graph-creator.scss';
-@import '@/utils/graph/context-menu.scss';
+@import '@/components/graph/graph-creator.scss';
+@import '@/components/graph/context-menu.scss';
 </style>
 
 <style lang="scss" scoped>
@@ -295,23 +302,14 @@ export default {
   height: 100%;
   display: block;
   background-color: rgb(248, 248, 248);
+}
 
-  .lock {
-    position: absolute;
-    left: 0px;
-    top: var(--app-left-panel-folder-button);
-    width: 50px;
-    height: 50px;
-    font-size: 18px;
-  }
-
-  .palete-footer {
-    position: absolute;
-    right: 0px;
-    bottom: var(--app-foot-panel-height);
-    p {
-      margin: 0.4rem;
-    }
+.Palete__section .footer {
+  position: absolute;
+  right: 0px;
+  bottom: var(--app-foot-panel-height);
+  p {
+    margin: 0.4rem;
   }
 }
 </style>

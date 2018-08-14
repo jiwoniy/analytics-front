@@ -1,16 +1,9 @@
-
-marker {
-  // fill: #333;
-  fill: none;
-  stroke-width: 1px;
-}
-
 path.draglink {
-  fill: none;
   pointer-events: none;
+  pointer-events: none;
+  fill: none;
   stroke: #333;
   stroke-width: 3px;
-  cursor: default;
 }
 
 path.draglink.hidden {

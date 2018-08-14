@@ -27,7 +27,6 @@
     >
       <path d = "M 0 0 L 10 10 M 0 10 L 10 0"/>
     </marker>
-
   </defs>
 </template>
 
@@ -38,7 +37,12 @@ export default {
 </script>
 
 <style scoped>
-#marker-arrow {
+#marker-arrow, #marker-fail {
   pointer-events: none;
+}
+
+marker {
+  fill: none;
+  stroke-width: 1px;
 }
 </style>

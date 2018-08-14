@@ -4,18 +4,28 @@ function GraphNodes (nodes) {
   this.nodes = nodes || {}
 }
 
-GraphNodes.prototype.getNodeList = function getNodeList () {
-  return Object.keys(this.nodes).map(key => this.nodes[key])
-}
-
 GraphNodes.prototype.getNodes = function getNodes () {
   return this.nodes
 }
 
+GraphNodes.prototype.getNodeList = function getNodeList () {
+  return Object.keys(this.nodes).map(key => this.nodes[key])
+}
+
+// node add
+GraphNodes.prototype.add = function add (node) {
+  this.nodes[getNodeId(node)] = node
+}
+
+// node remove
+GraphNodes.prototype.remove = function remove (node) {
+  delete this.nodes[getNodeId(node)]
+}
+
 GraphNodes.prototype.setSelectClean = function setSelectClean () {
-  const that = this
+  const graphNodes = this
   Object.keys(this.nodes).map(key => {
-    that.nodes[key].ui_status.selected = false
+    graphNodes.nodes[key].ui_status.selected = false
   })
 }
 
@@ -36,14 +46,6 @@ GraphNodes.prototype.findConnectedNode = function findConnectedNode (node, links
     const { source, target } = links[key]
     return source.sourceId === node.id || target.targetId === node.id
   })
-}
-
-GraphNodes.prototype.add = function add (node) {
-  this.nodes[getNodeId(node)] = node
-}
-
-GraphNodes.prototype.remove = function remove (node) {
-  delete this.nodes[getNodeId(node)]
 }
 
 export default GraphNodes
