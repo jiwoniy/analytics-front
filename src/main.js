@@ -24,10 +24,10 @@ Vue.component('loader', Loader)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: '#dtonic-app',
   router,
   i18n,
   store,
   template: '<App/>',
-  components: { App }
+  render: (h) => h(App)
 })

@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="dtonic-app">
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'RootApp'
 }
 </script>
 
@@ -32,7 +32,7 @@ body {
   /* 14px: 1.4rem, 16px: 1.6rem, 24px: 2.4rem */
 }
 
-#app {
+#dtonic-app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
