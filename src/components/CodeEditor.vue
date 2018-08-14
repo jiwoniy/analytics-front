@@ -6,8 +6,10 @@
 </template>
 
 <script>
+// https://codemirror.net/#description
 import CodeMirror from 'codemirror'
 import 'codemirror/mode/python/python'
+import 'codemirror/mode/sql/sql'
 
 export default {
   name: 'Python-Editor',
@@ -15,6 +17,10 @@ export default {
     code: {
       type: String,
       default: () => ''
+    },
+    mode: {
+      type: String,
+      default: () => 'python'
     }
   },
   data () {
@@ -26,12 +32,9 @@ export default {
   mounted () {
     this.originalCode = document.getElementById('code')
     CodeMirror.fromTextArea(this.originalCode, {
-      mode: 'python',
+      mode: 'sql',
       lineNumbers: true,
       value: this.codeValue
-      // mode: 'text/x-python',
-      // singleLineStringErrors: false
-      // styleActiveLine: true
     })
 
     // myCodeMirror.on('change', (cm) => {

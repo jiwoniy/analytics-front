@@ -12,12 +12,6 @@ Project dependencies
 
 > Vue Router is the official router for Vue.js. It deeply integrates with Vue.js core to make building Single Page Applications with Vue.js a breeze. Features include:
 
-
-[axios](https://github.com/axios/axios)
--------------
-
-> Promise based HTTP client for the browser and node.js
-
 [vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
 -------------
 
@@ -31,6 +25,11 @@ Project dependencies
 [vueSnotify](https://artemsky.github.io/vue-snotify/documentation/installation.html)
 -------------
 
+[axios](https://github.com/axios/axios)
+-------------
+
+> Promise based HTTP client for the browser and node.js
+
 > Notifications
 
 [Moment](https://momentjs.com/)
@@ -38,7 +37,17 @@ Project dependencies
 
 > Parse, validate, manipulate, and display dates and times in JavaScript.
 
-[dragula](https://github.com/bevacqua/dragula)
+[Codemirror](https://codemirror.net/)
 -------------
 
-> Drag and drop so simple it hurts https://bevacqua.github.io/dragula/
+> CodeMirror is a versatile text editor implemented in JavaScript for the browser. It is specialized for editing code, and comes with a number of language modes and addons that implement more advanced editing functionality.
+
+[D3](https://d3js.org/)
+-------------
+
+> Go to libraries
+
+[uuid](https://github.com/kelektiv/node-uuid#readme)
+-------------
+
+> Make uuid
