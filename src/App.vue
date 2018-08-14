@@ -12,7 +12,6 @@ export default {
 
 <style lang="scss">
 @import '@/styles/global.scss';
-// @import '@/styles/scrollbar.scss';
 </style>
 
 <style>
