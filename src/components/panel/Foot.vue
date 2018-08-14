@@ -1,27 +1,25 @@
 <template>
-  <transition>
-    <div id="Footer" class="Footer__page">
+  <section id="Footer" class="Footer__section">
 
-      <div v-if="!isOpen" class="footer--fixed">
-        <span @click="openReport" class='report'> {{ $t('Report') }} </span>
-      </div>
-
-      <div v-show="isOpen" class="report">
-        <div id="draggable" class="split" draggable="true"></div>
-        <div class="area">
-          <img class="close" @click="closeRerpot" src="@/assets/img/times-solid.svg" />
-          <slot></slot>
-        </div>
-      </div>
-
+    <div v-if="!isOpen" class="footer--fixed">
+      <span @click="openReport" class='report'> {{ $t('Report') }} </span>
     </div>
-  </transition>
+
+    <div v-show="isOpen" class="report">
+      <div id="draggable" class="split" draggable="true"></div>
+      <div class="area">
+        <img class="close" @click="closeRerpot" src="@/assets/img/times-solid.svg" />
+        <slot></slot>
+      </div>
+    </div>
+
+  </section>
 </template>
 
 <script>
 
 export default {
-  name: 'Foot-Panel',
+  name: 'Footer-Section',
   i18n: {
     messages: {
       'en': {
@@ -65,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.Footer__page {
+.Footer__section {
   position: fixed;
   width: 100%;
   background-color: #ffffff;

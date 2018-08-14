@@ -1,7 +1,6 @@
 <template>
   <transition>
-    <div class="top-panel__page">
-      <div id="tf-widget-container"></div>
+    <section class="Top__section">
       <menu-list
         class="menu-icon"
         :project-list="projectList">
@@ -12,17 +11,17 @@
           cache clear
         </button>
       </div>
-    </div>
+    </section>
   </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
-import MenuList from '@/components/ui/Menu'
+import MenuList from '@/components/Menu'
 
 export default {
-  name: 'TOP-Panel',
+  name: 'Top-Section',
   components: {
     MenuList
   },
@@ -40,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.top-panel__page {
+.Top__section {
   position: relative;
   width: 100%;
   height: var(--app-top-panel-height);

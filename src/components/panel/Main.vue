@@ -1,50 +1,60 @@
 <template>
-  <transition>
-    <section class="main-panel__page">
+  <section class="Main__section">
 
-      <Split ref="main_split" @onDragEnd="onDragSplitPanel">
-        <SplitArea :size="split_size.left" :minSize="50">
-          <div class="left-section" ref="dragable">
-            <left-panel
-              id="leftPanel"
-              :worksheet-list="worksheetList"
-              :activate-worksheet="activateWorksheet"
-              :pipeline-nodes="pipelineMeta">
-            </left-panel>
-          </div>
-        </SplitArea>
+    <Split ref="main_split" @onDragEnd="onDragSplitPanel">
+      <SplitArea :size="split_size.left" :minSize="50">
+        <left-panel
+          id="leftPanel"
+          :worksheet-list="worksheetList"
+          :activate-worksheet="activateWorksheet"
+          :pipeline-nodes="pipelineMeta">
+        </left-panel>
+      </SplitArea>
 
-        <SplitArea class="center-section" :size="split_size.center" :minSize="100">
-          <div class="folder__button" @click="minimizeLeftPanel">
-            <img v-show="isLeftMinimize" src="/static/img/angle-right-solid.svg" />
-            <img v-show="!isLeftMinimize" src="/static/img/angle-left-solid.svg" />
-          </div>
-          <work-panel>
-          </work-panel>
-          <div class="folder__button_right" @click="minimizeRightPanel">
-            <img v-show="!isRightMinimize" src="/static/img/angle-right-solid.svg" />
-            <img v-show="isRightMinimize" src="/static/img/angle-left-solid.svg" />
-          </div>
-        </SplitArea>
+      <SplitArea class="center-section" :size="split_size.center" :minSize="100">
+        <toggle-button
+          :click-button="minimizeLeftPanel"
+          :toggle="isLeftMinimize"
+          :custom-style="{
+            'top': '0px',
+            'left': '0px'
+          }"
+          :a-src="'/static/img/angle-right-solid.svg'"
+          :b-src="'/static/img/angle-left-solid.svg'"
+        >
+        </toggle-button>
+        <work-panel>
+        </work-panel>
+        <toggle-button
+          :click-button="minimizeRightPanel"
+          :toggle="!isRightMinimize"
+          :custom-style="{
+            'top': '0px',
+            'right': '0px'
+          }"
+          :a-src="'/static/img/angle-right-solid.svg'"
+          :b-src="'/static/img/angle-left-solid.svg'"
+        >
+        </toggle-button>
+      </SplitArea>
 
-        <SplitArea :size="split_size.right" :minSize="20">
-          <right-panel>
-            <worksheet-manager
-              v-if="currentItemType === 'worksheet'"
-              slot="worksheet-manager">
-            </worksheet-manager>
-            <node-manager
-              v-if="currentItemType === 'pipeline-node'"
-              slot="node-manager">
-            </node-manager>
-          </right-panel>
-        </SplitArea>
-      </Split>
+      <SplitArea :size="split_size.right" :minSize="20">
+        <right-panel>
+          <worksheet-manager
+            v-if="currentItemType === 'worksheet'"
+            slot="worksheet-manager">
+          </worksheet-manager>
+          <node-manager
+            v-if="currentItemType === 'pipeline-node'"
+            slot="node-manager">
+          </node-manager>
+        </right-panel>
+      </SplitArea>
+    </Split>
 
-      <foot-panel></foot-panel>
+    <foot-panel></foot-panel>
 
-    </section>
-  </transition>
+  </section>
 </template>
 
 <script>
@@ -57,16 +67,18 @@ import WorkPanel from '@/components/panel/Working'
 import FootPanel from '@/components/panel/Foot'
 import WorksheetManager from '@/components/WorksheetManager'
 import NodeManager from '@/components/NodeManager'
+import ToggleButton from '@/components/ui/ToggleButton'
 
 export default {
-  name: 'Work-Panel',
+  name: 'Main-Section',
   components: {
     LeftPanel,
     RightPanel,
     WorkPanel,
     FootPanel,
     WorksheetManager,
-    NodeManager
+    NodeManager,
+    ToggleButton
   },
   data () {
     return {
@@ -135,49 +147,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-panel__page {
+.Main__section {
   display: flex;
   flex-direction: column;
   width: 100%;
   z-index: 1;
 }
 
-.main-panel__page .left-section {
-  display: flex;
-  flex-direction: row;
-}
-
-.main-panel__page .center-section {
+.Main__section .center-section {
   position: relative;
-  .folder__button {
-    z-index: 2;
-    display: block;
-    position: absolute;
-    cursor: pointer;
-    top: 0px;
-    left: 0px;
-    width: var(--app-left-panel-folder-button);
-    height: var(--app-left-panel-folder-button);
-    img {
-      position: relative;
-      width: 30px;
-      height: 30px;
-    }
-  }
-  .folder__button_right {
-    z-index: 2;
-    display: block;
-    position: absolute;
-    cursor: pointer;
-    top: 0px;
-    right: 0px;
-    width: var(--app-left-panel-folder-button);
-    height: var(--app-left-panel-folder-button);
-    img {
-      position: relative;
-      width: 30px;
-      height: 30px;
-    }
-  }
 }
 </style>

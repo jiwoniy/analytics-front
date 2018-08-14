@@ -1,7 +1,7 @@
 <template>
   <section
     id="rightPanel"
-    class="right-panel__page"
+    class="Right__section"
   >
     <transition name="fade">
       <slot name="worksheet-manager"></slot>
@@ -12,12 +12,12 @@
 
 <script>
 export default {
-  name: 'Right-Panel'
+  name: 'Right-Section'
 }
 </script>
 
 <style lang="scss" scoped>
-.right-panel__page {
+.Right__section {
   display: block;
   position: relative;
   margin: 0 10px;

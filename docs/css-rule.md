@@ -1,7 +1,11 @@
 css(scss) conventsion
 =============
 
-bems..
+{ Section Name }__{ identifier for class type }
 
-__ page
-__ container
+__section: <section> class
+__ container: <div> class
+__ wrapper
+__button: <button> 
+
+__contents

@@ -1,21 +1,20 @@
 <template>
-  <transition>
-    <section class="working__page">
-      <div id="tool-box" class="tool-box">
-        <button @click="save"> save </button>
-        <button @click="edit"> edit </button>
-        <button @click="refresh"> recover </button>
-        <button @click="load"> Reload </button>
-        <button @click="openModal"> modal </button>
-        <button @click="openEditor"> editor </button>
-      </div>
-      <drop-comp>
-        <svg-palete
-          slot="svg-container">
-        </svg-palete>
-      </drop-comp>
-    </section>
-  </transition>
+  <section class="Working__section">
+    <div id="tool-box" class="tool-box">
+      <button @click="save"> save </button>
+      <button @click="edit"> edit </button>
+      <button @click="refresh"> recover </button>
+      <button @click="load"> Reload </button>
+      <button @click="openModal"> modal </button>
+      <button @click="openEditor"> editor </button>
+    </div>
+
+    <drop-comp>
+      <svg-palete
+        slot="svg-container">
+      </svg-palete>
+    </drop-comp>
+  </section>
 </template>
 
 <script>
@@ -24,7 +23,7 @@ import DropComp from '@/components/common/Drop'
 import SvgPalete from '@/components/common/Palete'
 
 export default {
-  name: 'Working',
+  name: 'Working-Section',
   components: {
     DropComp,
     SvgPalete
@@ -61,14 +60,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.working__page {
+.Working__section {
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.working__page .tool-box {
+.Working__section .tool-box {
   position: absolute;
   display: flex;
   flex-direction: column;

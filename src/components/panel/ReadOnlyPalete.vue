@@ -1,26 +1,24 @@
 <template>
-  <transition>
-    <div class="readonly-palete">
-      <Split>
-        <SplitArea :size="80">
-          <svg-palete
-            :read-only="readOnly">
-          </svg-palete>
-        </SplitArea>
+  <section class="Readonly-palete__section">
+    <Split>
+      <SplitArea :size="80">
+        <svg-palete
+          :read-only="readOnly">
+        </svg-palete>
+      </SplitArea>
 
-        <SplitArea :size="20">
-          <node-manager
-            :read-only="readOnly">
-          </node-manager>
-        </SplitArea>
-      </Split>
+      <SplitArea :size="20">
+        <node-manager
+          :read-only="readOnly">
+        </node-manager>
+      </SplitArea>
+    </Split>
 
-      <div class="modal-close" @click="modalClose">
-        <img src="/static/img/close-solid.svg" />
-      </div>
-
+    <div class="modal-close" @click="modalClose">
+      <img src="/static/img/close-solid.svg" />
     </div>
-  </transition>
+
+  </section>
 </template>
 
 <script>
@@ -28,7 +26,7 @@ import NodeManager from '@/components/NodeManager'
 import SvgPalete from '@/components/common/Palete'
 
 export default {
-  name: 'readonly-palete',
+  name: 'Readonly-Palete-Section',
   components: {
     SvgPalete,
     NodeManager
@@ -56,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.readonly-palete {
+.Readonly-palete__section {
   position: relative;
   width: 100%;
   height: 100%;

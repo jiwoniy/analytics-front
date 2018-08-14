@@ -1,20 +1,18 @@
 <template>
-  <transition>
-    <div class="div--project__page">
-      <main-panel></main-panel>
-      <modal
-        :modalId="'projectModal'"
-        v-show="showModal"
-        @close="modalClose"
-        :size="modal.modalSize"
-        :position="modal.modalPosition"
-        :pass-params="modal.passModalParams"
-        :is-need-accept="modal.isNeedAccept"
-        :content-component="modal.contentComponent"
-      >
-      </modal>
-    </div>
-  </transition>
+  <section class="Project__section">
+    <main-panel></main-panel>
+    <modal
+      :modalId="'projectModal'"
+      v-show="showModal"
+      @close="modalClose"
+      :size="modal.modalSize"
+      :position="modal.modalPosition"
+      :pass-params="modal.passModalParams"
+      :is-need-accept="modal.isNeedAccept"
+      :content-component="modal.contentComponent"
+    >
+    </modal>
+  </section>
 </template>
 
 <script>
@@ -22,7 +20,7 @@ import eventController from '@/utils/EventController'
 import MainPanel from '@/components/panel/Main'
 
 export default {
-  name: 'Project',
+  name: 'Project-Section',
   components: {
     MainPanel
   },
@@ -73,11 +71,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.div--project__page {
+<style scoped>
+.Project__section {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--app-top-panel-height));
 }
 </style>

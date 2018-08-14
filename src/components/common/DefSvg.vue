@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: 'Define-Svg'
+  name: 'Define-Svg-Comp'
 }
 </script>
 

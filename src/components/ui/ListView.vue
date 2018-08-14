@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-view">
+  <ul class="list-view__container">
     <li
       class="item-list"
       v-for="(item, itemIndex) in items"
@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'List-Comp',
+  name: 'ListView-Comp',
   props: {
     items: {
       type: Array,
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.list-view {
+.list-view__container {
   width: 100%;
 }
 

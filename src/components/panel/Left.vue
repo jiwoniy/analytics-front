@@ -1,10 +1,10 @@
 <template>
   <section
     id="leftPanel"
-    class="left-panel__page"
+    class="Left__section"
   >
     <transition name="fade">
-      <div class="left-panel__contents">
+      <div class="container">
         <h-accordion
           :worksheet-list="worksheetList"
           :activate-worksheet="activateWorksheet"
@@ -30,7 +30,7 @@ import TreeItems from '@/components/ui/TreeItems'
 import HAccordion from '@/components/ui/HAccordion'
 
 export default {
-  name: 'LEFT-Panel',
+  name: 'Left-Section',
   components: {
     HAccordion,
     TreeItems
@@ -53,18 +53,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.left-panel__page {
+.Left__section {
   width: 100%;
   position: relative;
   display: block;
 
-  .left-panel__contents {
+  .container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .left-panel__contents .pipeline-item {
+  .container .pipeline-item {
     cursor: pointer;
     margin: 10px;
     background: rgba(black, 0.4);

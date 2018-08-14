@@ -1,31 +1,29 @@
 <template>
-  <transition>
+  <section
+    class="Palete__section"
+    :id="`svgContainer${uCompId}`"
+    v-resize:debounce.250="onResize"
+  >
+    <img
+      class="lock"
+      v-if="!readOnly && isPipelineUnLock"
+      src="@/assets/img/lock-open-solid.svg" />
+    <img class="lock"
+      v-if="!readOnly && !isPipelineUnLock"
+      src="@/assets/img/lock-solid.svg" />
+
+    <svg>
+      <def-svg></def-svg>
+    </svg>
+
     <div
-      :id="`svgContainer${uCompId}`"
-      class="palete"
-      v-resize:debounce.250="onResize"
+      v-if="!readOnly"
+      class="palete-footer"
     >
-      <img
-        class="lock"
-        v-if="!readOnly && isPipelineUnLock"
-        src="@/assets/img/lock-open-solid.svg" />
-      <img class="lock"
-        v-if="!readOnly && !isPipelineUnLock"
-        src="@/assets/img/lock-solid.svg" />
-
-      <svg>
-        <def-svg></def-svg>
-      </svg>
-
-      <div
-        v-if="!readOnly"
-        class="palete-footer"
-      >
-        <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
-      </div>
-
+      <p v-if="lastSavedTime"> {{ `${$t('Last Update Time')} : ${lastSavedTime}` }}  </p>
     </div>
-  </transition>
+
+  </section>
 </template>
 
 <script>
@@ -43,7 +41,7 @@ import compose from '@/utils/compose'
 
 // TODO Make read, read/write mode
 export default {
-  name: 'Svg-palete',
+  name: 'Palete-Section',
   components: {
     DefSvg
   },
@@ -291,7 +289,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.palete {
+.Palete__section {
   position: relative;
   width: 100%;
   height: 100%;

@@ -1,30 +1,28 @@
 <template>
-  <transition>
-    <section class="confirmation">
+  <section class="Confirmation__section">
 
-      <div class="contents header">
-        <h1> {{ $t('Are you sure you want to delete') }} </h1>
-      </div>
+    <div class="contents header">
+      <h1> {{ $t('Are you sure you want to delete') }} </h1>
+    </div>
 
-      <div class="contents bottom" >
-        <wrapper-button
-          :click-event="clickYes"
-          :button-text="$t('Yes')">
-        </wrapper-button>
-        <wrapper-button
-          :click-event="clickCancel"
-          :button-text="$t('Cancel')">
-        </wrapper-button>
-      </div>
-    </section>
-  </transition>
+    <div class="contents bottom" >
+      <wrapper-button
+        :click-event="clickYes"
+        :button-text="$t('Yes')">
+      </wrapper-button>
+      <wrapper-button
+        :click-event="clickCancel"
+        :button-text="$t('Cancel')">
+      </wrapper-button>
+    </div>
+  </section>
 </template>
 
 <script>
 import WrapperButton from '@/components/ui/Wrapper/Button'
 
 export default {
-  name: 'Create-Worksheet',
+  name: 'Confirmation-Comp',
   components: {
     WrapperButton
   },
@@ -64,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scroped>
-.confirmation {
+.Confirmation__section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

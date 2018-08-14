@@ -1,15 +1,17 @@
 <template>
   <transition name="modal">
-    <div :id="modalId" class="modal-page" @click="clickModal">
+    <section :id="modalId" class="Modal__section" @click="clickModal">
 
-      <div class="modal-wrapper"
+      <div
+        class="modal-wrapper"
         :class="{
           'center': position === 'center',
           'top': position === 'top',
           'bottom': position === 'bottom'
         }"
       >
-        <div class="modal-container"
+        <div
+          class="modal-container"
           :class="{
             'small': size === 'small',
             'medium': size === 'medium',
@@ -25,13 +27,13 @@
         </div>
       </div>
 
-    </div>
+    </section>
   </transition>
 </template>
 
 <script>
 export default {
-  name: 'Modal',
+  name: 'Modal-Section',
   props: {
     modalId: {
       require: true,
@@ -117,8 +119,8 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.modal-page {
+<style lang="scss" scoped>
+.Modal__section {
   --app-modal-margin: 2rem;
   --app-modal-margin-double: 4rem;
   position: fixed;
@@ -132,40 +134,40 @@ export default {
   transition: opacity .3s ease;
 }
 
-.modal-wrapper {
+.Modal__section .modal-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: var(--app-modal-margin) auto;
   height: calc(100% - var(--app-modal-margin-double));
+
+  .modal-container {
+    position: relative;
+    margin: 0px auto;
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+
+  .modal-container.small {
+    width: 40%;
+    min-width: 300px;
+    height: calc(40% - var(--app-modal-margin-double));
+  }
+  .modal-container.medium {
+    width: 60%;
+    height: calc(60% - var(--app-modal-margin-double));
+  }
+  .modal-container.large {
+    width: 90%;
+    height: calc(90% - var(--app-modal-margin-double));
+  }
 }
 
-.modal-wrapper.top {
+.Modal__section .modal-wrapper.top {
   align-items: flex-start;
 }
-.modal-wrapper.bottom {
+.Modal__section .modal-wrapper.bottom {
   align-items: flex-end;
-}
-
-.modal-container {
-  position: relative;
-  margin: 0px auto;
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-container.small {
-  width: 40%;
-  min-width: 300px;
-  height: calc(40% - var(--app-modal-margin-double));
-}
-.modal-container.medium {
-  width: 60%;
-  height: calc(60% - var(--app-modal-margin-double));
-}
-.modal-container.large {
-  width: 90%;
-  height: calc(90% - var(--app-modal-margin-double));
 }
 
 /* transition modal */

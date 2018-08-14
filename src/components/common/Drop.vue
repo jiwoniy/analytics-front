@@ -1,20 +1,18 @@
 <template>
-  <transition>
-    <div
-      class="drop-container"
-      @dragover="allowDrop"
-      @drop="drop"
-    >
-      <slot name="svg-container"></slot>
-    </div>
-  </transition>
+  <div
+    class="drop__container"
+    @dragover="allowDrop"
+    @drop="drop"
+  >
+    <slot name="svg-container"></slot>
+  </div>
 </template>
 
 <script>
 import eventController from '@/utils/EventController'
 
 export default {
-  name: 'Drop-Component',
+  name: 'Drop-Comp',
   methods: {
     allowDrop (event) {
       event.preventDefault()
@@ -39,8 +37,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.drop-container {
+<style scoped>
+.drop__container {
   width: 100%;
   height: 100%;
 }
