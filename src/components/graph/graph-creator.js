@@ -15,7 +15,7 @@ import {
   nodeTransformSaveNodes,
   linksTransformSaveLink,
   linksTransformUiLinks
-} from './node-transformer'
+} from './node-property-transformer'
 import { getLinkId } from '@/utils/normalize'
 
 const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, { options, externalCallback }) {
