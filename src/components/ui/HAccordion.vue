@@ -1,5 +1,5 @@
 <template>
-  <div class="H--Accordion">
+  <div class="H--Accordion__section">
     <ul>
 
       <li>
@@ -57,7 +57,7 @@ import eventController from '@/utils/EventController'
 import ListView from '@/components/ui/ListView'
 
 export default {
-  name: 'Horizontal-Accordion',
+  name: 'Horizontal-Accordion-Section',
   components: {
     ListView
     // CreateWorksheet
@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.H--Accordion {
+.H--Accordion__section {
   display: inline-block;
   width: 100%;
   // height: calc(100vh - var(--app-top-panel-height));

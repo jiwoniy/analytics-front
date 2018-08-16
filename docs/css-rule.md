@@ -1,11 +1,26 @@
 css(scss) conventsion
 =============
 
-{ Section Name }__{ identifier for class type }
+There is no constraint with regard to css rules. It only provides a guide for readability and reusability.
 
+Use nouns as much as possible.
+
+use hyphen-naming syntax
+
+Use both the scss and css grammar properly.
+If you are using only one side, readability is not good.
+
+{ element Name - element Name }__{ identifier for class type }
+
+- identifier class||species
 __section: <section> class
-__ container: <div> class
-__ wrapper
+__container: <div> class
+__wrapper
 __button: <button> 
 
-__contents
+
+- element species
+header
+body
+bottom
+contents

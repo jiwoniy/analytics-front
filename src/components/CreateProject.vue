@@ -1,12 +1,12 @@
 <template>
-  <transition>
-    <section class="create-project">
+  <section class="Create-project__section">
 
-      <div class="contents header">
+    <div class="contents__container">
+      <div class="modal-header__container">
         <h1> {{ $t('Create Project') }} </h1>
       </div>
 
-      <div class="contents body">
+      <div class="modal-body__container">
         <label>
           {{ $t('Project name') }}
         </label>
@@ -26,7 +26,7 @@
         </wrapper-textarea>
       </div>
 
-      <div class="contents bottom" >
+      <div class="modal-bottom__container" >
         <wrapper-button
           :click-event="clickCreateProject"
           :button-text="$t('Create')">
@@ -36,8 +36,8 @@
           :button-text="$t('Cancel')">
         </wrapper-button>
       </div>
-    </section>
-  </transition>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -48,7 +48,7 @@ import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
 
 export default {
-  name: 'Create-Project',
+  name: 'Create-Project-Section',
   components: {
     WrapperButton,
     WrapperInput,
@@ -113,7 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scroped>
-.create-project {
+.Create-project__section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -122,9 +122,11 @@ export default {
   height: 300px;
   background-color: #eee;
 
-  .contents {
-    margin: 1rem;
-    width: calc(100% - 2rem);
-  }
+  padding: 0.2rem;
+}
+
+.Create-project__section .contents__container {
+  height: 100%;
+  width: 100%;
 }
 </style>

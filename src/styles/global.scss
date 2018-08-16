@@ -16,23 +16,3 @@
 
   // background-image: url('./assets/img/lock-open-solid.svg')
 }
-
-.text-ellipsis__default {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.modal-container__wrapper {
-  position: absolute;
-  background-color: rgba(0,0,0,0.4);
-  width: 100vw;
-  height: 100vh;
-  z-index: 999;
-}
-
-.modal--center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

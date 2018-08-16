@@ -23,7 +23,7 @@
           :item-click="selectProject">
         </list-view>
 
-        <div class="add-project__button" @click.stop="clickAddProject">
+        <div class="add-project__button" @click.prevent="clickAddProject">
           <img src="/static/img/plus-circle-solid.svg" />
           <span> {{ $t('Add project') }} </span>
         </div>
@@ -82,20 +82,18 @@ export default {
       this.isProjectModalOpen = !this.isProjectModalOpen
     },
     clickAddProject (event) {
-      let className = event.target.className || ''
-
-      if (className.indexOf('modal-container__wrapper') > -1 || className.indexOf('add-project') > -1) {
+      let className = event.target.className || event.target.parentElement.className || ''
+      if (className.indexOf('add-project__button') > -1) {
         eventController.SHOW_MODAL({
           position: 'center',
-          // size: 'small',
           isNeedAccept: true,
           params: {},
           contentComponent: 'CreateProject'
         })
 
-        if (this.isProjectModalOpen) {
-          this.toggleProject()
-        }
+        // if (this.isProjectModalOpen) {
+        //   this.toggleProject()
+        // }
       }
     },
     selectProject (event) {
@@ -129,13 +127,16 @@ export default {
 
 .Menu__container .contents-container__wrapper {
   position: absolute;
-  overflow-y: auto;
-  top: 30px; // TODO
-  width: 250px;
+  background-color: rgba(0,0,0,0.4);
+  width: 100vw;
+  height: 100vh;
   z-index: 999;
 
   .contents__container {
+    position: absolute;
     background-color: #ffffff;
+    width: 250px;
+    height: 300px;
   }
 }
 

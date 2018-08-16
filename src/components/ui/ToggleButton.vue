@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'Toggle-Button',
+  name: 'Toggle-Button_Comp',
   props: {
     clickButton: {
       type: Function,

@@ -1,40 +1,42 @@
 <template>
   <transition>
-    <section class="create-worksheet">
+    <section class="Create-worksheet__section">
 
-      <div class="contents header">
-        <h1> {{ $t('Create Worksheet') }} </h1>
-      </div>
+      <div class="contents__container">
+        <div class="modal-header__container">
+          <h1> {{ $t('Create Worksheet') }} </h1>
+        </div>
 
-      <div class="contents body">
-        <label>
-          {{ $t('Worksheet name') }}
-        </label>
-        <wrapper-input
-          :is-un-lock="true"
-          v-model="worksheetName"
-          @wrapperEvent="(value) => wrapperEvent('worksheetName', value)">
-        </wrapper-input>
+        <div class="modal-body__container">
+          <label>
+            {{ $t('Worksheet name') }}
+          </label>
+          <wrapper-input
+            :is-un-lock="true"
+            v-model="worksheetName"
+            @wrapperEvent="(value) => wrapperEvent('worksheetName', value)">
+          </wrapper-input>
 
-        <label>
-          {{ $t('Description') }}
-        </label>
-        <wrapper-textarea
-          :is-un-lock="true"
-          v-model="worksheetDesc"
-          @wrapperEvent="(value) => wrapperEvent('worksheetDesc', value)">
-        </wrapper-textarea>
-      </div>
+          <label>
+            {{ $t('Description') }}
+          </label>
+          <wrapper-textarea
+            :is-un-lock="true"
+            v-model="worksheetDesc"
+            @wrapperEvent="(value) => wrapperEvent('worksheetDesc', value)">
+          </wrapper-textarea>
+        </div>
 
-      <div class="contents bottom" >
-        <wrapper-button
-          :click-event="clickCreateWorksheet"
-          :button-text="$t('Create')">
-        </wrapper-button>
-        <wrapper-button
-          :click-event="clickCancel"
-          :button-text="$t('Cancel')">
-        </wrapper-button>
+        <div class="modal-bottom__container" >
+          <wrapper-button
+            :click-event="clickCreateWorksheet"
+            :button-text="$t('Create')">
+          </wrapper-button>
+          <wrapper-button
+            :click-event="clickCancel"
+            :button-text="$t('Cancel')">
+          </wrapper-button>
+        </div>
       </div>
     </section>
   </transition>
@@ -48,7 +50,7 @@ import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
 
 export default {
-  name: 'Create-Worksheet',
+  name: 'Create-Worksheet-Section',
   components: {
     WrapperButton,
     WrapperInput,
@@ -113,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scroped>
-.create-worksheet {
+.Create-worksheet__section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -122,9 +124,11 @@ export default {
   height: 300px;
   background-color: #eee;
 
-  .contents {
-    margin: 1rem;
-    width: calc(100% - 2rem);
-  }
+  padding: 0.2rem;
+}
+
+.Create-worksheet__section .contents__container {
+  height: 100%;
+  width: 100%;
 }
 </style>

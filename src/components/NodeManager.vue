@@ -1,13 +1,11 @@
 <template>
-  <div :id="uCompId" class="manage-node">
-    <div class="item-title">
-      <label>
-        {{ $t('Node') }}
-      </label>
-    </div>
+  <div :id="uCompId" class="node-manager__container">
+    <label class="item-title">
+      {{ $t('Node') }}
+    </label>
 
     <div
-      class="item-node basic"
+      class="property-contents__container"
       v-if="filterNodeBasicProperties"
       v-for="item in filterNodeBasicProperties"
       :key="item.key"
@@ -74,7 +72,7 @@ import Tab from '@/components/ui/Tab'
 import WrapperSelection from '@/components/ui/Wrapper/Selection'
 
 export default {
-  name: 'Node-Manager-View',
+  name: 'Node-Manager-Comp',
   components: {
     WrapperButton,
     WrapperInput,
@@ -193,28 +191,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.manage-node {
+.node-manager__container {
   background-color: rgb(248, 248, 248);
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  .item-title label {
-    text-align: center;
-    font-size: 1.8rem;
-  }
-
-  .item-node label {
-    text-align: left;
-    font-size: 1rem;
-  }
-
-  .right-footer {
-    position: absolute;
-    right: 0px;
-    bottom: var(--app-foot-panel-height);
-  }
 }
+
+.node-manager__container .item-title {
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+// .node-manager__container .property-contents__container {}
   </style>

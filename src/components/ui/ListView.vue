@@ -48,10 +48,11 @@ export default {
 
 <style lang="scss" scoped>
 .list-view__container {
+  list-style: none;
   width: 100%;
 }
 
-.item-list > .item {
+.list-view__container .item-list > .item {
   cursor: pointer;
 
   span {

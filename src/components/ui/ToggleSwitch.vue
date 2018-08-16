@@ -1,16 +1,18 @@
 <template>
-  <label class="switch">
-    <input
-      type="checkbox"
-      @input="eventHandler"
-      :checked="checked">
-    <span class="slider round"></span>
-  </label>
+  <div class="Toggle-Switch__container">
+    <label class="switch">
+      <input
+        type="checkbox"
+        @input="eventHandler"
+        :checked="checked">
+      <span class="slider round"></span>
+    </label>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Toggle-Switch',
+  name: 'Toggle-Switch-Comp',
   props: {
     value: {
       type: Boolean,
@@ -31,7 +33,11 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.Toggle-Switch__container {
+  position: relative;
+}
+
 .switch {
   position: relative;
   display: inline-block;

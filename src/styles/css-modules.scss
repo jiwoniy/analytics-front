@@ -1,0 +1,20 @@
+.text-ellipsis__default {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.modal-header__container {
+  margin: 0.4rem 0px;
+  h1 {
+    font-size: 1.4rem;
+  }
+}
+
+.modal-body__container {
+  margin: 1rem 0px;
+}
+
+.modal-bottom__container {
+  margin: 0.2rem 0px;
+}

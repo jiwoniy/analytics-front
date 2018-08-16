@@ -1,20 +1,18 @@
 <template>
-  <transition>
-    <div
-      class="drag-container"
-      @dragstart="drag($event, item)"
-      draggable="true"
-    >
-      <div class="drag-item-container">
-        <slot name="drag-item"></slot>
-      </div>
+  <div
+    class="drag__container"
+    @dragstart="drag($event, item)"
+    draggable="true"
+  >
+    <div class="drag-item__container">
+      <slot name="drag-item"></slot>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Drag-Component',
+  name: 'Drag-Comp',
   props: {
     item: {
       type: Object,
@@ -30,11 +28,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.drag-container {
+.drag__container {
   width: 100%;
   display: block;
 
-  .drag-item-container {
+  .drag-item__container {
     // padding: 10px;
     // margin: 10px;
     // background: rgba(black, 0.4);

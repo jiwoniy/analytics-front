@@ -1,13 +1,11 @@
 <template>
-  <div class="manage-node">
-    <div class="item-title">
-      <label>
-        {{ $t('Worksheet') }}
-      </label>
-    </div>
+  <div class="node-manager__container">
+    <label class="item-title">
+      {{ $t('Worksheet') }}
+    </label>
 
     <div
-      class="item-node"
+      class="property-contents__container"
       v-for="item in filterWorksheetItem"
       :key="item.key"
     >
@@ -20,7 +18,7 @@
         </wrapper-input>
       </label>
 
-      <div class="right-footer" @click="remove">
+      <div class="footer" @click="remove">
         <wrapper-button
           :button-text="$t('Delete')">
         </wrapper-button>
@@ -37,7 +35,7 @@ import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 
 export default {
-  name: 'Worksheet-Manager-View',
+  name: 'Worksheet-Manager-Comp',
   components: {
     WrapperButton,
     WrapperInput
@@ -106,27 +104,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.manage-node {
+.node-manager__container {
   position: relative;
   width: 100%;
   height: calc(100vh - var(--app-top-panel-height) - var(--app-foot-panel-height));
   display: flex;
   flex-direction: column;
-
-  .item-title label {
-    text-align: center;
-    font-size: 1.8rem;
-  }
-
-  .item-node label {
-    text-align: left;
-    font-size: 1rem;
-  }
-
-  .right-footer {
-    position: absolute;
-    right: 0px;
-    bottom: var(--app-foot-panel-height);
-  }
 }
+.node-manager__container .item-title {
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+// .node-manager__container .property-contents__container {
+//   .footer {}
+// }
   </style>

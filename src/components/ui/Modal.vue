@@ -3,7 +3,7 @@
     <section :id="modalId" class="Modal__section" @click="clickModal">
 
       <div
-        class="modal-wrapper"
+        class="modal__wrapper"
         :class="{
           'center': position === 'center',
           'top': position === 'top',
@@ -11,7 +11,7 @@
         }"
       >
         <div
-          class="modal-container"
+          class="modal__container"
           :class="{
             'small': size === 'small',
             'medium': size === 'medium',
@@ -107,7 +107,7 @@ export default {
             this.$emit('close', false)
           }
         } else {
-          if (id.indexOf('modal-wrapper') > -1 ||
+          if (id.indexOf('modal__wrapper') > -1 ||
             id.indexOf('modal-close-with-accept') > -1 ||
             id === 'modal-close-with-decline') {
             this.$emit('close')
@@ -134,39 +134,39 @@ export default {
   transition: opacity .3s ease;
 }
 
-.Modal__section .modal-wrapper {
+.Modal__section .modal__wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: var(--app-modal-margin) auto;
   height: calc(100% - var(--app-modal-margin-double));
 
-  .modal-container {
+  .modal__container {
     position: relative;
     margin: 0px auto;
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
   }
 
-  .modal-container.small {
+  .modal__container.small {
     width: 40%;
     min-width: 300px;
     height: calc(40% - var(--app-modal-margin-double));
   }
-  .modal-container.medium {
+  .modal__container.medium {
     width: 60%;
     height: calc(60% - var(--app-modal-margin-double));
   }
-  .modal-container.large {
+  .modal__container.large {
     width: 90%;
     height: calc(90% - var(--app-modal-margin-double));
   }
 }
 
-.Modal__section .modal-wrapper.top {
+.Modal__section .modal__wrapper.top {
   align-items: flex-start;
 }
-.Modal__section .modal-wrapper.bottom {
+.Modal__section .modal__wrapper.bottom {
   align-items: flex-end;
 }
 
@@ -179,8 +179,8 @@ export default {
   opacity: 0;
 }
 
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
+.modal-enter .modal__container,
+.modal-leave-active .modal__container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
