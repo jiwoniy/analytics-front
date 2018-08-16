@@ -66,7 +66,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import eventController from '@/utils/EventController'
+// import eventController from '@/utils/EventController'
 import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 import Tabs from '@/components/ui/Tabs'
@@ -159,24 +159,24 @@ export default {
     ...mapActions({
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
-    remove () {
-      if (this.isPipelineUnLock) {
-        eventController.SHOW_MODAL({
-          position: 'center',
-          // size: 'x-small',
-          isNeedAccept: true,
-          contentComponent: 'Confirmation',
-          params: {},
-          callback: (isAccept) => {
-            if (isAccept) {
-              this.updateActivatePipelineNode({
-                updateType: 'delete'
-              })
-            }
-          }
-        })
-      }
-    },
+    // remove () {
+    //   if (this.isPipelineUnLock) {
+    //     eventController.SHOW_MODAL({
+    //       position: 'center',
+    //       // size: 'x-small',
+    //       isNeedAccept: true,
+    //       contentComponent: 'Confirmation',
+    //       params: {},
+    //       callback: (isAccept) => {
+    //         if (isAccept) {
+    //           this.updateActivatePipelineNode({
+    //             updateType: 'delete'
+    //           })
+    //         }
+    //       }
+    //     })
+    //   }
+    // },
     wrapperEvent (key, value) {
       if (!this.readOnly && this.isPipelineUnLock) {
         this.updateActivatePipelineNode({

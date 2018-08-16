@@ -283,8 +283,8 @@ export default {
       }
     },
     activatePipelineNodeUpdateStatus (newValue) {
-      // 현재는 update, delete
-      if (newValue && (newValue.updateType === 'delete' || newValue.updateType === 'update')) {
+      // 현재는 update 밖에 없음
+      if (newValue && (newValue.updateType === 'update')) {
         this.refreshGraph({ updateObject: 'node', updateType: newValue.updateType })
       }
     }

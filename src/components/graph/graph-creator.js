@@ -18,6 +18,7 @@ import {
 } from './node-property-transformer'
 import { getLinkId } from '@/utils/normalize'
 
+// constructor
 const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, { options, externalCallback }) {
   const graphContext = this
 
@@ -111,6 +112,7 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
         graphContext.links.remove(link)
       })
       graphContext.stateProxy.isUpdated = true
+      graphContext.drawGraph({ needUpdate: false, link: true, node: true })
     }
   })
 
@@ -174,17 +176,17 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
     graphContext.nodeGroup.selectAll('g').remove()
     graphContext.linkGroup.selectAll('path').remove()
 
-    // set new value
-    graphContext.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
-    graphContext.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
+    if (pipeline) {
+      // set new value
+      graphContext.nodes = new GraphNodes(nodeTransformUiNodes(pipeline.nodes))
+      graphContext.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
+    }
 
     // draw
     if (updateObject === 'pipeline') {
       graphContext.drawGraph({ needUpdate: false, node: true, link: true })
     } else if (updateObject === 'node' && updateType === 'update') {
       graphContext.drawGraph({ needUpdate: false, node: true, link: false })
-    } else if (updateObject === 'node' && updateType === 'delete') {
-      graphContext.drawGraph({ needUpdate: false, node: true, link: true })
     }
   }
 
@@ -225,9 +227,11 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
   }
 }
 
+// prototype property
 GraphCreator.prototype.constants = {
   nodeGroupClass: 'node-group',
   linkGroupClass: 'link-group',
+  connectLinkClass: 'connect-link',
   nodeWrapClass: 'node-wrap',
   nodeHoverClass: 'node-hover',
   nodeSelectedClass: 'node-selected'
@@ -237,8 +241,8 @@ GraphCreator.prototype.drawGraph =
   function drawGraph ({ needUpdate = true, link = false, node = false, nodeParam }) {
     const graphContext = this
     if (link && node) {
-      graphContext.drawLinks()
       graphContext.drawNodes()
+      graphContext.drawLinks()
     } else if (link) {
       if (nodeParam) {
         graphContext.drawLinks(nodeParam)
@@ -254,78 +258,54 @@ GraphCreator.prototype.drawGraph =
     }
   }
 
+// draw node
 GraphCreator.prototype.drawNodes = function drawNodes () {
   const graphContext = this
-  const consts = graphContext.constants
-  const datas = graphContext.nodes.getNodeList()
-  // const links = thisGraph.links.getLinks()
 
+  const nodeDrag = nodeDragHandler(graphContext)
   const exists = graphContext.nodeGroup.selectAll('g')
-    .data(datas, function (d) {
+    .data(graphContext.nodes.getNodeList(), function (d) {
       return d.id
     })
 
-  const nodeDrag = nodeDragHandler(graphContext)
+  // update
   exists
-    .classed(graphContext.constants.nodeSelectedClass, function (d) {
-      // if (d.ui_status.selected) {
-      //   const result = thisGraph.nodes.findConnectedNode(d, links)
-      // }
-      return d.ui_status.selected
-    })
+    .classed(graphContext.constants.nodeSelectedClass, d => d.ui_status.selected)
     .call(graphContext.appendText)
 
-  const newGs = exists
+  // enter
+  const newNodes = exists
     .enter()
     .append('g')
-    .classed(consts.nodeWrapClass, true)
+    .classed(graphContext.constants.nodeWrapClass, true)
 
-  newGs
-    .attr('transform', function (d) {
-      return `translate(${d.position.x},${d.position.y})`
-    })
-    .on('click', function (d) {
-      graphContext.setSelectNode(this, d)
-    })
+  newNodes
+    .attr('transform', d => `translate(${d.position.x},${d.position.y})`)
+    .on('click', d => graphContext.setSelectNode(this, d))
     .on('contextmenu', function (d) {
-      // Stop browser the context menu
-      d3Selection.event.preventDefault()
-      const mousePosition = d3Selection.mouse(this.parentNode)
-      graphContext.nodeMenu(mousePosition[0], mousePosition[1], { node: d })
+      if (graphContext.isUnLock()) {
+        // Stop browser the context menu
+        d3Selection.event.preventDefault()
+        const mousePosition = d3Selection.mouse(this.parentNode)
+        graphContext.nodeMenu(mousePosition[0], mousePosition[1], { node: d })
+      }
     })
     .call(nodeDrag)
     .call(d => getNodeShape(graphContext, d, graphContext.options.connectValidation))
     .call(graphContext.appendText)
-  // newGs.call(thisGraph.appendText)
 
+  // remove
   exists.exit().remove()
 }
 
-GraphCreator.prototype.appendText = function appendText (nodes) {
-  nodes.append('text')
-    .attr('transform', 'translate(100, 30)') // rect size is 200, 50
-    .classed('dotme', true)
-    .text(function (d) {
-      // lenght < 17
-      const text = d.name
-      let result = text
-      if (text.length > 16) {
-        result = `${text.slice(0, 20)}...`
-      }
-      return result
-    })
-}
-
+// draw link
+const linkLineGenerator = d3Shape.linkHorizontal()
 GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
   const graphContext = this
 
   function draw (nodes) {
-    const lineGenerator = d3Shape.linkHorizontal()
-
     const exists = graphContext.linkGroup
-      .selectAll('path').data(graphContext.links.getLinkList(), function (d) {
-        return getLinkId(d)
-      })
+      .selectAll('path').data(graphContext.links.getLinkList(), d => getLinkId(d))
 
     // update
     exists
@@ -349,13 +329,16 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
           target: [targetNode.position.x + target.linkInput.cx, targetNode.position.y + target.linkInput.cy]
         }
 
-        return lineGenerator(data)
+        return linkLineGenerator(data)
       })
 
     // enter
-    exists.enter()
+    const newLinks = exists
+      .enter()
       .append('path')
-      .classed('link', true)
+      .classed(graphContext.constants.connectLinkClass, true)
+
+    newLinks
       .attr('d', function (d) {
         const { source, target } = d
         const sourceNode = nodes[source.sourceId]
@@ -364,13 +347,15 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
           source: [sourceNode.position.x + source.linkOutput.cx, sourceNode.position.y + source.linkOutput.cy],
           target: [targetNode.position.x + target.linkInput.cx, targetNode.position.y + target.linkInput.cy]
         }
-        return lineGenerator(data)
+        return linkLineGenerator(data)
       })
       .on('contextmenu', function (d) {
-        // Stop the context menu
-        d3Selection.event.preventDefault()
-        const mousePosition = d3Selection.mouse(this)
-        graphContext.linkMenu(mousePosition[0], mousePosition[1], { link: d })
+        if (graphContext.isUnLock()) {
+          // Stop the context menu
+          d3Selection.event.preventDefault()
+          const mousePosition = d3Selection.mouse(this)
+          graphContext.linkMenu(mousePosition[0], mousePosition[1], { link: d })
+        }
       })
 
     // remove
@@ -379,6 +364,21 @@ GraphCreator.prototype.drawLinks = function drawLinks (dragingNode) {
 
   const nodes = graphContext.nodes.getNodes()
   draw(nodes)
+}
+
+GraphCreator.prototype.appendText = function appendText (nodes) {
+  nodes.append('text')
+    .attr('transform', 'translate(100, 30)') // rect size is 200, 50
+    .classed('dotme', true)
+    .text(function (d) {
+      // lenght < 17
+      const text = d.name
+      let result = text
+      if (text.length > 16) {
+        result = `${text.slice(0, 20)}...`
+      }
+      return result
+    })
 }
 
 GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {

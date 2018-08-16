@@ -10,19 +10,15 @@ path.draglink.hidden {
   stroke-width: 0;
 }
 
-path.link {
+path.connect-link {
   fill: none;
   stroke: #333;
   stroke-width: 3px;
   cursor: default;
 }
 
-path.link:hover {
+path.connect-link:hover {
   stroke: rgb(94, 196, 204);
-}
-
-path.link.selected  {
-  stroke: rgb(229, 172, 247);
 }
 
 .node-wrap {

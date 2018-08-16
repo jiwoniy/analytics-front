@@ -45,7 +45,6 @@ export default {
 </script>
 
 <style lang="scss" scroped>
-@import '@/styles/global.scss';
 @import 'codemirror/lib/codemirror.css';
 .Editor__section {
   display: flex;

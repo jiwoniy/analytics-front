@@ -1,3 +1,3 @@
 export default {
-  saveTimer: 6000
+  saveTimer: 1000
 }

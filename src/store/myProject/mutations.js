@@ -97,23 +97,23 @@ export default {
       pipelineProxy.nodes = Object.assign({}, state.pipeline.nodes, currentNodes)
     }
   },
-  DELETE_ACTIVATE_PIPELINE_NODE: (state, { pipelineProxy, activatePipelineNodeId }) => {
-    const { nodes: currentNodes } = state.pipeline
-    if (currentNodes && currentNodes[activatePipelineNodeId]) {
-      delete currentNodes[activatePipelineNodeId]
-      // state.pipelineProxy.nodes = Object.assign({}, currentNodes)
-      pipelineProxy.nodes = Object.assign({}, currentNodes)
-    }
-  },
-  DELETE_CONNECT_LINK: (state, { pipelineProxy, linkIdList }) => {
-    if (linkIdList.length) {
-      const { links: currentLinks } = state.pipeline
-      linkIdList.forEach(id => {
-        delete currentLinks[id]
-      })
-      pipelineProxy.links = Object.assign({}, currentLinks)
-    }
-  },
+  // DELETE_ACTIVATE_PIPELINE_NODE: (state, { pipelineProxy, activatePipelineNodeId }) => {
+  //   const { nodes: currentNodes } = state.pipeline
+  //   if (currentNodes && currentNodes[activatePipelineNodeId]) {
+  //     delete currentNodes[activatePipelineNodeId]
+  //     // state.pipelineProxy.nodes = Object.assign({}, currentNodes)
+  //     pipelineProxy.nodes = Object.assign({}, currentNodes)
+  //   }
+  // },
+  // DELETE_CONNECT_LINK: (state, { pipelineProxy, linkIdList }) => {
+  //   if (linkIdList.length) {
+  //     const { links: currentLinks } = state.pipeline
+  //     linkIdList.forEach(id => {
+  //       delete currentLinks[id]
+  //     })
+  //     pipelineProxy.links = Object.assign({}, currentLinks)
+  //   }
+  // },
   UPDATE_ACTIVATE_PIPELINE_NODE_UPDATE_STATUS: (state, { updateType, updateObject, updateTime, updateObjectId }) => {
     state.pipelineNodeUpdateStatus = Object.assign({}, {
       updateType,

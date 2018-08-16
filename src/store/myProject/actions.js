@@ -154,13 +154,14 @@ export default {
     }
     const pipelineProxy = new Proxy(state.pipeline, pipelineProxyHandler)
 
-    if (updateType === 'delete') {
-      if (activatePipelineNodeId) {
-        const connectLinks = await dispatch('findConnectLinks', activatePipelineNodeId)
-        commit('DELETE_CONNECT_LINK', { pipelineProxy, linkIdList: connectLinks })
-        commit('DELETE_ACTIVATE_PIPELINE_NODE', { pipelineProxy, activatePipelineNodeId })
-      }
-    } else if (updateType === 'update') {
+    // if (updateType === 'delete') {
+    //   if (activatePipelineNodeId) {
+    //     const connectLinks = await dispatch('findConnectLinks', activatePipelineNodeId)
+    //     commit('DELETE_CONNECT_LINK', { pipelineProxy, linkIdList: connectLinks })
+    //     commit('DELETE_ACTIVATE_PIPELINE_NODE', { pipelineProxy, activatePipelineNodeId })
+    //   }
+    // } else
+    if (updateType === 'update') {
       if (!_isEmpty(updatedValue)) {
         const { nodes: currentNodes } = state.pipeline
         if (currentNodes && currentNodes[activatePipelineNodeId]) {
