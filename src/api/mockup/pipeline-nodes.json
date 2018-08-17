@@ -21,33 +21,9 @@
         {
           "id": "Split",
           "name": "Split sdfsfasjj dslfjsldkfjslkdjsdklj",
-          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+          "node_type_id": "4c65175b-5b75-4278-84f1-98a6c9edd7c9",
           "input": "2",
           "output": "3"
-        }
-      ]
-    },
-    { "id": "Filed Selection1",
-      "name": "Filed Selection1",
-      "children": [
-        {
-          "id": "Filed Selection1",
-          "name": "Filed Selection1klsadjfl skfjlskdjfslkfjslkdfjsldfjslkdfjslfkjsldkfjsdlkfjsdlkfjslkfjslkfjsdlkjdslk",
-          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-          "input": "1",
-          "output": "1"
-        }
-      ]
-    },
-    { "id": "Normalization1",
-      "name": "Normalization",
-      "children": [
-        {
-          "id": "Normalization",
-          "name": "Normalization",
-          "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-          "input": "1",
-          "output": "1"
         }
       ]
     }
@@ -59,29 +35,9 @@
   "children": [
     { "id": "RDBMS1",
       "name": "RDBMS ",
-      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
+      "node_type_id": "0af804ec-1b3b-41cd-80a6-51a49a32f34b",
       "input": "0",
       "output": "1"
-    },
-    { "id": "HBase", 
-      "name": "HBase",
-      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "input": "0",
-      "output": "1"
-    },
-    {
-      "id": "Visualize1", 
-      "name": "Visualize",
-      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "input": "0",
-      "output": "1"
-    },
-    {
-      "id": "File", 
-      "name": "File",
-      "node_type_id": "56a1f0dc-01f2-435d-ba9d-8ab162fbbedd",
-      "input": "0",
-      "output": "2"
     }
   ]
 }]

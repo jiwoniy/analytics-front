@@ -1,84 +1,69 @@
 <template>
   <div :id="uCompId" class="node-manager__container">
-    <label class="item-title">
+    <label class="title">
       {{ $t('Node') }}
     </label>
 
-    <div
-      class="property-contents__container"
-      v-if="filterNodeBasicProperties"
-      v-for="item in filterNodeBasicProperties"
-      :key="item.key"
-    >
-      <wrapper-input
-        v-if="!readOnly"
-        :is-un-lock="isPipelineUnLock"
-        v-model="item.value"
-        @wrapperEvent="(value) => wrapperEvent(item.key, value)">
-      </wrapper-input>
-    </div>
-    <!-- <wrapper-selection
-      :show-placeholder="true"
-      :options="options"
-      v-model="test"
-      @wrapperEvent="(value) => wrapperEvent('test', value)">
-    </wrapper-selection> -->
+    <div class="property-contents__container">
+      <div
+        class="property-item"
+        v-if="filterNodeBasicProperties"
+        v-for="item in filterNodeBasicProperties"
+        :key="item.key"
+      >
+        <label> {{ item.key }} </label>
 
-    <!-- <tabs>
-      <tab name="Services" :selected="true">
-        <h1>What we do</h1>
-      </tab>
-      <tab name="Pricing">
-        <h1>How much we do it for</h1>
-      </tab>
-      <tab name="About Us">
-        <h1>Why we do it</h1>
-      </tab>
-    </tabs> -->
-
-    <!-- <div
-      class="item-node"
-      v-if="filterNodeParamProperties"
-      v-for="item in filterNodeParamProperties"
-      :key="item.id"
-    >
-      <label>
-        {{ item }}
-        <wrapper-input
+        <wrapper-ui-container
+          v-if="!readOnly"
           :is-un-lock="isPipelineUnLock"
-          v-model="item.value"
-          @wrapperEvent="(value) => wrapperEvent(item.name, value)">
-        </wrapper-input>
-      </label>
+          :uiType="'input'"
+          :item-value="item.value"
+          :item-key="item.key"
+          :wrapper-event="(value) => wrapperEvent(item.key, value)"
+        >
+        </wrapper-ui-container>
+      </div>
     </div>
 
-    <div class="right-footer" v-if="!readOnly" @click="remove">
-      <wrapper-button
-        :button-text="$t('Delete')">
-      </wrapper-button>
-    </div> -->
+    <div class="property-contents__container">
+      <div
+        class="property-item"
+        v-if="filterNodeParamProperties"
+        v-for="(item, propertiesIndex) in filterNodeParamProperties"
+        :key="item.id || propertiesIndex"
+      >
+        <label> {{ item.parameter_key }} </label>
+
+          <wrapper-ui-container
+            v-if="!readOnly"
+            :is-un-lock="isPipelineUnLock"
+            :uiType="item.ui_type"
+            :item-value="item.value"
+            :item-key="item.parameter_key"
+            :wrapper-event="(value) => wrapperPropEvent(propertiesIndex, item.parameter_key, value)"
+          >
+          </wrapper-ui-container>
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import _cloneDeep from 'lodash.clonedeep'
 
-// import eventController from '@/utils/EventController'
-import WrapperButton from '@/components/ui/Wrapper/Button'
-import WrapperInput from '@/components/ui/Wrapper/Input'
+import { objectTransformKeyValueArray } from '@/utils/objectTransformArray'
+import WrapperUiContainer from '@/components/ui/Wrapper/Container'
 import Tabs from '@/components/ui/Tabs'
 import Tab from '@/components/ui/Tab'
-import WrapperSelection from '@/components/ui/Wrapper/Selection'
 
 export default {
   name: 'Node-Manager-Comp',
   components: {
-    WrapperButton,
-    WrapperInput,
+    WrapperUiContainer,
     Tabs,
-    Tab,
-    WrapperSelection
+    Tab
   },
   props: {
     readOnly: {
@@ -101,23 +86,6 @@ export default {
   data () {
     return {
       uCompId: null
-      // options: [
-      //   {
-      //     id: '1',
-      //     label: '11',
-      //     value: 1
-      //   },
-      //   {
-      //     id: '2',
-      //     label: '22',
-      //     value: 2
-      //   },
-      //   {
-      //     id: '3',
-      //     label: '33',
-      //     value: 3
-      //   }
-      // ]
     }
   },
   beforeMount () {
@@ -132,21 +100,21 @@ export default {
     filterNodeParamProperties () {
       const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
       if (activateNode && activateNode.properties) {
-        return activateNode.properties
-          .map(item => ({
-            id: item.id || item.name,
-            name: item.name,
+        return activateNode.properties.map((item, idx) => {
+          return {
+            id: item.id || idx,
+            ui_type: item.ui_type,
+            parameter_key: item.parameter_key,
             value: item.value
-          }))
-        //   // .filter(item => item.key === 'properties')
+          }
+        })
       }
       return null
     },
     filterNodeBasicProperties () {
       const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
       if (activateNode) {
-        return Object.keys(activateNode)
-          .map(key => ({ key, value: activateNode[key] }))
+        return objectTransformKeyValueArray(activateNode)
           .filter(item => item.key === 'name' ||
             item.key === 'desc')
       }
@@ -157,30 +125,26 @@ export default {
     ...mapActions({
       updateActivatePipelineNode: 'myProject/updateActivatePipelineNode'
     }),
-    // remove () {
-    //   if (this.isPipelineUnLock) {
-    //     eventController.SHOW_MODAL({
-    //       position: 'center',
-    //       // size: 'x-small',
-    //       isNeedAccept: true,
-    //       contentComponent: 'Confirmation',
-    //       params: {},
-    //       callback: (isAccept) => {
-    //         if (isAccept) {
-    //           this.updateActivatePipelineNode({
-    //             updateType: 'delete'
-    //           })
-    //         }
-    //       }
-    //     })
-    //   }
-    // },
     wrapperEvent (key, value) {
       if (!this.readOnly && this.isPipelineUnLock) {
         this.updateActivatePipelineNode({
           updateType: 'update',
           updatedProp: key,
           updatedValue: value
+        })
+      } else {
+        return false
+      }
+    },
+    wrapperPropEvent (propertiesIndex, key, value) {
+      const activateNode = this.getActivatePipelineNodes[this.activatePipelineNodeId]
+      if (!this.readOnly && this.isPipelineUnLock) {
+        const newProps = _cloneDeep(activateNode.properties)
+        newProps[propertiesIndex].value = value
+        this.updateActivatePipelineNode({
+          updateType: 'update',
+          updatedProp: 'properties',
+          updatedValue: newProps
         })
       } else {
         return false
@@ -200,10 +164,17 @@ export default {
   flex-direction: column;
 }
 
-.node-manager__container .item-title {
+.node-manager__container .title {
   text-align: center;
   font-size: 1.8rem;
 }
 
-// .node-manager__container .property-contents__container {}
+.node-manager__container .property-contents__container {
+  margin: 0.4rem;
+  border: 0.5px solid darken(#ffffff, 5%);
+
+  .property-item {
+    margin: 0.2rem;
+  }
+}
   </style>

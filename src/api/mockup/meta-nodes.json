@@ -8,125 +8,21 @@
       "properties": [
         {
           "type": "string",
+          "ui_type": "text",
           "name": "문자열",
           "default": "기본값. placeholder 속성으로 지원할지 여부 결정 필요",
-          "parameter_key": "p_string"
+          "parameter_key": "abc",
+          "value": "def"
         },
         {
           "type": "numeric",
+          "ui_type": "number",
           "name": "정수(음수 불가)",
           "scope": "int",
           "negative": false,
           "default": 3,
-          "parameter_key": "p_integer_positive_only"
-        },
-        {
-          "type": "numeric",
-          "name": "정수(음수 가능)",
-          "scope": "int",
-          "negative": true,
-          "default": -3,
-          "parameter_key": "p_integer_allow_negative"
-        },
-        {
-          "type": "numeric",
-          "name": "실수(음수 불가)",
-          "scope": "float",
-          "negative": false,
-          "default": 0.5,
-          "parameter_key": "p_float_positive_only"
-        },
-        {
-          "type": "numeric",
-          "name": "실수(음수 가능)",
-          "scope": "float",
-          "negative": true,
-          "default": -0.5,
-          "parameter_key": "p_float_allow_negative"
-        },
-        {
-          "type": "multiple numeric",
-          "name": "여러개의 정수(음수 불가)",
-          "scope": "int",
-          "negative": false,
-          "default": 3,
-          "parameter_key": "p_multiple_integer_positive_only"
-        },
-        {
-          "type": "multiple numeric",
-          "name": "여러개의 정수(음수 가능)",
-          "scope": "int",
-          "negative": true,
-          "default": -3,
-          "parameter_key": "p_multiple_integer_allow_negative"
-        },
-        {
-          "type": "multiple numeric",
-          "name": "여러개의 실수(음수 불가)",
-          "scope": "float",
-          "negative": false,
-          "default": 0.5,
-          "parameter_key": "p_multiple_float_positive_only"
-        },
-        {
-          "type": "multiple numeric",
-          "name": "여러개의 실수(음수 가능)",
-          "scope": "float",
-          "negative": true,
-          "default": -0.5,
-          "parameter_key": "p_multiple_float_allow_negative"
-        },
-        {
-          "type": "boolean",
-          "name": "TRUE/FALSE, YES/NO, ON/OFF",
-          "default": true,
-          "parameter_key": "p_boolean"
-        },
-        {
-          "type": "choice",
-          "name": "선택",
-          "items": [
-            { "text": "Option#1", "value": "1"},
-            { "text": "Option#2", "value": "2"},
-            { "text": "Option#3", "value": "3"}
-          ],
-          "parameter_key": "p_choice"
-        },
-        {
-          "type": "list selector",
-          "name": "목록 선택 (팝업 UI 제공)",
-          "list_ref": "/some/rest/api/uri",
-          "parameter_key": "p_select"
-        },
-        {
-          "type": "column selector",
-          "name" : "단일 컬럼 선택 (팝업 UI 제공. 입력 데이터프레임의 컬럼 목록 노출)",
-          "target_input_port": 0,
-          "parameter_key": "p_column"
-        },
-        {
-          "type": "mutliple column selector",
-          "name" : "다중 컬럼 선택 (팝업 UI 제공. 입력 데이터프레임의 컬럼 목록 노출)",
-          "target_input_port": 1,
-          "parameter_key": "p_columns"
-        },
-        {
-          "type": "code snippet",
-          "name": "code snippet - Python",
-          "language": "Python",
-          "default": "def transformation(dataframe):\n    return dataframe",
-          "parameter_key": "p_python_code"
-        },
-        {
-          "type": "code snippet",
-          "name": "code snippet - SQL",
-          "language": "SQL",
-          "default": "SELECT * FROM DF",
-          "parameter_key": "p_sql_code"
-        },
-        {
-          "type": "sequence",
-          "name": "Sequence : 아직 고민중인 항목입니다."
+          "parameter_key": "def",
+          "value": "abc"
         }
       ]
     }
@@ -142,9 +38,11 @@
       "properties": [
         {
           "type": "list_selector",
+          "ui_type": "input",
           "name": "Data Source",
           "list_ref": "/datasource",
-          "parameter_key": "datasource_id"
+          "parameter_key": "datasource_id",
+          "value": "test"
         }
       ]
     }
@@ -159,11 +57,13 @@
       "desc": "",
       "properties": [
         {
-          "type": "code_snippet",
+          "type": "string",
+          "ui_type": "textarea",
           "name": "Code",
           "language": "Python",
           "default": "def transformation(dataframe):\n    return dataframe",
-          "parameter_key": "code"
+          "parameter_key": "code",
+          "value": "function () {}"
         }
       ]
     },
@@ -210,12 +110,4 @@
       }]
     }
   ]
-},
-{
-  "group_title": "Machine Learning",
-  "nodes": []
-},
-{
-  "group_title": "Output",
-  "nodes": []
 }]
