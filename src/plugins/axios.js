@@ -1,7 +1,8 @@
 import axios from 'axios'
 
+import { appConf } from '@/config'
 const instance = axios.create({
-  baseURL: 'https://some-domain.com/api/',
+  baseURL: appConf.end_point,
   timeout: 1000,
   headers: {'X-Custom-Header': 'foobar'}
 })
