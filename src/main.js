@@ -15,6 +15,9 @@ import '@/plugins/vue-split-panel'
 import '@/plugins/axios'
 import '@/plugins/localStorage' // Use localstorage before api created
 
+// directives
+import '@/directives/focus'
+
 Vue.config.productionTip = false
 // Vue.config.errorHandler = function (err, vm, info) {
 // handle error

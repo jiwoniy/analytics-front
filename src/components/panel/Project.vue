@@ -7,7 +7,7 @@
       @close="modalClose"
       :size="modal.modalSize"
       :position="modal.modalPosition"
-      :pass-params="modal.passModalParams"
+      :pass-modal-params="modal.passModalParams"
       :is-need-accept="modal.isNeedAccept"
       :content-component="modal.contentComponent"
     >
@@ -57,7 +57,6 @@ export default {
   mounted () {
     eventController.addListner('SHOW_MODAL', (payload) => {
       const { position, size, params, isNeedAccept, callback, contentComponent } = payload
-
       this.showModal = true
       this.modal.passModalParams = params || null
       this.modal.isNeedAccept = isNeedAccept || false

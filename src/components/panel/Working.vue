@@ -6,7 +6,6 @@
       <button @click="refresh"> recover </button>
       <button @click="load"> Reload </button>
       <button @click="openModal"> modal </button>
-      <button @click="openEditor"> editor </button>
     </div>
 
     <drop-comp>
@@ -47,14 +46,14 @@ export default {
         size: 'large',
         contentComponent: 'Palete'
       })
-    },
-    openEditor () {
-      eventController.SHOW_MODAL({
-        position: 'center',
-        size: 'large',
-        contentComponent: 'CodeEditor'
-      })
     }
+    // openEditor () {
+    //   eventController.SHOW_MODAL({
+    //     position: 'center',
+    //     size: 'large',
+    //     contentComponent: 'CodeEditor'
+    //   })
+    // }
   }
 }
 </script>

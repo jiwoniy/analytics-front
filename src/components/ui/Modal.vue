@@ -22,6 +22,7 @@
             v-if="lazyLoadComponent"
             v-bind:is="lazyLoadComponent"
             :modal-close="(isNeedAccept) => $emit('close', isNeedAccept)"
+            :pass-modal-params="passModalParams"
             :read-only="true">
           </component>
         </div>
@@ -48,7 +49,7 @@ export default {
       type: String,
       default: () => 'center' // center, top, bottom
     },
-    passParams: {
+    passModalParams: {
       type: Object,
       default: () => {}
     },

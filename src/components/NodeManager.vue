@@ -14,13 +14,11 @@
         <label> {{ item.key }} </label>
 
         <wrapper-ui-container
-          v-if="!readOnly"
-          :is-un-lock="isPipelineUnLock"
+          :is-un-lock="isPipelineUnLock && !readOnly"
           :uiType="'input'"
           :item-value="item.value"
           :item-key="item.key"
-          :wrapper-event="(value) => wrapperEvent(item.key, value)"
-        >
+          :wrapper-event="(value) => wrapperEvent(item.key, value)">
         </wrapper-ui-container>
       </div>
     </div>
@@ -35,13 +33,11 @@
         <label> {{ item.parameter_key }} </label>
 
           <wrapper-ui-container
-            v-if="!readOnly"
-            :is-un-lock="isPipelineUnLock"
+            :is-un-lock="isPipelineUnLock && !readOnly"
             :uiType="item.ui_type"
             :item-value="item.value"
             :item-key="item.parameter_key"
-            :wrapper-event="(value) => wrapperPropEvent(propertiesIndex, item.parameter_key, value)"
-          >
+            :wrapper-event="(value) => wrapperPropEvent(propertiesIndex, item.parameter_key, value)">
           </wrapper-ui-container>
       </div>
     </div>

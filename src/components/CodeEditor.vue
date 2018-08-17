@@ -1,6 +1,9 @@
 <template>
   <section class="Editor__section">
-    <textarea id="code" class="code" v-model="codeValue">
+    <textarea
+      id="codeEditor"
+      class="code"
+      v-model="codeValue">
     </textarea>
   </section>
 </template>
@@ -14,32 +17,40 @@ import 'codemirror/mode/sql/sql'
 export default {
   name: 'Editor-Section',
   props: {
-    code: {
-      type: String,
-      default: () => ''
-    },
     mode: {
       type: String,
       default: () => 'python'
+    },
+    passModalParams: {
+      type: Object,
+      default: () => null
     }
   },
   data () {
     return {
-      codeValue: null,
+      codeValue: '',
       originalCode: null
     }
   },
   mounted () {
-    this.originalCode = document.getElementById('code')
-    CodeMirror.fromTextArea(this.originalCode, {
+    this.originalCode = document.getElementById('codeEditor')
+    if (this.passModalParams) {
+      this.codeValue = this.passModalParams.codeValue
+      this.originalCode.value = this.codeValue
+      this.mode = this.passModalParams.mode
+    }
+
+    const myCodeMirror = CodeMirror.fromTextArea(this.originalCode, {
       mode: this.mode,
-      lineNumbers: true,
-      value: this.codeValue
+      autofocus: true,
+      lineNumbers: true
+      // value: this.originalCode
+      // readOnly: true
     })
 
-    // myCodeMirror.on('change', (cm) => {
-    //   myCodeMirror.save()
-    // })
+    myCodeMirror.on('change', (cm, changes) => {
+      myCodeMirror.save()
+    })
   }
 }
 </script>
