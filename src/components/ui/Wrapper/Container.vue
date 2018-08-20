@@ -38,6 +38,13 @@
       :props-value="itemValue"
       @wrapperEvent="wrapperEvent">
     </switch-toggle>
+    <wrapper-radio
+      v-if="uiType === 'radio'"
+      :is-un-lock="isUnLock"
+      :options="options"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </wrapper-radio>
   </div>
 </template>
 
@@ -46,6 +53,7 @@ import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperSelection from '@/components/ui/Wrapper/Selection'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
+import WrapperRadio from '@/components/ui/Wrapper/RadioBox'
 import Dropdown from '@/components/ui/Wrapper/Dropdown'
 import MultiDropdown from '@/components/ui/Wrapper/MultiDropdown'
 import SwitchToggle from '@/components/ui/Wrapper/SwitchToggle'
@@ -57,6 +65,7 @@ export default {
     WrapperInput,
     WrapperTextarea,
     WrapperSelection,
+    WrapperRadio,
     Dropdown,
     MultiDropdown,
     SwitchToggle

@@ -1,14 +1,16 @@
 <template>
-  <div>
+  <div class="radio__container">
     <div
-      class="radio-wrapper"
-      v-for="(option) in options"
-      :key="option.id">
+      v-for="(option, idx) in options"
+      :key="`radio-${idx}`">
         <input
           type="radio"
-          @input="eventHandler"
-          :name="name"
-          :value="option.value">
+          :disabled="!isUnLock"
+          @change="eventHandler(option)"
+          :label="option.label"
+          :value="option.value"
+          :checked="option.value === selected.value"
+        >
         <label> {{ option.label }} </label>
     </div>
   </div>
@@ -16,40 +18,53 @@
 
 <script>
 export default {
-  name: 'Wrapper-Radio',
+  name: 'Wrapper-Radio-Comp',
   props: {
     isUnLock: {
       type: Boolean,
       default: () => false
     },
-    name: {
-      type: String,
-      required: true
-    },
     options: {
       type: Array,
       required: true
+    },
+    propsValue: {
+      type: Object,
+      required: true
+    }
+  },
+  data () {
+    return {
+      selected: {}
     }
   },
   methods: {
-    eventHandler (event) {
-      if (this.isUnLock) {
-        this.$emit('wrapperEvent', event.target.value)
-      }
+    eventHandler (option) {
+      this.$emit('wrapperEvent', option)
+    }
+  },
+  mounted () {
+    if (this.propsValue) {
+      this.selected = this.propsValue
+    }
+  },
+  watch: {
+    propsValue (newValue) {
+      this.selected = newValue
     }
   }
 }
 </script>
 
 <style scoped>
-.radio-wrapper {
+.radio__container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   width: 100%;
 }
 
-.radio-wrapper input {
+.radio__container input {
   margin: 0px 0.4rem;
 }
 </style>

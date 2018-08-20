@@ -47,12 +47,37 @@
           "value": ["value1", "value2"]
         },
         {
-          "type": "Boolean",
+          "type": "boolean",
           "ui_type": "switch-toggle",
           "name": "Switch test",
           "default": false,
           "parameter_key": "switch",
           "value": true
+        },
+        {
+          "type": "string",
+          "ui_type": "radio",
+          "name": "Switch test",
+          "options": [
+            {
+              "label": "test1",
+              "value": "value1"
+            },
+            {
+              "label": "test2",
+              "value": "value2"
+            },
+            {
+              "label": "test3",
+              "value": "value3"
+            }
+          ],
+          "value": {
+            "label": "test3",
+            "value": "value3"
+          },
+          "default": false,
+          "parameter_key": "radio"
         }
       ]
     }
