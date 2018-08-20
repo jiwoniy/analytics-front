@@ -1,10 +1,23 @@
 <template>
   <section class="Editor__section">
-    <textarea
-      id="codeEditor"
-      class="code"
-      v-model="codeValue">
-    </textarea>
+    <div class="editor__container">
+      <textarea
+        id="codeEditor"
+        v-model="codeValue">
+      </textarea>
+    </div>
+
+    <div class="modal-bottom__container" >
+      <wrapper-button
+        :click-event="clickOk"
+        :button-text="$t('Ok')">
+      </wrapper-button>
+      <wrapper-button
+        :click-event="clickCancel"
+        :button-text="$t('Cancel')">
+      </wrapper-button>
+    </div>
+
   </section>
 </template>
 
@@ -14,8 +27,13 @@ import CodeMirror from 'codemirror'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/sql/sql'
 
+import WrapperButton from '@/components/ui/Wrapper/Button'
+
 export default {
   name: 'Editor-Section',
+  components: {
+    WrapperButton
+  },
   props: {
     mode: {
       type: String,
@@ -24,12 +42,45 @@ export default {
     passModalParams: {
       type: Object,
       default: () => null
+    },
+    modalClose: {
+      type: Function,
+      default: () => null
     }
   },
   data () {
     return {
       codeValue: '',
-      originalCode: null
+      originalCode: null,
+      readOnly: false
+    }
+  },
+  i18n: {
+    messages: {
+      'en': {
+        'Ok': 'Ok',
+        'Cancel': 'Cancel'
+      },
+      'ko': {
+        'Ok': '적용',
+        'Cancel': '취소'
+      }
+    }
+  },
+  methods: {
+    clickOk () {
+      if (this.passModalParams.callback) {
+        this.passModalParams.callback(this.codeValue)
+      }
+
+      if (this.modalClose) {
+        this.modalClose()
+      }
+    },
+    clickCancel () {
+      if (this.modalClose) {
+        this.modalClose()
+      }
     }
   },
   mounted () {
@@ -38,18 +89,21 @@ export default {
       this.codeValue = this.passModalParams.codeValue
       this.originalCode.value = this.codeValue
       this.mode = this.passModalParams.mode
+      this.readOnly = this.passModalParams.readOnly
     }
 
     const myCodeMirror = CodeMirror.fromTextArea(this.originalCode, {
       mode: this.mode,
       autofocus: true,
-      lineNumbers: true
-      // value: this.originalCode
-      // readOnly: true
+      lineNumbers: true,
+      readOnly: this.readOnly
     })
 
     myCodeMirror.on('change', (cm, changes) => {
       myCodeMirror.save()
+      if (!this.readOnly) {
+        this.codeValue = cm.getValue()
+      }
     })
   }
 }
@@ -61,10 +115,14 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+}
 
-  .code {
-    height: 100%;
+.Editor__section {
+  .editor__container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     width: 100%;
+    height: 100%;
   }
 }
 </style>

@@ -12,7 +12,6 @@
 </template>
 
 <script>
-// @input="eventHandler" :value="value"
 import eventController from '@/utils/EventController'
 
 export default {
@@ -28,18 +27,20 @@ export default {
     }
   },
   methods: {
-    eventHandler (event) {
-      this.$emit('wrapperEvent', event.target.value)
+    eventHandler (value) {
+      this.$emit('wrapperEvent', value)
     },
     onFocus () {
       eventController.SHOW_MODAL({
         position: 'center',
-        size: 'large',
+        size: 'medium',
+        contentComponent: 'CodeEditor',
         params: {
           codeValue: this.value,
-          mode: 'python'
-        },
-        contentComponent: 'CodeEditor'
+          mode: 'python',
+          readOnly: false,
+          callback: this.eventHandler
+        }
       })
     }
   }
@@ -53,6 +54,7 @@ export default {
 
 .textarea-wrapper textarea{
   width: calc(100% - 0.4rem);
-  resize: 'none'
+  height: 10rem;
+  resize: none
 }
 </style>

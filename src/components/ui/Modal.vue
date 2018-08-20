@@ -10,8 +10,7 @@
           'bottom': position === 'bottom'
         }"
       >
-        <div
-          class="modal__container"
+        <div class="modal__container"
           :class="{
             'small': size === 'small',
             'medium': size === 'medium',
@@ -136,31 +135,29 @@ export default {
 }
 
 .Modal__section .modal__wrapper {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   margin: var(--app-modal-margin) auto;
+  width: 100%;
   height: calc(100% - var(--app-modal-margin-double));
 
   .modal__container {
     position: relative;
-    margin: 0px auto;
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
+    margin: 0 auto;
   }
-
   .modal__container.small {
-    width: 40%;
-    min-width: 300px;
-    height: calc(40% - var(--app-modal-margin-double));
+    width: 30rem;
   }
   .modal__container.medium {
-    width: 60%;
-    height: calc(60% - var(--app-modal-margin-double));
+    width: 50rem;
   }
   .modal__container.large {
-    width: 90%;
-    height: calc(90% - var(--app-modal-margin-double));
+    width: 60rem;
   }
 }
 
