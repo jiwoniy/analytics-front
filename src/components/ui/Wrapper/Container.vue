@@ -18,6 +18,26 @@
       v-model="itemValue"
       @wrapperEvent="wrapperEvent">
     </wrapper-textarea>
+    <dropdown
+      v-if="uiType === 'dropdown'"
+      :is-un-lock="isUnLock"
+      :options="options"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </dropdown>
+    <multi-dropdown
+      v-if="uiType === 'multi_dropdown'"
+      :is-un-lock="isUnLock"
+      :options="options"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </multi-dropdown>
+    <switch-toggle
+      v-if="uiType === 'switch-toggle'"
+      :is-un-lock="isUnLock"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </switch-toggle>
   </div>
 </template>
 
@@ -26,6 +46,9 @@ import WrapperButton from '@/components/ui/Wrapper/Button'
 import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperSelection from '@/components/ui/Wrapper/Selection'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
+import Dropdown from '@/components/ui/Wrapper/Dropdown'
+import MultiDropdown from '@/components/ui/Wrapper/MultiDropdown'
+import SwitchToggle from '@/components/ui/Wrapper/SwitchToggle'
 
 export default {
   name: 'Wrapper-UI-Container',
@@ -33,7 +56,10 @@ export default {
     WrapperButton,
     WrapperInput,
     WrapperTextarea,
-    WrapperSelection
+    WrapperSelection,
+    Dropdown,
+    MultiDropdown,
+    SwitchToggle
   },
   props: {
     isUnLock: {
@@ -49,12 +75,16 @@ export default {
       required: true
     },
     itemValue: {
-      type: [String, Number],
+      type: [String, Number, Object, Array, Boolean],
       required: true
     },
     wrapperEvent: {
       type: Function,
       default: () => {}
+    },
+    options: {
+      type: Array,
+      default: () => []
     }
   }
 }

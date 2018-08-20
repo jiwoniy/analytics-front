@@ -38,6 +38,7 @@
     "vue-native-websocket": "^2.0.8",
     "vue-resize-directive": "^1.0.1",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.4.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

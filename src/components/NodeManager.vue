@@ -37,6 +37,7 @@
             :uiType="item.ui_type"
             :item-value="item.value"
             :item-key="item.parameter_key"
+            :options="item.options"
             :wrapper-event="(value) => wrapperPropEvent(propertiesIndex, item.parameter_key, value)">
           </wrapper-ui-container>
       </div>
@@ -101,7 +102,8 @@ export default {
             id: item.id || idx,
             ui_type: item.ui_type,
             parameter_key: item.parameter_key,
-            value: item.value
+            value: item.value,
+            options: item.options
           }
         })
       }

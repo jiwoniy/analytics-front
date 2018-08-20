@@ -25,6 +25,11 @@ Project dependencies
 [vueSnotify](https://artemsky.github.io/vue-snotify/documentation/installation.html)
 -------------
 
+
+[vue-select](http://sagalbot.github.io/vue-select/)
+-------------
+
+
 [axios](https://github.com/axios/axios)
 -------------
 

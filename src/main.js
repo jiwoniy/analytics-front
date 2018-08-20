@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import vSelect from 'vue-select'
 
 import App from '@/App'
 import router from '@/router'
@@ -50,6 +51,7 @@ Vue.config.productionTip = false
 // }
 
 // global components
+Vue.component('v-select', vSelect)
 Vue.component('tree-item', TreeItem)
 Vue.component('modal', Modal)
 Vue.component('loader', Loader)

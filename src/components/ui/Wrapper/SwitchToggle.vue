@@ -2,9 +2,10 @@
   <div class="Toggle-Switch__container">
     <label class="switch">
       <input
+        :disabled="!isUnLock"
         type="checkbox"
         @input="eventHandler"
-        :checked="checked">
+        :checked="value">
       <span class="slider round"></span>
     </label>
   </div>
@@ -14,19 +15,32 @@
 export default {
   name: 'Toggle-Switch-Comp',
   props: {
-    value: {
+    isUnLock: {
       type: Boolean,
-      default: () => false
+      required: () => false
+    },
+    propsValue: {
+      type: Boolean,
+      required: true
     }
   },
-  computed: {
-    checked () {
-      return this.value
+  data () {
+    return {
+      value: false
     }
   },
   methods: {
-    eventHandler (event) {
-      this.$emit('wrapperEvent', !this.value)
+    eventHandler () {
+      const current = this.value
+      this.$emit('wrapperEvent', !current)
+    }
+  },
+  mounted () {
+    this.value = this.propsValue
+  },
+  watch: {
+    propsValue (newValue) {
+      this.value = newValue
     }
   }
 }

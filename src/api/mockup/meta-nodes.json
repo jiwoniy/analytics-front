@@ -8,21 +8,51 @@
       "properties": [
         {
           "type": "string",
-          "ui_type": "text",
+          "ui_type": "dropdown",
           "name": "문자열",
           "default": "기본값. placeholder 속성으로 지원할지 여부 결정 필요",
           "parameter_key": "abc",
-          "value": "def"
+          "options": [
+            {
+              "label": "test1",
+              "value": "value1"
+            },
+            {
+              "label": "test2",
+              "value": "value2"
+            },
+            {
+              "label": "test3",
+              "value": "value3"
+            }
+          ],
+          "value": {
+            "label": "test3",
+            "value": "value3"
+          }
         },
         {
-          "type": "numeric",
-          "ui_type": "number",
+          "type": "string",
+          "ui_type": "multi_dropdown",
           "name": "정수(음수 불가)",
           "scope": "int",
           "negative": false,
           "default": 3,
           "parameter_key": "def",
-          "value": "abc"
+          "options": [
+            "value1",
+            "value2",
+            "value3"
+          ],
+          "value": ["value1", "value2"]
+        },
+        {
+          "type": "Boolean",
+          "ui_type": "switch-toggle",
+          "name": "Switch test",
+          "default": false,
+          "parameter_key": "switch",
+          "value": true
         }
       ]
     }
