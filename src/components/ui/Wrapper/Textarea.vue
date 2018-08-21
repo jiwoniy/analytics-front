@@ -47,7 +47,6 @@ export default {
 <style scoped>
 .textarea__container {
   background-color: #ffffff;
-  /* width: 100%; */
 }
 
 .textarea__container textarea {
