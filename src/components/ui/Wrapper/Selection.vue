@@ -1,12 +1,12 @@
 <template>
   <div
-    class="select-wrapper"
+    class="select__container"
     :id="compId"
   >
     <select
       :id="`selectComp${compId}`"
-      @change="selectChange"
-      :disabled="isDisable"
+      @change="eventHandler"
+      :disabled="!isUnLock"
     >
       <option
         v-if="showPlaceholder"
@@ -14,8 +14,8 @@
       > {{ placeholder }} </option>
       <option
         id="selectOption"
-        v-for="entry in options"
-        :key="entry.id"
+        v-for="(entry, idx) in options"
+        :key="`options-${idx}`"
         :value="entry.value"
       > {{ entry.value }}
       </option>
@@ -26,8 +26,12 @@
 
 <script>
 export default {
-  name: 'Wrapper-Input',
+  name: 'Wrapper-Selector-Comp',
   props: {
+    isUnLock: {
+      type: Boolean,
+      default: () => false
+    },
     placeholder: {
       type: String,
       default: () => 'select'
@@ -38,11 +42,11 @@ export default {
     },
     options: {
       type: Array,
-      default: () => []
+      required: true
     },
-    isDisable: {
-      type: Boolean,
-      default: () => false
+    propsValue: {
+      type: Object,
+      required: true
     }
   },
   beforeMount () {
@@ -51,42 +55,41 @@ export default {
   data () {
     return {
       compId: null,
-      selectComp: null,
-      isSelected: false
+      selectComp: null
     }
   },
   methods: {
-    selectChange (event) {
-      if (!this.isDisable) {
-        this.isSelected = true
-      }
+    eventHandler (event) {
+      this.setFindIndex(event.target.value)
+      const option = this.options.find(option => option.value === event.target.value)
+      this.$emit('wrapperEvent', option)
     },
-    init () {
-      const findIndex = this.options.findIndex(option => option.value === this.initValue)
-      this.selectComp = document.getElementById(`selectComp${this.compId}`)
-      if (findIndex > -1) {
-        this.isSelected = true
-      }
-      this.selectComp.selectedIndex = findIndex + 1
+    setFindIndex (currentValue) {
+      const index = this.options.findIndex(option => option.value === currentValue)
+      this.selectComp.selectedIndex = index
     }
   },
   mounted () {
-    this.init()
-    this.$nextTick(() => {
-      this.init()
-    })
+    this.selectComp = document.getElementById(`selectComp${this.compId}`)
+    if (this.propsValue && this.propsValue.value) {
+      this.setFindIndex(this.propsValue.value)
+    }
+  },
+  watch: {
+    propsValue (newValue) {
+      this.setFindIndex(newValue.value)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.select-wrapper {
+.select__container {
   width: 100%
 }
 
-.select-wrapper select {
+.select__container select {
   /*hide original SELECT element:*/
-  display: none;
   width: calc(100% - 0.4rem);
 }
 

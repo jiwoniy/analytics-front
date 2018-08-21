@@ -78,6 +78,39 @@
           },
           "default": false,
           "parameter_key": "radio"
+        },
+        {
+          "type": "boolean",
+          "ui_type": "checkbox",
+          "name": "checkbox",
+          "value": false,
+          "default": false,
+          "parameter_key": "checkbox"
+        },
+        {
+          "type": "string",
+          "ui_type": "selector",
+          "name": "Selector test",
+          "options": [
+            {
+              "label": "test1",
+              "value": "value1"
+            },
+            {
+              "label": "test2",
+              "value": "value2"
+            },
+            {
+              "label": "test3",
+              "value": "value3"
+            }
+          ],
+          "value": {
+            "label": "test1",
+            "value": "value1"
+          },
+          "default": false,
+          "parameter_key": "selector"
         }
       ]
     }

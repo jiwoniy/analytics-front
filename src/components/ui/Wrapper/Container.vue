@@ -6,12 +6,6 @@
       v-model="itemValue"
       @wrapperEvent="wrapperEvent">
     </wrapper-input>
-    <wrapper-selection
-      v-if="uiType === 'selector'"
-      :is-un-lock="isUnLock"
-      v-model="itemValue"
-      @wrapperEvent="wrapperEvent">
-    </wrapper-selection>
     <wrapper-textarea
       v-if="uiType === 'textarea'"
       :is-un-lock="isUnLock"
@@ -45,6 +39,20 @@
       :props-value="itemValue"
       @wrapperEvent="wrapperEvent">
     </wrapper-radio>
+    <wrapper-checkbox
+      v-if="uiType === 'checkbox'"
+      :is-un-lock="isUnLock"
+      :label="itemKey"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </wrapper-checkbox>
+    <wrapper-selection
+      v-if="uiType === 'selector'"
+      :is-un-lock="isUnLock"
+      :options="options"
+      :props-value="itemValue"
+      @wrapperEvent="wrapperEvent">
+    </wrapper-selection>
   </div>
 </template>
 
@@ -54,6 +62,7 @@ import WrapperInput from '@/components/ui/Wrapper/Input'
 import WrapperSelection from '@/components/ui/Wrapper/Selection'
 import WrapperTextarea from '@/components/ui/Wrapper/Textarea'
 import WrapperRadio from '@/components/ui/Wrapper/Radios'
+import WrapperCheckbox from '@/components/ui/Wrapper/Checkbox'
 import Dropdown from '@/components/ui/Wrapper/Dropdown'
 import MultiDropdown from '@/components/ui/Wrapper/MultiDropdown'
 import SwitchToggle from '@/components/ui/Wrapper/SwitchToggle'
@@ -66,6 +75,7 @@ export default {
     WrapperTextarea,
     WrapperSelection,
     WrapperRadio,
+    WrapperCheckbox,
     Dropdown,
     MultiDropdown,
     SwitchToggle

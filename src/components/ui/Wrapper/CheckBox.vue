@@ -24,8 +24,8 @@ export default {
       default: () => 'label'
     },
     propsValue: {
-      type: Object,
-      required: true
+      type: Boolean,
+      required: () => false
     }
   },
   data () {
@@ -34,10 +34,8 @@ export default {
     }
   },
   methods: {
-    eventHandler (event) {
-      console.log('----')
-      console.log(event.target.value)
-      // this.$emit('wrapperEvent', event.target.value)
+    eventHandler () {
+      this.$emit('wrapperEvent', !this.value)
     }
   },
   mounted () {
