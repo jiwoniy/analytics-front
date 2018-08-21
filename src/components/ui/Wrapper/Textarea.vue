@@ -1,12 +1,9 @@
 <template>
-  <div class="textarea-wrapper">
-    <label v-if="!isUnLock">
-      {{ value }}
-    </label>
+  <div class="textarea__container">
     <textarea
       @focus="onFocus"
-      v-if="isUnLock"
       :value="value"
+      :disabled="!isUnLock"
     />
   </div>
 </template>
@@ -48,13 +45,14 @@ export default {
 </script>
 
 <style scoped>
-.textarea-wrapper {
-  width: 100%;
+.textarea__container {
+  background-color: #ffffff;
+  /* width: 100%; */
 }
 
-.textarea-wrapper textarea{
-  width: calc(100% - 0.4rem);
-  height: 10rem;
-  resize: none
+.textarea__container textarea {
+  width: 100%;
+  height: 200px;
+  resize: none;
 }
 </style>
