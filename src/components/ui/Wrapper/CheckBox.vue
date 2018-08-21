@@ -1,7 +1,8 @@
 <template>
-  <div class="checkbox-wrapper">
+  <div class="checkbox__container">
     <input
       type="checkbox"
+      :disabled="!isUnLock"
       @input="eventHandler"
     />
     <label>
@@ -12,7 +13,7 @@
 
 <script>
 export default {
-  name: 'Wrapper-CheckBox',
+  name: 'Wrapper-CheckBox-Comp',
   props: {
     isUnLock: {
       type: Boolean,
@@ -20,28 +21,45 @@ export default {
     },
     label: {
       type: String,
-      default: () => 'lksdjlksf'
+      default: () => 'label'
+    },
+    propsValue: {
+      type: Object,
+      required: true
+    }
+  },
+  data () {
+    return {
+      value: false
     }
   },
   methods: {
     eventHandler (event) {
-      if (this.isUnLock) {
-        this.$emit('wrapperEvent', event.target.value)
-      }
+      console.log('----')
+      console.log(event.target.value)
+      // this.$emit('wrapperEvent', event.target.value)
+    }
+  },
+  mounted () {
+    this.value = this.propsValue
+  },
+  watch: {
+    propsValue (newValue) {
+      this.value = newValue
     }
   }
 }
 </script>
 
 <style scoped>
-.checkbox-wrapper {
+.checkbox__container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   width: 100%;
 }
 
-.checkbox-wrapper input {
+.checkbox__container input {
   margin: 0px 0.4rem;
 }
 </style>
