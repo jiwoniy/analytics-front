@@ -63,6 +63,13 @@ path.connect-link:hover {
   }
 }
 
+.node-wrap.node-connected  {
+  rect {
+    stroke-width: 1px;
+    stroke: pink;
+  }
+}
+
 .tooltip {
   pointer-events: none;
   opacity: 1;

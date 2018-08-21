@@ -34,6 +34,7 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
     uParentCompId: uParentCompId || 1,
     unLock: false,
     selectedNode: null,
+    connectedNodes: [],
     isUpdated: false, // watch for to determine wheter to save or not
     connecting: false,
     capturedTarget: null,
@@ -234,7 +235,8 @@ GraphCreator.prototype.constants = {
   connectLinkClass: 'connect-link',
   nodeWrapClass: 'node-wrap',
   nodeHoverClass: 'node-hover',
-  nodeSelectedClass: 'node-selected'
+  nodeSelectedClass: 'node-selected',
+  nodeConnectedClass: 'node-connected'
 }
 
 GraphCreator.prototype.drawGraph =
@@ -271,6 +273,11 @@ GraphCreator.prototype.drawNodes = function drawNodes () {
   // update
   exists
     .classed(graphContext.constants.nodeSelectedClass, d => d.ui_status.selected)
+    .classed(graphContext.constants.nodeConnectedClass, d => {
+      return graphContext.state.connectedNodes.some(function (id) {
+        return id === d.id
+      })
+    })
     .call(graphContext.appendText)
 
   // enter
@@ -382,12 +389,30 @@ GraphCreator.prototype.appendText = function appendText (nodes) {
 }
 
 GraphCreator.prototype.setSelectNode = function setSelectNode (context, data) {
+  const graphContext = this
+  graphContext.setUnSelectNode()
+  graphContext.state.connectedNodes = []
+
   if (data) {
     const isSelected = data.ui_status.selected
+    const connectedNodesIds = graphContext.findConnectedNode(data)
+    graphContext.state.connectedNodes = connectedNodesIds
+
     this.stateProxy.selectedNode = isSelected ? null : data
   } else {
     this.stateProxy.selectedNode = null
   }
+}
+
+GraphCreator.prototype.setUnSelectNode = function setUnSelectNode () {
+  const graphContext = this
+  graphContext.nodes.setSelectClean()
+}
+
+GraphCreator.prototype.findConnectedNode = function findConnectedNode (node) {
+  const graphContext = this
+
+  return this.nodes.findConnectedNode(node, graphContext.links.getLinks())
 }
 
 GraphCreator.prototype.findRelatedLinks = function findRelatedLinks (node) {

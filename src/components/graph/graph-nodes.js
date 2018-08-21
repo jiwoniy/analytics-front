@@ -41,11 +41,25 @@ GraphNodes.prototype.setSelectedNode = function setSelectedNode (selectNode) {
   }
 }
 
+// GraphNodes.prototype.setUnSelectedNode = function setUnSelectedNode (node, links) {
+//   const graphNodes = this
+//   return Object.keys(graphNodes.nodes).find(nodeId => {
+//     return graphNodes.nodes[nodeId].ui_status.selected === true
+//   })
+// }
+
 GraphNodes.prototype.findConnectedNode = function findConnectedNode (node, links) {
-  return Object.keys(links).filter(key => {
+  const connectNodes = []
+  Object.keys(links).forEach(key => {
     const { source, target } = links[key]
-    return source.sourceId === node.id || target.targetId === node.id
+    if (source.sourceId === node.id) {
+      connectNodes.push(target.targetId)
+    } else if (target.targetId === node.id) {
+      connectNodes.push(source.sourceId)
+    }
+    // return source.sourceId === node.id || target.targetId === node.id
   })
+  return connectNodes
 }
 
 export default GraphNodes
