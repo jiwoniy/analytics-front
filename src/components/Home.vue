@@ -10,8 +10,8 @@
 <script>
 import { mapActions } from 'vuex'
 
-import TopPanel from '@/components/panel/Top'
-import Project from '@/components/panel/Project'
+import TopPanel from '@/components/views/Top'
+import Project from '@/components/views/Project'
 
 export default {
   name: 'Home-Section',

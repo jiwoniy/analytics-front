@@ -17,7 +17,7 @@
 
 <script>
 import eventController from '@/utils/EventController'
-import MainPanel from '@/components/panel/Main'
+import MainPanel from '@/components/views/Main'
 
 export default {
   name: 'Project-Section',

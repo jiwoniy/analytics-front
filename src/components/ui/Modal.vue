@@ -87,7 +87,7 @@ export default {
       } else if (this.contentComponent === 'Confirmation') {
         return () => import('@/components/ui/Confirmation')
       } else if (this.contentComponent === 'Palete') {
-        return () => import('@/components/panel/ReadOnlyPalete')
+        return () => import('@/components/views/ReadOnlyPalete')
       } else if (this.contentComponent === 'CodeEditor') {
         return () => import('@/components/CodeEditor')
       }

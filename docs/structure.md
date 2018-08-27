@@ -37,7 +37,7 @@ Most structures were constructed by [vue templates](https://vuejs.org/v2/guide/i
 * [components](https://vuejs.org/v2/guide/index.html#Composing-with-Components)
   - common :  Can be used anywhere component
   - graph : Modules to create nodes and connect nodes
-  - panel: Pages made up of multiple components
+  - views: Pages made up of multiple components
   - ui : Components created for specific UI functions
   - CodeEditor : editor for code(grammar-highlighted)
   - CreateProject : project create component
