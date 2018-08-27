@@ -5,17 +5,6 @@
     v-resize:debounce.250="onResize"
   >
 
-    <toggle-button
-      v-if="!readOnly"
-      :toggle="isPipelineUnLock"
-      :custom-style="{
-        'top': '30px'
-      }"
-      :a-src="'/static/img/lock-open-solid.svg'"
-      :b-src="'/static/img/lock-solid.svg'"
-    >
-    </toggle-button>
-
     <svg>
       <def-svg></def-svg>
     </svg>
@@ -42,14 +31,12 @@ import compose from '@/utils/compose'
 import eventController from '@/utils/EventController'
 import DefSvg from '@/components/common/DefSvg'
 import GraphCreator from '@/components/graph/graph-creator'
-import ToggleButton from '@/components/ui/ToggleButton'
 
-// TODO Make read, read/write mode
+// Make read, read/write mode
 export default {
   name: 'Palete-Section',
   components: {
-    DefSvg,
-    ToggleButton
+    DefSvg
   },
   directives: {
     resize
@@ -225,17 +212,13 @@ export default {
         })
       })
 
-      eventController.addListner('SAVE', () => {
-        this.saveGraph()
-      })
+      // eventController.addListner('SAVE', () => {
+      //   this.saveGraph()
+      // })
 
-      eventController.addListner('REFRESH', () => {
-        this.graphInstance.setZoomInit()
-      })
-
-      eventController.addListner('LOAD', () => {
-        this.init()
-      })
+      // eventController.addListner('LOAD', () => {
+      //   this.init()
+      // })
 
       eventController.addListner('EDIT', () => {
         this.updateLock(true)
@@ -252,9 +235,6 @@ export default {
   beforeDestroy () {
     if (!this.readOnly) {
       eventController.removeListner('SEND_DATA_TRANSFER')
-      eventController.removeListner('SAVE')
-      eventController.removeListner('REFRESH')
-      eventController.removeListner('LOAD')
       eventController.removeListner('EDIT')
     }
   },

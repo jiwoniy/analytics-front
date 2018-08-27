@@ -23,6 +23,17 @@
           :b-src="'/static/img/angle-left-solid.svg'"
         >
         </toggle-button>
+        <toggle-button
+          :toggle="isPipelineUnLock"
+          :custom-style="{
+            'top': '0px',
+            'left': '30px'
+          }"
+          :click-button="unLock"
+          :a-src="'/static/img/lock-open-solid.svg'"
+          :b-src="'/static/img/lock-solid.svg'"
+        >
+        </toggle-button>
         <work-panel>
         </work-panel>
         <toggle-button
@@ -95,6 +106,7 @@ export default {
   computed: {
     ...mapGetters({
       pipelineMeta: 'pipelineMeta/getPipelineMetaList',
+      isPipelineUnLock: 'myProject/isPipelineUnLock',
       worksheetList: 'myProject/getWorksheetList',
       activateWorksheet: 'myProject/getActivateWorksheet'
     })
@@ -130,6 +142,11 @@ export default {
         left: size[0],
         center: size[1],
         right: size[2]
+      }
+    },
+    unLock () {
+      if (!this.isPipelineUnLock) {
+        eventController.EDIT(true)
       }
     }
   },

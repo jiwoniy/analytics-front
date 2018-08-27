@@ -86,7 +86,7 @@ export default {
         return () => import('@/components/CreateWorksheet')
       } else if (this.contentComponent === 'Confirmation') {
         return () => import('@/components/ui/Confirmation')
-      } else if (this.contentComponent === 'Palete') {
+      } else if (this.contentComponent === 'ReadOnlyPalete') {
         return () => import('@/components/views/ReadOnlyPalete')
       } else if (this.contentComponent === 'CodeEditor') {
         return () => import('@/components/CodeEditor')
@@ -152,12 +152,15 @@ export default {
   }
   .modal__container.small {
     width: 30rem;
+    height: 20rem;
   }
   .modal__container.medium {
     width: 50rem;
+    height: 30rem;
   }
   .modal__container.large {
     width: 60rem;
+    height: 40rem;
   }
 }
 

@@ -183,12 +183,13 @@ const GraphCreator = function GraphCreatorConstructor (svgElem, uParentCompId, {
       graphContext.links = new GraphLinks(linksTransformUiLinks(pipeline.links))
     }
 
-    // draw
-    if (updateObject === 'pipeline') {
-      graphContext.drawGraph({ needUpdate: false, node: true, link: true })
-    } else if (updateObject === 'node' && updateType === 'update') {
-      graphContext.drawGraph({ needUpdate: false, node: true, link: false })
-    }
+    graphContext.drawGraph({ needUpdate: false, node: true, link: true })
+    // // draw
+    // if (updateObject === 'pipeline') {
+    //   graphContext.drawGraph({ needUpdate: false, node: true, link: true })
+    // } else if (updateObject === 'node' && updateType === 'update') {
+    //   graphContext.drawGraph({ needUpdate: false, node: true, link: true })
+    // }
   }
 
   graphContext.save = function save () {

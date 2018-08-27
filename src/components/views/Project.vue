@@ -12,17 +12,22 @@
       :content-component="modal.contentComponent"
     >
     </modal>
+    <watch-pipeline
+      :is-show="true">
+    </watch-pipeline>
   </section>
 </template>
 
 <script>
 import eventController from '@/utils/EventController'
 import MainPanel from '@/components/views/Main'
+import WatchPipeline from '@/components/WatchPipeline'
 
 export default {
   name: 'Project-Section',
   components: {
-    MainPanel
+    MainPanel,
+    WatchPipeline
   },
   data () {
     return {
