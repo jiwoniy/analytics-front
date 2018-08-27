@@ -3,24 +3,26 @@ css(scss) conventsion
 
 There is no constraint with regard to css rules. It only provides a guide for readability and reusability.
 
-Use nouns as much as possible.
+> use nouns as much as possible.
 
-use hyphen-naming syntax
+> use hyphen-naming syntax
 
-Use both the scss and css grammar properly.
+> use both the scss and css grammar properly.
 If you are using only one side, readability is not good.
 
-{ element Name - element Name }__{ identifier for class type }
+* example
 
-- identifier class||species
-__section: <section> class
-__container: <div> class
-__wrapper
-__button: <button> 
+  - { element Name - element Name }__{ identifier for class type }
+
+- identifier class
+  - __section
+  - __container
+  - __wrapper
+  - __button
 
 
 - element species
-header
-body
-bottom
-contents
+  - header
+  - body
+  - bottom
+  - contents

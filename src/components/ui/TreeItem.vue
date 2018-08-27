@@ -2,7 +2,7 @@
   <li>
     <div class="tree-item" @click="toggle">
       <img v-if="!open && isFolder" src="/static/img/angle-right-solid.svg" />
-      <img v-if="open" src="@/assets/img/angle-down-solid.svg" />
+      <img v-if="open" src="/static/img/angle-down-solid.svg" />
 
       <div v-if="!isNodeitemDragable" class="text-ellipsis__default">
         <span> {{ treeItem.name }} </span>

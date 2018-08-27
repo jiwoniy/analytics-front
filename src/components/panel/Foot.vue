@@ -8,7 +8,7 @@
     <div v-show="isOpen" class="report">
       <div id="draggable" class="split" draggable="true"></div>
       <div class="area">
-        <img class="close" @click="closeRerpot" src="@/assets/img/times-solid.svg" />
+        <img class="close" @click="closeRerpot" src="/static/img/times-solid.svg" />
         <slot></slot>
       </div>
     </div>
