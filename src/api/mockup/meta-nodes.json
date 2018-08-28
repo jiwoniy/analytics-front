@@ -7,11 +7,10 @@
       "desc": "Properties Panel UI 테스트를 위한 더미 노드 입니다. 해당 노드는 분석툴에서 지원가능한 모든 속성을 가지고있습니다.",
       "properties": [
         {
+          "parameter_key": "abc",
+          "name": "문자열",
           "type": "string",
           "ui_type": "dropdown",
-          "name": "문자열",
-          "default": "기본값. placeholder 속성으로 지원할지 여부 결정 필요",
-          "parameter_key": "abc",
           "options": [
             {
               "label": "test1",
@@ -32,13 +31,10 @@
           }
         },
         {
+          "parameter_key": "def",
+          "name": "정수(음수 불가)",
           "type": "string",
           "ui_type": "multi_dropdown",
-          "name": "정수(음수 불가)",
-          "scope": "int",
-          "negative": false,
-          "default": 3,
-          "parameter_key": "def",
           "options": [
             "value1",
             "value2",
@@ -47,17 +43,17 @@
           "value": ["value1", "value2"]
         },
         {
+          "parameter_key": "switch",
+          "name": "Switch test",
           "type": "boolean",
           "ui_type": "switch-toggle",
-          "name": "Switch test",
-          "default": false,
-          "parameter_key": "switch",
           "value": true
         },
         {
+          "parameter_key": "radio",
+          "name": "Switch test",
           "type": "string",
           "ui_type": "radio",
-          "name": "Switch test",
           "options": [
             {
               "label": "test1",
@@ -75,22 +71,20 @@
           "value": {
             "label": "test3",
             "value": "value3"
-          },
-          "default": false,
-          "parameter_key": "radio"
+          }
         },
         {
+          "parameter_key": "checkbox",
           "type": "boolean",
           "ui_type": "checkbox",
           "name": "checkbox",
-          "value": false,
-          "default": false,
-          "parameter_key": "checkbox"
+          "value": false
         },
         {
+          "parameter_key": "selector",
+          "name": "Selector test",
           "type": "string",
           "ui_type": "selector",
-          "name": "Selector test",
           "options": [
             {
               "label": "test1",
@@ -108,9 +102,7 @@
           "value": {
             "label": "test1",
             "value": "value1"
-          },
-          "default": false,
-          "parameter_key": "selector"
+          }
         }
       ]
     }
@@ -125,11 +117,10 @@
       "desc": "",
       "properties": [
         {
+          "parameter_key": "datasource_id",
+          "name": "Data Source",
           "type": "list_selector",
           "ui_type": "input",
-          "name": "Data Source",
-          "list_ref": "/datasource",
-          "parameter_key": "datasource_id",
           "value": "test"
         }
       ]
@@ -145,12 +136,11 @@
       "desc": "",
       "properties": [
         {
+          "parameter_key": "code",
+          "name": "Code",
           "type": "string",
           "ui_type": "textarea",
-          "name": "Code",
-          "language": "Python",
-          "default": "def transformation(dataframe):\n    return dataframe",
-          "parameter_key": "code",
+          "code_language": "python",
           "value": "kilometers = 5.5 # To take kilometers from the user, uncomment the code below kilometers = input(\"Enter value in kilometers\") # conversion factor conv_fac = 0.621371 # calculate miles miles = kilometers * conv_fac print('%0.3f kilometers is equal to %0.3f miles' %(kilometers,miles))"
         }
       ]
@@ -161,17 +151,17 @@
       "desc": "",
       "properties": [
         {
-          "type": "string",
+          "parameter_key": "dataframe_id",
           "name": "Dataframe ID",
-          "default": "DF",
-          "parameter_key": "dataframe_id"
+          "type": "string",
+          "value": "DF"
         },
         {
-          "type": "code_snippet",
+          "parameter_key": "query",
           "name": "Query",
-          "language": "SQL",
-          "default": "",
-          "parameter_key": "query"
+          "type": "code_snippet",
+          "code_language": "sql",
+          "value": ""
         }
       ]
     },
@@ -180,11 +170,11 @@
       "name": "Row Filter",
       "desc": "",
       "properties": [{
-        "type": "code_snipet",
+        "parameter_key": "condition",
         "name": "Condition",
-        "language": "SQL",
-        "default": "",
-        "parameter_key": "condition"
+        "type": "code_snipet",
+        "code_language": "sql",
+        "value": ""
       }]
     },
     {
@@ -192,9 +182,8 @@
       "name": "Column Filter",
       "desc": "",
       "properties": [{
-        "name": "multiple_column_selector",
-        "title": "Selected Columns",
-        "parameter_key": "selected_columns"
+        "parameter_key": "selected_columns",
+        "name": "multiple_column_selector"
       }]
     }
   ]

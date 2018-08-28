@@ -19,6 +19,8 @@ import '@/plugins/localStorage' // Use localstorage before api created
 // directives
 import '@/directives/focus'
 
+import captureBug from '@/utils/captureBug'
+
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err, vm, info) {
   // handle error
@@ -55,6 +57,8 @@ Vue.component('v-select', vSelect)
 Vue.component('tree-item', TreeItem)
 Vue.component('modal', Modal)
 Vue.component('loader', Loader)
+
+captureBug.init()
 
 /* eslint-disable no-new */
 new Vue({
