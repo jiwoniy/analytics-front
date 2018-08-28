@@ -1,14 +1,3 @@
-import isPromise from '@/utils/isPromise'
-
-function run (prev, next, arg) {
-  if (isPromise(prev)) {
-    return prev(arg)
-      .then(res => next(res))
-  }
-
-  return next(prev(arg))
-}
-
 const compose = (fns, left = true) => {
   if (fns && Array.isArray(fns)) {
     const fun = left ? 'reduce' : 'reduceRight'
@@ -16,18 +5,16 @@ const compose = (fns, left = true) => {
       if (typeof prev === 'function' && typeof next === 'function') {
         return function (...arg) {
           try {
-            if (arg === null || arg === undefined) {
-              return run(prev, next, null)
-            }
-
-            return run(prev, next, arg)
+            return next(prev(...arg))
           } catch (e) {
             return new Error(`exception in function: ${e}`)
           }
         }
       }
       return new Error('The array must consist of functions.')
-    }, value => value)
+    }, function (...value) {
+      return value || []
+    })
   }
   return new Error('first argument should be array')
 }

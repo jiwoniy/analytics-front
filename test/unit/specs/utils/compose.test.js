@@ -22,8 +22,8 @@ test('compose with throw exception', () => {
 })
 
 test('compose without argument', () => {
-  const add = x => y => x + y
-  const multiply = x => y => x * y
+  const add = x => (y = 0) => x + y
+  const multiply = x => (y = 1) => x * y
 
   const example = compose([
     add(1),
@@ -34,8 +34,13 @@ test('compose without argument', () => {
 })
 
 test('compose(argument 2) - from left to right', () => {
-  const add = x => y => x + y
-  const multiply = x => y => x * y
+  const add = x => (arg) => {
+    const y = arg[0] || 0
+    return x + y
+  }
+  const multiply = x => (y = 1) => {
+    return x * y
+  }
 
   const example = compose([
     add(1),
@@ -46,7 +51,10 @@ test('compose(argument 2) - from left to right', () => {
 })
 
 test('compose(argument 3) - from left to right', () => {
-  const add = x => y => x + y
+  const add = x => (arg) => {
+    const y = arg[0] || 0
+    return x + y
+  }
   const multiply = x => y => x * y
 
   const example = compose([
@@ -60,7 +68,10 @@ test('compose(argument 3) - from left to right', () => {
 
 test('compose(argument 2) - from right to left', () => {
   const add = x => y => x + y
-  const multiply = x => y => x * y
+  const multiply = x => (arg) => {
+    const y = arg[0] || 0
+    return x * y
+  }
 
   const example = compose([
     add(1),
@@ -70,15 +81,18 @@ test('compose(argument 2) - from right to left', () => {
   expect(result).toBe(5)
 })
 
+// TODO arguments가 더 많아질 경우....
 test('compose(argument 3) - from right to left', () => {
-  const add = x => y => x + y
+  const add = x => (arg) => {
+    const y = arg[0] || 0
+    return x + y
+  }
   const multiply = x => y => x * y
 
   const example = compose([
-    add(1),
     multiply(2),
     add(4)
   ], false)
   const result = example(2)
-  expect(result).toBe(13)
+  expect(result).toBe(12)
 })

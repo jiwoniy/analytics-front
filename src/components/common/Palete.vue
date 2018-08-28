@@ -110,26 +110,18 @@ export default {
         watch_update: this.watchGraphUpdate
       }
 
-      // TODO method chaning
-      function validate (isFirst) {
-        return function (args) {
-          if (isFirst) {
-            // 비교로직
-            return [true, ...args]
-          } else {
-            // 비교로직
-            if (!args[0]) {
-              return false
-            } else {
-              // 비교로직
-              return [true, ...args]
-            }
-          }
-        }
-      }
       const composeValidate = compose([
-        validate(true),
-        validate()
+        (...arg) => {
+          // arg[0] = source
+          // arg[1] = target
+          return [arg, false]
+        },
+        (...arg) => {
+          // arg[0] = source
+          // arg[1] = target
+          // arg[2] = before validation
+          return true
+        }
       ], true)
 
       this.graphInstance = new GraphCreator(svgElem, this.uCompId, {

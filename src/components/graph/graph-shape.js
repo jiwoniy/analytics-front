@@ -1,9 +1,9 @@
 import * as d3Selection from 'd3-selection'
 import * as d3Drag from 'd3-drag'
 
-function checkLinkValidate (source, target) {
-  return source.id !== target.id
-}
+// function checkLinkValidate (source, target) {
+//   return source.id !== target.id
+// }
 
 function drawTooltip (selection, d, inOut, xPosition) {
   const tooltip = selection
@@ -63,8 +63,6 @@ function circleOutputDraghandler ({ context, linkOutput, isCanConnect }) {
       context.dragLine.classed('hidden', true)
       if (context.state.connecting) {
         if (context.state.capturedTarget) {
-          // TODO method chaning
-          // isCanConnect({ ...d, linkOutput }, context.state.capturedTarget))[0]
           if (isCanConnect({ ...d, linkOutput }, context.state.capturedTarget)) {
             const newLink = {
               source: {
@@ -152,7 +150,8 @@ function getNodeShape (context, selections, isCanConnect) {
               id: `output-${circleOut}`,
               index: circleOut
             },
-            isCanConnect: isCanConnect || checkLinkValidate
+            // isCanConnect: checkLinkValidate
+            isCanConnect: isCanConnect
           }))
       }
     }
