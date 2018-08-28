@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+// const fs = require('fs');
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -28,6 +29,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
       ],
     },
+    /* make https dev server */
+    // https://certsimple.com/blog/localhost-ssl-fix
+    // https: true,
+    // key: fs.readFileSync('cert/key.pem'),
+    // cert: fs.readFileSync('cert/cert.pem'),
+    // ca: fs.readFileSync('CA.pem'),
+    /* make https dev server */
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,

@@ -19,9 +19,11 @@ import '@/plugins/localStorage' // Use localstorage before api created
 // directives
 import '@/directives/focus'
 
+// promise rejection handler
 import handleRejectionError from '@/utils/handle-rejection-error'
 
 Vue.config.productionTip = false
+// exception error handler
 Vue.config.errorHandler = function (err, vm, info) {
   // handle error
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
@@ -52,6 +54,7 @@ Vue.component('modal', Modal)
 Vue.component('loader', Loader)
 
 handleRejectionError.init()
+
 /* eslint-disable no-new */
 new Vue({
   el: '#dtonic-app',
