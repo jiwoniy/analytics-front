@@ -19,7 +19,7 @@ import '@/plugins/localStorage' // Use localstorage before api created
 // directives
 import '@/directives/focus'
 
-import unhandlerejection from '@/utils/unhandlerejection'
+import handleRejectionError from '@/utils/handle-rejection-error'
 
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err, vm, info) {
@@ -51,7 +51,7 @@ Vue.component('tree-item', TreeItem)
 Vue.component('modal', Modal)
 Vue.component('loader', Loader)
 
-unhandlerejection.init()
+handleRejectionError.init()
 /* eslint-disable no-new */
 new Vue({
   el: '#dtonic-app',
@@ -63,6 +63,6 @@ new Vue({
     console.log('--error--')
     console.log(err)
   },
-  beforeDestroy: () => unhandlerejection.destroy(),
+  beforeDestroy: () => handleRejectionError.destroy(),
   render: (h) => h(App)
 })
