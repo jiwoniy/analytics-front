@@ -60,10 +60,8 @@ new Vue({
   store,
   template: '<App/>',
   errorHandler (err, vm, info) {
-    console.log('--errorHandler--')
+    console.log('--error--')
     console.log(err)
-    console.log(vm)
-    console.log(info)
   },
   beforeDestroy: () => unhandlerejection.destroy(),
   render: (h) => h(App)

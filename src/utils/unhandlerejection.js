@@ -47,6 +47,8 @@ export default {
         report.stacktrace = []
         report.handledState = handledState
       }
+      console.log('--error--')
+      console.log(report)
 
       // client.notify(report)
     }
