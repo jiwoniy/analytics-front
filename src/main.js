@@ -19,7 +19,7 @@ import '@/plugins/localStorage' // Use localstorage before api created
 // directives
 import '@/directives/focus'
 
-import captureBug from '@/utils/captureBug'
+import unhandlerejection from '@/utils/unhandlerejection'
 
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err, vm, info) {
@@ -45,21 +45,13 @@ Vue.config.errorHandler = function (err, vm, info) {
   }
 }
 
-// https://sentry.io/answers/capture-errors/
-// https://blog.sentry.io/2016/01/04/client-javascript-reporting-window-onerror.html
-// window.onerror = function (msg, url, lineNo, columnNo, error) {
-//   // ... handle error ...
-//   return false
-// }
-
 // global components
 Vue.component('v-select', vSelect)
 Vue.component('tree-item', TreeItem)
 Vue.component('modal', Modal)
 Vue.component('loader', Loader)
 
-captureBug.init()
-
+unhandlerejection.init()
 /* eslint-disable no-new */
 new Vue({
   el: '#dtonic-app',
@@ -67,5 +59,12 @@ new Vue({
   i18n,
   store,
   template: '<App/>',
+  errorHandler (err, vm, info) {
+    console.log('--errorHandler--')
+    console.log(err)
+    console.log(vm)
+    console.log(info)
+  },
+  beforeDestroy: () => unhandlerejection.destroy(),
   render: (h) => h(App)
 })
