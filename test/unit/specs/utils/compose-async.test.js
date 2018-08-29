@@ -21,32 +21,32 @@ test('compose async test', async () => {
   expect(result).toBe('test2')
 })
 
-test('compose async test', async () => {
-  function returnPromise (param) {
-    return new Promise((resolve) => {
-      resolve(param)
-    })
-  }
+// test('compose async test', async () => {
+//   function returnPromise (param) {
+//     return new Promise((resolve) => {
+//       resolve(param)
+//     })
+//   }
 
-  const example = compose([
-    () => returnPromise(3),
-    () => returnPromise(5)
-  ], true)
-  const result = await example()
-  expect(result).toBe(5)
-})
+//   const example = compose([
+//     () => returnPromise(3),
+//     () => returnPromise(5)
+//   ], true)
+//   const result = await example()
+//   expect(result).toBe(5)
+// })
 
-test('compose async test', async () => {
-  function returnPromise (param) {
-    return new Promise((resolve) => {
-      resolve(param)
-    })
-  }
+// test('compose async test', async () => {
+//   function returnPromise (param) {
+//     return new Promise((resolve) => {
+//       resolve(param)
+//     })
+//   }
 
-  const example = compose([
-    () => returnPromise(3),
-    () => returnPromise(5)
-  ], true)
-  const result = await example(5)
-  expect(result).toBe(5)
-})
+//   const example = compose([
+//     () => returnPromise(3),
+//     () => returnPromise(5)
+//   ], true)
+//   const result = await example(5)
+//   expect(result).toBe(5)
+// })

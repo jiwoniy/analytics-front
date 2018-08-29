@@ -111,15 +111,13 @@ export default {
       }
 
       const composeValidate = compose([
-        (...arg) => {
-          // arg[0] = source
-          // arg[1] = target
-          return [arg, false]
+        (source, target, ...args) => {
+          return true
         },
-        (...arg) => {
-          // arg[0] = source
-          // arg[1] = target
-          // arg[2] = before validation
+        (source, target, beforeResult) => {
+          if (!beforeResult) {
+            return false
+          }
           return true
         }
       ], true)

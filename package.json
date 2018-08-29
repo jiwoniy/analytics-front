@@ -10,7 +10,7 @@
     "start": "npm run dev",
     "start:prod": "npm run prod",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
-    "jest:unit": "jest --config test/unit/jest.conf.js",
+    "jest:unit": "jest --watch --config test/unit/jest.conf.js",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
