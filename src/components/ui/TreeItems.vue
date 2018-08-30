@@ -1,12 +1,10 @@
 <template>
-  <div class="tree">
-    <ul class="tree-list">
-      <tree-item
-        :tree-item="treeItem"
-        :is-dragable="isDragable">
-      </tree-item>
-    </ul>
-  </div>
+  <ul class="tree-list">
+    <tree-item
+      :tree-item="treeItem"
+      :is-dragable="isDragable">
+    </tree-item>
+  </ul>
 </template>
 
 <script>

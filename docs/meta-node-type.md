@@ -18,6 +18,7 @@
   - property name
 - type
   - property value [json type](https://www.w3schools.com/js/js_json_datatypes.asp)
+  - This [Link](https://www.w3schools.com/js/js_json_stringify.asp) should be used with caution when communicating with json.
   ```
   string
   number

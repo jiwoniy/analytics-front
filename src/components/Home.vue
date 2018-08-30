@@ -1,10 +1,8 @@
 <template>
-  <transition>
-    <section class="Home__section">
-      <top-panel id="topPanel"></top-panel>
-      <project></project>
-    </section>
-  </transition>
+  <section class="Home__section">
+    <top-panel id="topPanel"></top-panel>
+    <project></project>
+  </section>
 </template>
 
 <script>
