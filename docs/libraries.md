@@ -20,6 +20,9 @@ Libraries
 
 * [d3-force](https://github.com/d3/d3-force)
 
+> If you do not have a knowledge at all, be sure to read the site below.
+  [D3 in depth](https://d3indepth.com/)
+
 * #### d3-example
   [Interactive & Dynamic Force-Directed Graphs with D3](https://medium.com/ninjaconcept/interactive-dynamic-force-directed-graphs-with-d3-da720c6d7811)
   [understanding zoom behavior bindings](http://bl.ocks.org/cpdean/7a71e687dd5a80f6fd57)

@@ -17,14 +17,14 @@
 - name
   - property name
 - type
-  - property value type(javascript type?)
+  - property value [json type](https://www.w3schools.com/js/js_json_datatypes.asp)
   ```
   string
   number
   boolean
   object
   array
-  date
+  null
   ```
 - ui type
   ```
