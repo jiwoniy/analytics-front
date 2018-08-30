@@ -1,6 +1,6 @@
 <template>
   <transition>
-    <section class="Top__section">
+    <header class="Top__section">
       <menu-list
         class="menu-icon"
         :project-list="projectList">
@@ -11,7 +11,7 @@
           cache clear
         </button>
       </div>
-    </section>
+    </header>
   </transition>
 </template>
 

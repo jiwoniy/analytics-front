@@ -1,5 +1,5 @@
 <template>
-  <section id="Footer" class="Footer__section">
+  <footer id="Footer" class="Footer__section">
 
     <div v-if="!isOpen" class="footer--fixed">
       <span @click="openReport" class='report'> {{ $t('Report') }} </span>
@@ -13,7 +13,7 @@
       </div>
     </div>
 
-  </section>
+  </footer>
 </template>
 
 <script>
