@@ -21,6 +21,10 @@ export default {
     value: {
       type: [String, Number],
       default: () => ''
+    },
+    isOpenCodeMirror: {
+      type: Boolean,
+      default: () => false
     }
   },
   methods: {
@@ -28,17 +32,19 @@ export default {
       this.$emit('wrapperEvent', value)
     },
     onFocus () {
-      eventController.SHOW_MODAL({
-        position: 'center',
-        size: 'medium',
-        contentComponent: 'CodeEditor',
-        params: {
-          codeValue: this.value,
-          mode: 'python',
-          readOnly: false,
-          callback: this.eventHandler
-        }
-      })
+      if (this.isOpenCodeMirror) {
+        eventController.SHOW_MODAL({
+          position: 'center',
+          size: 'medium',
+          contentComponent: 'CodeEditor',
+          params: {
+            codeValue: this.value,
+            mode: 'python',
+            readOnly: false,
+            callback: this.eventHandler
+          }
+        })
+      }
     }
   }
 }

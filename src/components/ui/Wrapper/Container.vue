@@ -9,6 +9,7 @@
     <wrapper-textarea
       v-if="uiType === 'textarea'"
       :is-un-lock="isUnLock"
+      :is-open-code-mirror="true"
       v-model="itemValue"
       @wrapperEvent="wrapperEvent">
     </wrapper-textarea>

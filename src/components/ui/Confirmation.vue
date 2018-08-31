@@ -1,11 +1,11 @@
 <template>
   <section class="Confirmation__section">
 
-    <div class="contents header">
+    <div class="contents">
       <h1> {{ $t('Are you sure you want to delete') }} </h1>
     </div>
 
-    <div class="contents bottom" >
+    <div class="contents" >
       <wrapper-button
         :click-event="clickYes"
         :button-text="$t('Yes')">
